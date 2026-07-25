@@ -1,0 +1,415 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "nbn: CMake Configure (Conan Debug)",
+            "type": "shell",
+            "command": "python scripts/run_nbn_task.py cmake-configure-debug",
+            "problemMatcher": ["$gcc"],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "nbn: CMake Build (Conan Debug)",
+            "type": "shell",
+            "command": "python scripts/run_nbn_task.py cmake-build-debug",
+            "dependsOn": "nbn: CMake Configure (Conan Debug)",
+            "problemMatcher": ["$gcc"],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "nbn: Conan Install",
+            "type": "shell",
+            "command": "python scripts/run_nbn_task.py conan-install --profile ${input:profile}",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "nbn: Open Integrated Terminal",
+            "type": "shell",
+            "command": "python scripts/run_nbn_task.py open-integrated-terminal --profile ${input:profile}",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "nbn: Coverage Configure",
+            "type": "shell",
+            "command": "python scripts/run_nbn_task.py coverage-configure",
+            "problemMatcher": ["$gcc"],
+            "continueOnError": true,
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "nbn: Coverage Build",
+            "type": "shell",
+            "command": "python scripts/run_nbn_task.py coverage-build",
+            "dependsOn": "nbn: Coverage Configure",
+            "problemMatcher": ["$gcc"],
+            "continueOnError": true,
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "nbn: Coverage Metrics",
+            "type": "shell",
+            "command": "python scripts/run_nbn_task.py coverage-metrics",
+            "dependsOn": "nbn: Coverage",
+            "problemMatcher": [],
+            "continueOnError": true,
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "nbn: Coverage",
+            "type": "shell",
+            "command": "python scripts/run_nbn_task.py coverage",
+            "dependsOn": "nbn: Coverage Build",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "continueOnError": true,
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "nbn: Valgrind Configure Tests",
+            "type": "shell",
+            "command": "python scripts/run_nbn_task.py valgrind-configure",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": ["$gcc"],
+            "continueOnError": true,
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "nbn: Valgrind Build Core Tests",
+            "type": "shell",
+            "command": "python scripts/run_nbn_task.py valgrind-build",
+            "dependsOn": "nbn: Valgrind Configure Tests",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": ["$gcc"],
+            "continueOnError": true,
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "nbn: Valgrind Callgrind",
+            "type": "shell",
+            "command": "python scripts/run_nbn_task.py valgrind-callgrind",
+            "dependsOn": "nbn: Valgrind Build Core Tests",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "nbn: Valgrind Massif",
+            "type": "shell",
+            "command": "python scripts/run_nbn_task.py valgrind-massif",
+            "dependsOn": "nbn: Valgrind Build Core Tests",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "nbn: Valgrind Memcheck",
+            "type": "shell",
+            "command": "python scripts/run_nbn_task.py valgrind-memcheck",
+            "dependsOn": "nbn: Valgrind Build Core Tests",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "nbn: Valgrind All",
+            "type": "shell",
+            "command": "python scripts/run_nbn_task.py valgrind-all",
+            "problemMatcher": [],
+            "continueOnError": true,
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "nbn: Valgrind Report",
+            "type": "shell",
+            "command": "python scripts/run_nbn_task.py valgrind-report",
+            "dependsOn": "nbn: Valgrind All",
+            "problemMatcher": [],
+            "continueOnError": true,
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "nbn: Coverage All",
+            "type": "shell",
+            "command": "python scripts/run_nbn_task.py coverage-all",
+            "problemMatcher": [],
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "nbn: AddressSanitizer Configure",
+            "type": "shell",
+            "command": "python scripts/run_nbn_task.py asan-configure",
+            "problemMatcher": ["$gcc"],
+            "continueOnError": true,
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "nbn: AddressSanitizer Build Core Tests",
+            "type": "shell",
+            "command": "python scripts/run_nbn_task.py asan-build",
+            "dependsOn": "nbn: AddressSanitizer Configure",
+            "problemMatcher": ["$gcc"],
+            "continueOnError": true,
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "nbn: AddressSanitizer",
+            "type": "shell",
+            "command": "python scripts/run_nbn_task.py asan",
+            "dependsOn": "nbn: AddressSanitizer Build Core Tests",
+            "problemMatcher": [],
+            "continueOnError": true,
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "nbn: ThreadSanitizer Configure",
+            "type": "shell",
+            "command": "python scripts/run_nbn_task.py tsan-configure",
+            "problemMatcher": ["$gcc"],
+            "continueOnError": true,
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "nbn: ThreadSanitizer Build Core Tests",
+            "type": "shell",
+            "command": "python scripts/run_nbn_task.py tsan-build",
+            "dependsOn": "nbn: ThreadSanitizer Configure",
+            "problemMatcher": ["$gcc"],
+            "continueOnError": true,
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "nbn: ThreadSanitizer",
+            "type": "shell",
+            "command": "python scripts/run_nbn_task.py tsan",
+            "dependsOn": "nbn: ThreadSanitizer Build Core Tests",
+            "problemMatcher": [],
+            "continueOnError": true,
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "nbn: Sanitizers All",
+            "type": "shell",
+            "command": "python scripts/run_nbn_task.py sanitizers-all",
+            "problemMatcher": [],
+            "continueOnError": true,
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "nbn: Sanitizer Report",
+            "type": "shell",
+            "command": "python scripts/run_nbn_task.py sanitizer-report",
+            "dependsOn": "nbn: Sanitizers All",
+            "problemMatcher": [],
+            "continueOnError": true,
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "nbn: Quality Reports Clean",
+            "type": "shell",
+            "command": "python scripts/run_nbn_task.py quality-reports-clean",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "nbn: Quality Reports",
+            "type": "shell",
+            "command": "python scripts/run_nbn_task.py quality-reports",
+            "problemMatcher": [],
+            "continueOnError": true,
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        }
+    ],
+    "inputs": [
+        {
+            "id": "profile",
+            "type": "promptString",
+            "description": "Conan profile",
+            "default": "conan-debug"
+        }
+    ]
+}

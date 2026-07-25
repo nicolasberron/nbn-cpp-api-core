@@ -1,0 +1,16 @@
+# Conan and CMake generated files
+.conan2/
+build/
+
+# Local editor files
+CMakeUserPresets.json
+
+# valgrind output
+valgrind-results/*
+
+*.pyc
+
+# --- AgentX (auto-generated, do not edit this block) ---
+# AgentX runtime state
+.agentx/
+# --- /AgentX ---

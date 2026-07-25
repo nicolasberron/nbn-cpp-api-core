@@ -1,0 +1,39 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "nbn: Debug selected test",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${env:NBN_BUILD_DIR_BASE}/${workspaceFolderBasename}/${input:profile}/tests/nbn/core/${input:testExecutable}",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${env:NBN_BUILD_DIR_BASE}/${workspaceFolderBasename}/${input:profile}/tests/nbn/core",
+            "environment": [],
+            "sourceLanguages": [
+                "cpp"
+            ],
+            "stopOnSharedLibraryLoad": false
+        }
+    ],
+    "inputs": [
+        {
+            "id": "profile",
+            "type": "command",
+            "command": "shellCommand.execute",
+            "args": {
+                "command": "conan profile list",
+                "description": "Select Conan profile"
+            }
+        },
+        {
+            "id": "testExecutable",
+            "type": "command",
+            "command": "shellCommand.execute",
+            "args": {
+                "command": "find '${env:NBN_BUILD_DIR_BASE}/${workspaceFolderBasename}/${input:profile}/tests/nbn/core' -maxdepth 1 -type f -executable -printf '%f\\n' | sort",
+                "description": "Select built test executable"
+            }
+        }
+    ]
+}
