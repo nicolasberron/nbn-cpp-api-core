@@ -45,7 +45,7 @@ When ASan and TSan were run by a combined sanitizer task, discover both sibling 
    ```text
    python3 .github/skills/analyze-llvm-sanitizer-reports/scripts/analyze_llvm_sanitizers.py \\
        --reports sanitizer-results \\
-   --output quality-reports/sanitizers
+    --output doc/quality-reports/sanitizers
    ```
 
    For a CTest build-tree report, use the corresponding absolute paths instead:
@@ -53,7 +53,7 @@ When ASan and TSan were run by a combined sanitizer task, discover both sibling 
    ```text
    python3 .github/skills/analyze-llvm-sanitizer-reports/scripts/analyze_llvm_sanitizers.py \
        --reports /home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-tsan/Testing/Temporary \
-   --output quality-reports/sanitizers
+    --output doc/quality-reports/sanitizers
    ```
 
    For combined ASan and TSan output, pass both report directories after `--reports`:
@@ -62,10 +62,10 @@ When ASan and TSan were run by a combined sanitizer task, discover both sibling 
    python3 .github/skills/analyze-llvm-sanitizer-reports/scripts/analyze_llvm_sanitizers.py \
        --reports /home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-asan/Testing/Temporary \
                  /home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-tsan/Testing/Temporary \
-   --output quality-reports/sanitizers
+    --output doc/quality-reports/sanitizers
    ```
 
-2. Open `quality-reports/sanitizers/README.md`.
+2. Open `doc/quality-reports/sanitizers/README.md`.
 3. Review `sanitizers.md` as the single ASan/TSan page, then review `failures.md` for every recorded CTest failure and its classification and `recommendations.md` for prioritized follow-up work. The legacy `asan.md` and `tsan.md` files may also be generated for compatibility, but are not the primary report.
 4. Treat each sanitizer error as actionable unless the report explicitly identifies an intentional test-process termination. Do not suppress a report merely because the test is instrumented.
 5. Deduplicate repeated reports by sanitizer, normalized summary, and first project source location where possible. Distinguish one root cause repeated across tests from independent defects.
@@ -89,4 +89,4 @@ The generated directory contains:
 - `tsan.md`: ThreadSanitizer races and clean TSan runs.
 - `recommendations.md`: prioritized recommendations based on observed findings.
 
-Generated Markdown analysis is written to `quality-reports/sanitizers`; its `README.md` is the main sanitizer page. Raw CTest logs remain in the external build directories and are used as analyzer inputs. The task runner creates empty sanitizer input directories before analysis, so `README.md`, `sanitizers.md`, `overview.md`, `failures.md`, `asan.md`, `tsan.md`, and `recommendations.md` are generated even when configuration, compilation, or CTest fails. A missing sanitizer diagnostic must be reported as missing input or a non-sanitizer failure, never silently treated as clean.
+Generated Markdown analysis is written to `doc/quality-reports/sanitizers`; its `README.md` is the main sanitizer page. Raw CTest logs remain in the external build directories and are used as analyzer inputs. The task runner creates empty sanitizer input directories before analysis, so `README.md`, `sanitizers.md`, `overview.md`, `failures.md`, `asan.md`, `tsan.md`, and `recommendations.md` are generated even when configuration, compilation, or CTest fails. A missing sanitizer diagnostic must be reported as missing input or a non-sanitizer failure, never silently treated as clean.

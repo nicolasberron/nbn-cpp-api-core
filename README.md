@@ -48,6 +48,58 @@ Consumers should require `nbn-cpp-api-core/<version>` and use Conan's
 same `nbn::core` CMake target. Use `-o nbn-cpp-api-core/*:shared=False` for a
 static package.
 
+## Conan package VS Code assets
+
+The Conan package also contains the repository's downstream development assets:
+
+- `vscode/.vscode/`: VS Code settings, launch configurations, and tasks.
+- `vscode/.github/`: the `nbn-cpp-api` agent and repository-specific skills.
+- `scripts/`: downstream helper scripts used by the packaged VS Code tasks.
+- `scripts/install_vscode_assets.py`: a standard-library installer for copying
+	those directories and scripts into a downstream workspace.
+
+The package keeps these assets outside the C++ install tree, so consuming the
+library does not install editor files into system directories. A downstream
+Conan recipe must explicitly install them during its `generate()` step by using
+the dependency package folder. `conan install` does not copy arbitrary files
+from a dependency package into the consumer source tree automatically:
+
+```python
+from pathlib import Path
+import subprocess
+import sys
+
+def generate(self):
+	package_root = Path(self.dependencies["nbn-cpp-api-core"].package_folder)
+	installer = package_root / "scripts" / "install_vscode_assets.py"
+	subprocess.run(
+		[
+			sys.executable,
+			str(installer),
+			"--destination",
+			str(self.recipe_folder),
+			"--define",
+			"NBN_PROFILE=conan-debug",
+		],
+		check=True,
+	)
+```
+
+For example, `nbn-cpp-api-ui` invokes this installer from its `generate()` method.
+After recreating or refreshing the `nbn-cpp-api-core` package, running `conan
+install` for `nbn-cpp-api-ui` installs the packaged `.vscode` and `.github` trees
+in the UI workspace. The package must be recreated after changing the core
+recipe; an existing Conan package revision is not modified in place.
+
+The same command can be run manually with the `scripts/install_vscode_assets.py`
+path from the Conan package. Installation is merge-safe by default: existing
+files are rejected rather than silently overwritten. Pass `--force` when the
+downstream workspace intentionally wants the package versions. Files can be
+customized at install time with repeated `--define NBN_NAME=value` options;
+these replace `@NBN_NAME@` tokens in UTF-8 text files and leave binary files
+unchanged. Downstream projects can therefore adapt paths, profiles, or other
+workspace-specific values without modifying the package contents.
+
 Core tests are available under `tests/nbn/core` and are enabled by default.
 The tests that exercise UI-specific types remain in the migrated source tree
 but are excluded from this standalone build because this repository does not
@@ -58,6 +110,7 @@ The repository also provides standalone VS Code tasks in
 coverage report generation.
 
 Optional dependency-free benchmark infrastructure is documented in
-[benchmark/README.md](benchmark/README.md). Benchmarks are disabled by default
-and are kept outside `tests/` so timing and diagnostic runs do not become part
-of the core test target.
+[tests/core/utilities/README.md](tests/core/utilities/README.md). The reusable
+header is installed as `include/nbn/benchmark/benchmark_support.h`, so
+downstream Conan packages can use the same measurement and report helpers.
+Benchmarks are disabled by default and are kept outside the core test targets.

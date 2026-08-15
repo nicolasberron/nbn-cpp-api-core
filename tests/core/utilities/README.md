@@ -1,8 +1,11 @@
-# nbn benchmarks
+# nbn benchmark utilities
 
-This directory contains standalone, opt-in benchmarks and a small header-only
-runner. The runner uses only the C++23 standard library; `nbn-core` is linked
-only by benchmark executables, so the production library remains dependency-free.
+This directory contains standalone, opt-in benchmarks and a reusable
+header-only runner. The runner uses only the C++23 standard library; `nbn-core`
+is linked only by benchmark executables, so the production library remains
+dependency-free. The installed header is available to downstream Conan
+packages as `nbn/benchmark/benchmark_support.h`, and the CMake package exports
+the header-only `nbn::benchmark` target for reuse by downstream benchmarks.
 
 ## Build
 
@@ -20,11 +23,11 @@ benchmarks in normal production builds.
 
 ## Running tools
 
-`scripts/run_benchmarks.sh` accepts `--build-dir`, `--executable`, `--tool`, and
+From the repository root, `scripts/run_benchmarks.sh` accepts `--build-dir`, `--executable`, `--tool`, and
 `--output-dir`. Tools are `normal`, `perf`, `heaptrack`, `callgrind`, `massif`,
 `memcheck`, `asan`, `ubsan`, and `fuzz`. Optional tools are detected before
 execution. Results include metadata and are written below the output directory,
-which defaults to `quality-reports/benchmark`. The directory's `README.md` is the main
+which defaults to `doc/quality-reports/benchmark`. The directory's `README.md` is the main
 page for the run.
 
 Normal and `perf` runs are timing runs. Heaptrack, Valgrind, sanitizers, and

@@ -210,7 +210,7 @@ def finding_recommendation(finding: Finding) -> tuple[str, str]:
 def all_reports(reports_dirs: list[Path], output: Path) -> list[Report]:
     paths = {
         path for reports_dir in reports_dirs for path in reports_dir.rglob("*")
-        if path.is_file() and output not in path.parents
+        if path.is_file() and output not in path.parents and "analysis" not in path.parts
     }
     return [parse_report(path) for path in sorted(paths)]
 
@@ -246,7 +246,10 @@ def sanitizer_page(sanitizer: str, reports: list[Report], findings: list[Finding
         return lines
 
     passed_tests = {test for report in sanitizer_reports for test in report.passed_tests}
-    lines += ["**Status:** clean; no sanitizer diagnostic was emitted.", ""]
+    if failed_tests:
+        lines += ["**Status:** validation failed; no sanitizer diagnostic was emitted, but CTest reported failed tests.", ""]
+    else:
+        lines += ["**Status:** clean; no sanitizer diagnostic was emitted.", ""]
     lines += [
         "A clean sanitizer run is normally silent. This status is based on the absence of sanitizer diagnostics "
         "in the supplied logs, the recorded CTest results, and the sanitizer build-directory context.",
@@ -265,29 +268,32 @@ def generate(reports_dirs: list[Path], output: Path) -> None:
     reports = all_reports(reports_dirs, output)
     findings = deduplicated_findings(reports)
     sanitizer_counts = Counter(report.sanitizer for report in reports)
-    failure_map: dict[str, tuple[Report, str]] = {}
+    failure_map: dict[tuple[str, str], tuple[Report, str]] = {}
     failure_details: list[tuple[Report, str, str]] = []
-    passed_tests = {test for report in reports for test in report.passed_tests}
+    passed_tests = {(report.sanitizer, test) for report in reports for test in report.passed_tests}
     explicit_failed_tests = {
-        test for report in reports if report.path.name != "LastTestsFailed.log"
+        (report.sanitizer, test) for report in reports if report.path.name != "LastTestsFailed.log"
         for test, _ in report.failure_details
     }
     for report in reports:
         for test, detail in report.failure_details:
-            if (report.path.name == "LastTestsFailed.log" and test in passed_tests
-                    and test not in explicit_failed_tests):
+            failure_key = (report.sanitizer, test)
+            if (report.path.name == "LastTestsFailed.log" and failure_key in passed_tests
+                    and failure_key not in explicit_failed_tests):
                 continue
-            if test not in failure_map or not detail.startswith("Listed by CTest"):
-                failure_map[test] = (report, detail)
-    failed_tests = Counter({test: 1 for test in failure_map})
-    failure_details = [(report, test, detail) for test, (report, detail) in sorted(failure_map.items())]
+            if failure_key not in failure_map or not detail.startswith("Listed by CTest"):
+                failure_map[failure_key] = (report, detail)
+    failed_tests = Counter({test: 1 for _, test in failure_map})
+    failure_details = [
+        (report, test, detail) for (_, test), (report, detail) in sorted(failure_map.items())
+    ]
     reconciled_failures = [
         (report, test, detail)
         for report in reports
         for test, detail in report.failure_details
         if report.path.name == "LastTestsFailed.log"
-        and test in passed_tests
-        and test not in explicit_failed_tests
+        and (report.sanitizer, test) in passed_tests
+        and (report.sanitizer, test) not in explicit_failed_tests
     ]
 
     overview = ["# LLVM sanitizer overview", "", f"Reports analyzed: {len(reports)}", "",
@@ -305,11 +311,11 @@ def generate(reports_dirs: list[Path], output: Path) -> None:
             "Each entry below is a recorded CTest failure. A sanitizer finding is actionable; a failure without a sanitizer finding requires separate test/assertion investigation.",
             "",
         ]
-        finding_tests = {finding.test for report in reports for finding in report.findings}
+        finding_tests = {(finding.sanitizer, finding.test) for report in reports for finding in report.findings}
         for report, test, detail in failure_details:
-            classification = "sanitizer-detected failure" if test in finding_tests else "non-sanitizer CTest failure"
+            classification = "sanitizer-detected failure" if (report.sanitizer, test) in finding_tests else "non-sanitizer CTest failure"
             reasons = sorted({finding.summary for source_report in reports for finding in source_report.findings
-                              if finding.test == test})
+                              if finding.sanitizer == report.sanitizer and finding.test == test})
             reason = "; ".join(reasons) if reasons else detail
             report_link = f"[{report.path.name}]({rel_link(report.path, output)})"
             failure_lines.append(f"- **{classification}** `{test}` in {report_link}: {reason}")
@@ -328,16 +334,24 @@ def generate(reports_dirs: list[Path], output: Path) -> None:
         f"- Unresolved failed tests: {sum(failed_tests.values())}",
         "",
     ]
-    sanitizer_lines += sanitizer_page("AddressSanitizer", reports, findings, output, failed_tests)
-    sanitizer_lines += sanitizer_page("ThreadSanitizer", reports, findings, output, failed_tests)
+    for sanitizer in ("AddressSanitizer", "ThreadSanitizer"):
+        sanitizer_failed_tests = Counter({
+            test: 1 for report, test, _ in failure_details if report.sanitizer == sanitizer
+        })
+        sanitizer_lines += sanitizer_page(sanitizer, reports, findings, output, sanitizer_failed_tests)
     write(output / "sanitizers.md", "\n".join(sanitizer_lines))
 
     for sanitizer, filename in (("AddressSanitizer", "asan.md"), ("ThreadSanitizer", "tsan.md")):
         sanitizer_reports = [report for report in reports if report.sanitizer == sanitizer]
         sanitizer_findings = [finding for report in sanitizer_reports for finding in report.findings]
+        sanitizer_failed_tests = {
+            test for report, test, _ in failure_details if report.sanitizer == sanitizer
+        }
         lines = [f"# {sanitizer}", ""]
-        if sanitizer_findings:
+        if sanitizer_findings or sanitizer_failed_tests:
             lines += ["<span style=\"color:red\">❌ ERROR</span>", "", "See [Recommendations](recommendations.md) for next actions.", "", f"Findings: {len(sanitizer_findings)}", ""]
+            if sanitizer_failed_tests:
+                lines += [f"Unresolved CTest failures: {len(sanitizer_failed_tests)}", ""]
             lines += [markdown_finding(finding, output) for finding in sanitizer_findings]
         elif sanitizer_reports:
             lines += ["<span style=\"color:green\">✅ PASS</span>", "", "No sanitizer findings were detected in the analyzed reports.", ""]
@@ -374,11 +388,11 @@ def generate(reports_dirs: list[Path], output: Path) -> None:
     recommendations += ["", "## Informational", "", "- The consolidated status is based on sanitizer diagnostics, explicit CTest pass/fail markers, and sanitizer build-directory context.", "- CTest's `LastTestsFailed.log` entries are reconciled with explicit `Test Passed.` and `Test Failed.` markers in `LastTest.log` so stale entries do not remain failures.", "- Repeated sanitizer findings are deduplicated separately.", "- No timeout or expected-signal classification was inferred unless it was present in the supplied logs.", "", "## Exact next action", ""]
     if failure_details:
         recommendations += ["- Investigate every unresolved CTest failure listed below; a failed test without a sanitizer marker is still a failed validation and must not be reported as a clean sanitizer run.", "", "## CTest failures requiring follow-up", ""]
-        finding_tests = {finding.test for report in reports for finding in report.findings}
+        finding_tests = {(finding.sanitizer, finding.test) for report in reports for finding in report.findings}
         for report, test, detail in failure_details:
-            classification = "sanitizer finding" if test in finding_tests else "non-sanitizer test failure"
+            classification = "sanitizer finding" if (report.sanitizer, test) in finding_tests else "non-sanitizer test failure"
             report_link = f"[{report.path.name}]({rel_link(report.path, output)})"
-            if test in finding_tests:
+            if (report.sanitizer, test) in finding_tests:
                 recommendations.append(
                     f"- **{classification}** `{test}`: {detail}; raw log: {report_link}; "
                     f"full failure entry: [failures.md](failures.md)."
@@ -431,9 +445,9 @@ def generate(reports_dirs: list[Path], output: Path) -> None:
             recommendations.append("")
             recommendations.append(markdown_finding(finding, output))
             recommendations.append("")
-        finding_tests = {finding.test for report in reports for finding in report.findings}
+        finding_tests = {(finding.sanitizer, finding.test) for report in reports for finding in report.findings}
         for report, test, detail in failure_details:
-            if test in finding_tests:
+            if (report.sanitizer, test) in finding_tests:
                 continue
             report_link = f"[{report.path.name}]({rel_link(report.path, output)})"
             recommendations.append(f"### CTest - `{test}`")

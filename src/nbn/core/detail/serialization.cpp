@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <cstring>
 #include <functional>
+#include <iterator>
 #include <limits>
 #include <unordered_set>
 #include <vector>
@@ -41,6 +42,7 @@ constexpr char OPEN_BRACE = '{';
 constexpr char CLOSE_BRACE = '}';
 constexpr char OPEN_BRACKET = '[';
 constexpr char CLOSE_BRACKET = ']';
+constexpr unsigned char JSON_CONTROL_CHARACTER_LIMIT = 0x20U;
 
 constexpr uint32_t HEX_ALPHA_OFFSET = 10U;
 constexpr uint32_t UTF8_MAX_1_BYTE = 0x7FU;
@@ -269,7 +271,8 @@ auto parseString(std::string_view json, size_t& pos) -> std::string {
 
     size_t fastPos = pos;
     while (fastPos < json.size() && json[fastPos] != QUOTE && json[fastPos] != BACKSLASH) {
-        nbn::log::fatal_if(static_cast<unsigned char>(json[fastPos]) < 0x20U, "Invalid JSON string: unescaped control character.");
+        nbn::log::fatal_if(static_cast<unsigned char>(json[fastPos]) < JSON_CONTROL_CHARACTER_LIMIT,
+                           "Invalid JSON string: unescaped control character.");
         ++fastPos;
     }
     if (fastPos < json.size() && json[fastPos] == QUOTE) {
@@ -286,7 +289,8 @@ auto parseString(std::string_view json, size_t& pos) -> std::string {
     while (pos < json.size() && json[pos] != QUOTE) {
         const size_t segmentStart = pos;
         while (pos < json.size() && json[pos] != QUOTE && json[pos] != BACKSLASH) {
-            nbn::log::fatal_if(static_cast<unsigned char>(json[pos]) < 0x20U, "Invalid JSON string: unescaped control character.");
+            nbn::log::fatal_if(static_cast<unsigned char>(json[pos]) < JSON_CONTROL_CHARACTER_LIMIT,
+                               "Invalid JSON string: unescaped control character.");
             ++pos;
         }
         if (pos > segmentStart) {
@@ -495,7 +499,8 @@ auto skipString(std::string_view json, size_t& pos) -> void {
 
     while (pos < json.size()) {
         while (pos < json.size() && json[pos] != QUOTE && json[pos] != BACKSLASH) {
-            nbn::log::fatal_if(static_cast<unsigned char>(json[pos]) < 0x20U, "Invalid JSON string: unescaped control character.");
+            nbn::log::fatal_if(static_cast<unsigned char>(json[pos]) < JSON_CONTROL_CHARACTER_LIMIT,
+                               "Invalid JSON string: unescaped control character.");
             ++pos;
         }
 
@@ -714,8 +719,10 @@ auto deserializeNumber(std::string_view str) -> T {
     const auto token{parseNumber(str, pos)};
     validateEnd(str, pos);
     T value{};
-    const auto [end, error] = std::from_chars(token.data(), token.data() + token.size(), value);
-    nbn::log::fatal_if(error != std::errc{} || end != token.data() + token.size(),
+    const auto tokenBegin = token.data();
+    const auto tokenEnd = std::next(tokenBegin, static_cast<std::ptrdiff_t>(token.size()));
+    const auto [end, error] = std::from_chars(tokenBegin, tokenEnd, value);
+    nbn::log::fatal_if(error != std::errc{} || end != tokenEnd,
                        std::format("Invalid JSON number or value out of range: '{}'.", token));
     return value;
 }
@@ -1028,12 +1035,14 @@ auto deserialize<long double>(std::string_view str) -> long double {
 
 template <>
 auto deserialize<bool>(std::string_view str) -> bool {
+    constexpr size_t TRUE_LITERAL_LENGTH = 4U;
+    constexpr size_t FALSE_LITERAL_LENGTH = 5U;
     size_t pos{0};
     nbn::core::serialization::json::skipWhitespace(str, pos);
     const bool value{str.substr(pos, 4) == nbn::core::serialization::json::constants::TRUE};
     const bool isFalse{str.substr(pos, 5) == nbn::core::serialization::json::constants::FALSE};
     nbn::log::fatal_if(!value && !isFalse, std::format("Cannot convert string '{}' to bool", str));
-    pos += value ? 4U : 5U;
+    pos += value ? TRUE_LITERAL_LENGTH : FALSE_LITERAL_LENGTH;
     nbn::core::serialization::json::validateEnd(str, pos);
     return value;
 }

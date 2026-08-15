@@ -266,7 +266,7 @@ def write(path: Path, content: str) -> None:
 def main() -> int:  # NOSONAR - coordinates independent report-family writers.
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--reports", type=Path, default=Path("build/valgrind-results"), help="Valgrind result directory")
-    parser.add_argument("--output", type=Path, default=Path("quality-reports/valgrind"), help="Markdown output directory")
+    parser.add_argument("--output", type=Path, default=Path("doc/quality-reports/valgrind"), help="Markdown output directory")
     args = parser.parse_args()
 
     reports = args.reports.resolve()

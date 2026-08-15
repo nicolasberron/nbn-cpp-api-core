@@ -10,6 +10,7 @@
 #include <stdexcept>
 #include <string>
 #include <thread>
+#include <vector>
 
 // Test Logger
 
@@ -54,7 +55,6 @@ void pauseLoggerQueuePush() {
     state.condition.notify_all();
     state.condition.wait(lock, [&state] { return state.releasePush; });
 }
-
 void pauseLoggerAtStopCheck() {
     auto& state = loggerIdleState();
     {
@@ -75,6 +75,33 @@ void test_logger() {
     nbn::log::info("This is an info message");
     nbn::log::warning("This is a warning message");
     nbn::log::error("This is an error message");
+}
+
+void test_logger_concurrent_producers() {
+    constexpr int kProducerCount{4};
+    constexpr int kMessagesPerProducer{250};
+    nbn::core::Logger logger{};
+
+    std::vector<std::thread> producers;
+    producers.reserve(kProducerCount);
+    for (int producer{0}; producer < kProducerCount; ++producer) {
+        producers.emplace_back([&logger, producer]() {
+            for (int message{0}; message < kMessagesPerProducer; ++message) {
+                logger.enqueueForTest(std::to_string(producer) + ":" + std::to_string(message));
+            }
+        });
+    }
+
+    for (auto& producer : producers) {
+        producer.join();
+    }
+    int received{0};
+    std::string message;
+    while (logger.popForTest(message)) {
+        ++received;
+    }
+    nbn::core::unit_tests::equal("Logger should accept every concurrent producer message", kProducerCount * kMessagesPerProducer,
+                                 received);
 }
 
 void test_logger_emits_structured_and_formatted_messages() {

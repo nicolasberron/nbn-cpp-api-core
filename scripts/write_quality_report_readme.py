@@ -146,7 +146,7 @@ def main() -> int:
 
     workspace = args.workspace.resolve()
     build_root = args.build_root.resolve()
-    quality = workspace / "quality-reports"
+    quality = workspace / "doc" / "quality-reports"
     coverage = build_root / "linux-clang19-coverage" / "coverage-llvm"
     asan = build_root / "linux-clang19-asan"
     tsan = build_root / "linux-clang19-tsan"

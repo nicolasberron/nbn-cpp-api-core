@@ -1,6 +1,5 @@
 #pragma once
 
-#include <bits/shared_ptr_atomic.h>
 #include <atomic>
 #include <memory>
 
@@ -42,7 +41,7 @@ class ConcurrentStack {
    private:
     struct Node {
         T m_value{};
-        std::shared_ptr<Node> m_spNext{nullptr};
+        std::atomic<std::shared_ptr<Node>> m_spNext{nullptr};
 
         Node() = default;
 
@@ -54,7 +53,7 @@ class ConcurrentStack {
             : m_value{std::move(value)} {}
     };
 
-    std::atomic<std::shared_ptr<Node>> m_head{nullptr};
+    std::atomic<std::shared_ptr<Node>> m_head{};
 
    public:
     /**
@@ -91,10 +90,10 @@ class ConcurrentStack {
         } else {
             spNewNode = std::make_shared<Node>(value);
         }
-        // Atomically push the new node onto the stack, when swap is successful
-        while (!m_head.compare_exchange_weak(spNewNode->m_spNext, spNewNode)) {
-            // Do nothing
-        }
+        auto spHead = m_head.load(std::memory_order_relaxed);
+        do {
+            spNewNode->m_spNext.store(spHead, std::memory_order_relaxed);
+        } while (!m_head.compare_exchange_weak(spHead, spNewNode, std::memory_order_release, std::memory_order_relaxed));
     }
 
     /**
@@ -103,7 +102,7 @@ class ConcurrentStack {
      * @return true if the stack is not empty and a value was popped, false otherwise.
      */
     [[nodiscard]] auto pop(T& dest) noexcept -> bool {
-        std::shared_ptr<Node> spHead = m_head.load();
+        std::shared_ptr<Node> spHead = m_head.load(std::memory_order_acquire);
         if (spHead.get() == nullptr) {
             return false;
         }
@@ -113,8 +112,8 @@ class ConcurrentStack {
             if (spHead == nullptr) {
                 return false;
             }
-            spNewHead = spHead->m_spNext;  // Update spNewHead inside the loop
-        } while (!m_head.compare_exchange_weak(spHead, spNewHead));
+            spNewHead = spHead->m_spNext.load(std::memory_order_acquire);
+        } while (!m_head.compare_exchange_weak(spHead, spNewHead, std::memory_order_acq_rel, std::memory_order_relaxed));
 
         if constexpr (is_smart_ptr<T>::value) {
             dest = std::move(spHead->m_value);

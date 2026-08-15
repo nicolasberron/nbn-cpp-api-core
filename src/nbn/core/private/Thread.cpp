@@ -129,7 +129,7 @@ class Thread::Impl {
 #endif
             {
                 std::lock_guard<std::mutex> lock(m_stopMutex);
-                if (isRunning() && !isStopRequested()) {
+                if (!isStopRequested()) {
                     m_isStopRequested.store(true);
 #if !defined(PLATFORMIO_BUILD)
                     m_thread.request_stop();

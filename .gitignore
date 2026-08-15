@@ -14,3 +14,5 @@ valgrind-results/*
 # AgentX runtime state
 .agentx/
 # --- /AgentX ---
+
+*.profraw

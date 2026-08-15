@@ -409,7 +409,7 @@
             "id": "profile",
             "type": "promptString",
             "description": "Conan profile",
-            "default": "conan-debug"
+            "default": "linux-clang19-debug"
         }
     ]
 }

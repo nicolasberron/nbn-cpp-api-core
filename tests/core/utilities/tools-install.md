@@ -115,24 +115,24 @@ Replace the build directory if a different Conan profile is being used.
 
 ```bash
 ./scripts/run_benchmarks.sh \
-    --build-dir /home/nbn/dev/builds/nbn-cpp-api-core/linux-gcc13-debug/benchmark \
-    --executable benchmark_serialization \
+    --build-dir /home/nbn/dev/builds/nbn-cpp-api-core/linux-gcc13-debug \
+    --executable tests/core/utilities/benchmark_serialization \
     --tool normal \
     --output-dir benchmark-results/normal
 ```
 
 ```bash
 ./scripts/run_benchmarks.sh \
-    --build-dir /home/nbn/dev/builds/nbn-cpp-api-core/linux-gcc13-debug/benchmark \
-    --executable benchmark_serialization \
+    --build-dir /home/nbn/dev/builds/nbn-cpp-api-core/linux-gcc13-debug \
+    --executable tests/core/utilities/benchmark_serialization \
     --tool perf \
     --output-dir benchmark-results/perf
 ```
 
 ```bash
 ./scripts/run_benchmarks.sh \
-    --build-dir /home/nbn/dev/builds/nbn-cpp-api-core/linux-gcc13-debug/benchmark \
-    --executable benchmark_serialization \
+    --build-dir /home/nbn/dev/builds/nbn-cpp-api-core/linux-gcc13-debug \
+    --executable tests/core/utilities/benchmark_serialization \
     --tool heaptrack \
     --output-dir benchmark-results/heaptrack
 ```
@@ -142,8 +142,8 @@ Run Valgrind diagnostics with the same runner:
 ```bash
 for tool in callgrind massif memcheck; do
     ./scripts/run_benchmarks.sh \
-        --build-dir /home/nbn/dev/builds/nbn-cpp-api-core/linux-gcc13-debug/benchmark \
-        --executable benchmark_serialization \
+        --build-dir /home/nbn/dev/builds/nbn-cpp-api-core/linux-gcc13-debug \
+        --executable tests/core/utilities/benchmark_serialization \
         --tool "$tool" \
         --output-dir "benchmark-results/$tool"
 done
@@ -153,24 +153,24 @@ Run sanitizer and fuzz diagnostics with their separately built executables:
 
 ```bash
 ./scripts/run_benchmarks.sh \
-    --build-dir /home/nbn/dev/builds/nbn-cpp-api-core/linux-gcc13-debug/benchmark \
-    --executable benchmark_serialization_sanitized \
+    --build-dir /home/nbn/dev/builds/nbn-cpp-api-core/linux-gcc13-debug \
+    --executable tests/core/utilities/benchmark_serialization_sanitized \
     --tool asan \
     --output-dir benchmark-results/asan
 ```
 
 ```bash
 ./scripts/run_benchmarks.sh \
-    --build-dir /home/nbn/dev/builds/nbn-cpp-api-core/linux-gcc13-debug/benchmark \
-    --executable benchmark_serialization_sanitized \
+    --build-dir /home/nbn/dev/builds/nbn-cpp-api-core/linux-gcc13-debug \
+    --executable tests/core/utilities/benchmark_serialization_sanitized \
     --tool ubsan \
     --output-dir benchmark-results/ubsan
 ```
 
 ```bash
 ./scripts/run_benchmarks.sh \
-    --build-dir /home/nbn/dev/builds/nbn-cpp-api-core/linux-gcc13-debug/benchmark \
-    --executable fuzz_serialization \
+    --build-dir /home/nbn/dev/builds/nbn-cpp-api-core/linux-gcc13-debug \
+    --executable tests/core/utilities/fuzz_serialization \
     --tool fuzz \
     --output-dir benchmark-results/fuzz
 ```

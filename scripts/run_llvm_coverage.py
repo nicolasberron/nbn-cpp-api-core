@@ -338,7 +338,7 @@ def remove_published_html(output_dir: Path) -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("build_dir", nargs="?", type=Path, default=Path("."))
-    parser.add_argument("--output-dir", type=Path, default=Path("quality-reports/coverage"))
+    parser.add_argument("--output-dir", type=Path, default=Path("doc/quality-reports/coverage"))
     args = parser.parse_args()
     build_dir = args.build_dir.resolve()
     llvm_cov = require_tool(os.environ.get("LLVM-COV", "llvm-cov-19"))

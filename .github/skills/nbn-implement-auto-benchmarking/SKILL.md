@@ -41,7 +41,7 @@ the same baseline, and keep only changes supported by reproducible evidence.
 - Use LLVM/Clang for libFuzzer on Linux and Windows where the platform
   toolchain supports it. Keep host-specific results separate.
 - Maintain the benchmark history in a tracked CSV file, normally
-  `doc/benchmark-history.csv`. Do not store generated benchmark output in the
+  `doc/quality-reports/benchmark-history.csv`. Do not store generated benchmark output in the
   repository unless it is explicitly requested.
 - Every accepted measurement iteration must be committed. Use a monotonically
   increasing four-digit iteration number in both the CSV row and commit

@@ -55,8 +55,8 @@ class ConcurrentQueue {
      * @brief Node structure for the linked list.
      */
     struct Node {
-        T m_value{};                                          /**< The value stored in the node. */
-        std::atomic<std::shared_ptr<Node>> m_spNext{nullptr}; /**< Pointer to the next node in the list. */
+        T m_value{};                                   /**< The value stored in the node. */
+        std::atomic<std::shared_ptr<Node>> m_spNext{}; /**< Pointer to the next node in the list. */
 
         /**
          * @brief Default constructor for Node.
@@ -119,7 +119,7 @@ class ConcurrentQueue {
         std::shared_ptr<Node> spTail;
 
         while (true) {
-            spTail = m_tail.load(std::memory_order_relaxed);
+            spTail = m_tail.load(std::memory_order_acquire);
             auto spNext = spTail->m_spNext.load(std::memory_order_acquire);
 
             if (spTail == m_tail.load(std::memory_order_acquire)) {
@@ -137,7 +137,7 @@ class ConcurrentQueue {
             }
         }
 
-        m_tail.compare_exchange_strong(spTail, spNewNode, std::memory_order_acq_rel, std::memory_order_relaxed);
+        m_tail.compare_exchange_strong(spTail, spNewNode, std::memory_order_release, std::memory_order_relaxed);
     }
 
     /**
@@ -149,7 +149,7 @@ class ConcurrentQueue {
     [[nodiscard]] auto pop(T& dest) noexcept -> bool {
         std::shared_ptr<Node> spHead;
         while (true) {
-            spHead = m_head.load(std::memory_order_relaxed);
+            spHead = m_head.load(std::memory_order_acquire);
             auto spTail = m_tail.load(std::memory_order_acquire);
             auto spNext = spHead->m_spNext.load(std::memory_order_acquire);
 

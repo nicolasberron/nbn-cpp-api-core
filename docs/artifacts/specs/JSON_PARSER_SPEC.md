@@ -24,7 +24,7 @@ This contract applies to the public serialization entry points and the JSON help
 
 ## Differential and fuzz validation
 
-The committed corpus under `benchmark/fuzz_corpus/` contains valid, malformed, duplicate-key, overflow, Unicode, nesting, and trailing-data seeds. When the Clang libFuzzer option is enabled:
+The committed corpus under `tests/core/utilities/fuzz_corpus/` contains valid, malformed, duplicate-key, overflow, Unicode, nesting, and trailing-data seeds. When the Clang libFuzzer option is enabled:
 
 - `fuzz_serialization` runs the variant deserializer with ASan and UBSan.
 - `json_parser_probe` provides a file-oriented acceptance probe.

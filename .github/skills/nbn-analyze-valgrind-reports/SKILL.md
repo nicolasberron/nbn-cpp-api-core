@@ -1,6 +1,6 @@
 ---
 name: analyze-valgrind-reports
-description: "Analyze Valgrind Memcheck, Massif, and Callgrind reports from this repository and generate linked Markdown findings, status summaries, and actionable recommendations. Use when reviewing quality-reports/valgrind, memory errors, leaks, heap usage, or callgrind profiles."
+description: "Analyze Valgrind Memcheck, Massif, and Callgrind reports from this repository and generate linked Markdown findings, status summaries, and actionable recommendations. Use when reviewing doc/quality-reports/valgrind, memory errors, leaks, heap usage, or callgrind profiles."
 argument-hint: "[report directory] [output directory]"
 ---
 
@@ -18,11 +18,11 @@ This skill is analysis-only. Do **not** launch Valgrind, CTest, builds, or profi
 
    ```text
    python3 .github/skills/analyze-valgrind-reports/scripts/analyze_valgrind.py \\
-   --reports quality-reports/valgrind/raw \\
-   --output quality-reports/valgrind
+   --reports doc/quality-reports/valgrind/raw \\
+   --output doc/quality-reports/valgrind
    ```
 
-2. Open `quality-reports/valgrind/README.md`.
+2. Open `doc/quality-reports/valgrind/README.md`.
 3. Review `memcheck.md` for correctness issues, `massif.md` for peak heap observations, `callgrind.md` for instruction hotspots, and `recommendations.md` for prioritized follow-up work.
 4. Treat `still reachable` allocations as informational, but list each allocation record and explain whether it is project-owned, runtime-owned, or an intentional process-lifetime allocation. Prioritize invalid accesses and `definitely lost` or `indirectly lost` blocks.
 5. Treat Callgrind instruction counts as profiler observations, not wall-clock timings. Startup and dynamic-loader symbols are reported separately from project symbols.
@@ -42,4 +42,4 @@ The generated directory contains:
 - `callgrind.md`: total instructions and top annotated functions.
 - `recommendations.md`: prioritized recommendations based on observed findings.
 
-Raw reports should remain in the build directory, for example `<build-dir>/valgrind-results`. Generated Markdown is written to `quality-reports/valgrind`; its `README.md` is the main Valgrind page.
+Raw reports should remain in the build directory, for example `<build-dir>/valgrind-results`. Generated Markdown is written to `doc/quality-reports/valgrind`; its `README.md` is the main Valgrind page.

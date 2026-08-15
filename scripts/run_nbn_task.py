@@ -15,7 +15,7 @@ from typing import Callable, Sequence
 
 
 DEFAULT_BUILD_ROOT_NAME = "nbn-cpp-api-core"
-DEFAULT_PROFILE = "conan-debug"
+DEFAULT_PROFILE = "linux-clang19-debug"
 CORE_TEST_TARGET = "tests/nbn/core/all"
 BENCHMARK_TARGET = "benchmark_serialization"
 COVERAGE_BUILD_NAME = "linux-clang19-coverage"
@@ -52,11 +52,35 @@ class TaskContext:
 
     @property
     def quality_reports(self) -> Path:
-        return self.workspace / QUALITY_REPORTS_NAME
+        return self.workspace / "doc" / QUALITY_REPORTS_NAME
 
     def command_environment(self) -> dict[str, str]:
         """Return a copy of the process environment for a child command."""
         return os.environ.copy()
+
+    def conan_toolchain(self) -> Path:
+        """Return the generated Conan toolchain or explain how to create it."""
+        toolchain = self.debug_build / "conan_toolchain.cmake"
+        if self.dry_run:
+            return toolchain
+        if not toolchain.is_file():
+            raise FileNotFoundError(
+                f"Conan toolchain not found: {toolchain}. "
+                f"Run conan-install with profile {self.profile!r} first."
+            )
+        return toolchain
+
+    def conan_environment_script(self) -> Path:
+        """Return the generated Conan environment script for this platform."""
+        scripts = sorted(self.debug_build.glob("conanbuildenv-*.sh"))
+        if self.dry_run:
+            return self.debug_build / "conanbuildenv-<configuration>.sh"
+        if not scripts:
+            raise FileNotFoundError(
+                f"Conan build environment not found in {self.debug_build}. "
+                f"Run conan-install with profile {self.profile!r} first."
+            )
+        return scripts[0]
 
 
 TaskFunction = Callable[[TaskContext], int]
@@ -122,20 +146,34 @@ def run_python(context: TaskContext, script: Path, arguments: Sequence[str]) -> 
 
 def configure_debug(context: TaskContext) -> int:
     """Configure the standard Conan debug build."""
+    toolchain = context.conan_toolchain()
     return run_command(
         context,
-        ["cmake", "--preset", context.profile, "-DNBN_CLANG_TIDY_ENABLE=ON"],
+        [
+            "cmake",
+            "-S",
+            str(context.workspace),
+            "-B",
+            str(context.debug_build),
+            "-G",
+            "Ninja",
+            "-DCMAKE_BUILD_TYPE=Debug",
+            "-DCMAKE_TOOLCHAIN_FILE=" + str(toolchain),
+            "-DCMAKE_C_COMPILER=clang-19",
+            "-DCMAKE_CXX_COMPILER=clang++-19",
+            "-DNBN_CLANG_TIDY_ENABLE=ON",
+        ],
     )
 
 
 def build_debug(context: TaskContext) -> int:
     """Build the standard Conan debug preset."""
-    return run_command(context, ["cmake", "--build", "--preset", context.profile])
+    return run_command(context, ["cmake", "--build", str(context.debug_build)])
 
 
 def conan_install(context: TaskContext) -> int:
     """Install Conan dependencies for the selected profile."""
-    output_directory = context.build_root / context.profile
+    output_directory = context.debug_build
     return run_command(
         context,
         [
@@ -152,19 +190,21 @@ def conan_install(context: TaskContext) -> int:
 
 def open_integrated_terminal(context: TaskContext) -> int:
     """Open the selected profile build directory with the VS Code CLI."""
-    return run_command(context, ["code", str(context.build_root / context.profile)])
+    return run_command(context, ["code", str(context.debug_build)])
 
 
 def configure_coverage(context: TaskContext) -> int:
     """Configure the LLVM coverage build."""
+    environment_script = context.conan_environment_script()
+    toolchain = context.conan_toolchain()
     command = (
         "source "
-        f"{shlex.quote(str(context.debug_build / 'conanbuildenv-debug-x86_64.sh'))}"
+        f"{shlex.quote(str(environment_script))}"
         f" && cmake -S {shlex.quote(str(context.workspace))}"
         f" -B {shlex.quote(str(context.coverage_build))} -G Ninja"
         " -DCMAKE_BUILD_TYPE=Debug"
         " -DCMAKE_TOOLCHAIN_FILE="
-        f"{shlex.quote(str(context.debug_build / 'conan_toolchain.cmake'))}"
+        f"{shlex.quote(str(toolchain))}"
         " -DNBN_BUILD_TESTS=ON -DNBN_LLVM_COVERAGE_ENABLE=ON"
         " -DNBN_CLANG_TIDY_ENABLE=OFF"
     )
@@ -214,12 +254,21 @@ def coverage_metrics(context: TaskContext) -> int:
 
 def configure_valgrind(context: TaskContext) -> int:
     """Configure the debug build used by Valgrind."""
+    toolchain = context.conan_toolchain()
     return run_command(
         context,
         [
             "cmake",
-            "--preset",
-            context.profile,
+            "-S",
+            str(context.workspace),
+            "-B",
+            str(context.debug_build),
+            "-G",
+            "Ninja",
+            "-DCMAKE_BUILD_TYPE=Debug",
+            "-DCMAKE_TOOLCHAIN_FILE=" + str(toolchain),
+            "-DCMAKE_C_COMPILER=clang-19",
+            "-DCMAKE_CXX_COMPILER=clang++-19",
             "-DNBN_BUILD_TESTS=ON",
             "-DNBN_BUILD_BENCHMARKS=OFF",
             "-DNBN_TEST_TIMEOUT_SECONDS=300",
@@ -235,8 +284,7 @@ def build_valgrind(context: TaskContext) -> int:
         [
             "cmake",
             "--build",
-            "--preset",
-            context.profile,
+            str(context.debug_build),
             "--target",
             CORE_TEST_TARGET,
         ],
@@ -277,23 +325,27 @@ def valgrind_report(context: TaskContext) -> int:
 
 def benchmark_all(context: TaskContext) -> int:
     """Build and run the normal serialization benchmark for publication."""
-    configure_result = run_command(
-        context,
-        [
-            "cmake",
-            "--preset",
-            context.profile,
-            "-DNBN_BUILD_BENCHMARKS=ON",
-            "-DNBN_BUILD_BENCHMARK_SANITIZERS=OFF",
-            "-DNBN_BUILD_BENCHMARK_FUZZER=OFF",
-            "-DNBN_CLANG_TIDY_ENABLE=OFF",
-        ],
+    environment_script = context.conan_environment_script()
+    toolchain = context.conan_toolchain()
+    configure_command = (
+        "source "
+        f"{shlex.quote(str(environment_script))}"
+        f" && cmake -S {shlex.quote(str(context.workspace))}"
+        f" -B {shlex.quote(str(context.debug_build))} -G Ninja"
+        " -DCMAKE_BUILD_TYPE=Debug"
+        " -DCMAKE_TOOLCHAIN_FILE="
+        f"{shlex.quote(str(toolchain))}"
+        " -DNBN_BUILD_BENCHMARKS=ON"
+        " -DNBN_BUILD_BENCHMARK_SANITIZERS=OFF"
+        " -DNBN_BUILD_BENCHMARK_FUZZER=OFF"
+        " -DNBN_CLANG_TIDY_ENABLE=OFF"
     )
+    configure_result = run_command(context, shell_command(configure_command))
     if configure_result != 0:
         return configure_result
     build_result = run_command(
         context,
-        ["cmake", "--build", "--preset", context.profile, "--target", BENCHMARK_TARGET],
+        ["cmake", "--build", str(context.debug_build), "--target", BENCHMARK_TARGET],
     )
     if build_result != 0:
         return build_result
@@ -304,7 +356,7 @@ def benchmark_all(context: TaskContext) -> int:
             "--build-dir",
             str(context.debug_build),
             "--executable",
-            "benchmark/benchmark_serialization",
+            "tests/core/utilities/benchmark_serialization",
             "--tool",
             "normal",
             "--output-dir",
@@ -318,17 +370,19 @@ def benchmark_all(context: TaskContext) -> int:
 def configure_sanitizer(context: TaskContext, sanitizer: str) -> int:
     """Configure an AddressSanitizer or ThreadSanitizer build."""
     build_directory = context.asan_build if sanitizer == "asan" else context.tsan_build
+    environment_script = context.conan_environment_script()
+    toolchain = context.conan_toolchain()
     sanitizer_flag = "address" if sanitizer == "asan" else "thread"
     flags = f"-fsanitize={sanitizer_flag} -fno-omit-frame-pointer"
     extra_options = " -DNBN_TSAN_BUILD=ON" if sanitizer == "tsan" else ""
     command = (
         "source "
-        f"{shlex.quote(str(context.debug_build / 'conanbuildenv-debug-x86_64.sh'))}"
+        f"{shlex.quote(str(environment_script))}"
         f" && cmake -S {shlex.quote(str(context.workspace))}"
         f" -B {shlex.quote(str(build_directory))} -G Ninja"
         " -DCMAKE_BUILD_TYPE=Debug"
         " -DCMAKE_TOOLCHAIN_FILE="
-        f"{shlex.quote(str(context.debug_build / 'conan_toolchain.cmake'))}"
+        f"{shlex.quote(str(toolchain))}"
         " -DCMAKE_C_COMPILER=clang-19 -DCMAKE_CXX_COMPILER=clang++-19"
         f" -DCMAKE_C_FLAGS=-fsanitize={sanitizer_flag}"
         f" -DCMAKE_CXX_FLAGS={shlex.quote(flags)}"
@@ -400,16 +454,21 @@ def clean_quality_reports(context: TaskContext) -> int:
     if context.dry_run:
         print(f"[nbn-task] remove {context.quality_reports}", flush=True)
         return 0
+    expected_parent = context.workspace / "doc"
     if (
         context.quality_reports == context.workspace
-        or context.quality_reports.parent != context.workspace
+        or context.quality_reports.parent != expected_parent
     ):
-        raise ValueError("quality report path must be directly below the workspace")
+        raise ValueError("quality report path must be directly below the workspace doc directory")
     if not context.quality_reports.is_relative_to(context.workspace):
         raise ValueError("quality report path must be inside the workspace")
+    history_path = context.quality_reports / "benchmark-history.csv"
+    history_contents = history_path.read_bytes() if history_path.is_file() else None
     if context.quality_reports.exists():
         shutil.rmtree(context.quality_reports)
     context.quality_reports.mkdir(parents=True, exist_ok=True)
+    if history_contents is not None:
+        history_path.write_bytes(history_contents)
     return 0
 
 
@@ -439,7 +498,11 @@ def run_sequence(context: TaskContext, tasks: Sequence[TaskFunction]) -> int:
     """Run all stages and continue after failures."""
     results: list[int] = []
     for task in tasks:
-        result = task(context)
+        try:
+            result = task(context)
+        except (OSError, ValueError) as error:
+            print(f"[nbn-task] error: {error}", file=sys.stderr, flush=True)
+            result = 1
         results.append(result)
         if result != 0:
             print(f"[nbn-task] task failed with exit code {result}", flush=True)

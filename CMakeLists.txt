@@ -10,13 +10,6 @@ if(NOT NBN_PROJECT_VERSION MATCHES "^[0-9]+\\.[0-9]+\\.[0-9]+([.-][0-9A-Za-z.-]+
     message(FATAL_ERROR "Invalid project version in ${NBN_VERSION_FILE}: '${NBN_PROJECT_VERSION}'")
 endif()
 
-if(DEFINED ENV{NBN_CPP_API_CMAKE_DIR} AND EXISTS "$ENV{NBN_CPP_API_CMAKE_DIR}/nbn-init.cmake")
-    set(NBN_CPP_API_CMAKE_DIR "$ENV{NBN_CPP_API_CMAKE_DIR}")
-    include("${NBN_CPP_API_CMAKE_DIR}/nbn-init.cmake")
-elseif(DEFINED ENV{NBN_CPP_API_CMAKE_DIR})
-    message(WARNING "NBN_CPP_API_CMAKE_DIR does not contain nbn-init.cmake; using standalone CMake defaults")
-endif()
-
 # Set coverage defaults before loading nbn-init.cmake. The build-system package
 # selects gcov by default unless it can see that LLVM coverage was requested.
 # Keep ordinary builds free of coverage instrumentation while preserving
@@ -26,6 +19,13 @@ if(NOT DEFINED NBN_LLVM_COVERAGE_ENABLE)
 endif()
 if(NOT DEFINED NBN_GCOV_ENABLE)
     set(NBN_GCOV_ENABLE OFF)
+endif()
+
+if(DEFINED ENV{NBN_CPP_API_CMAKE_DIR} AND EXISTS "$ENV{NBN_CPP_API_CMAKE_DIR}/nbn-init.cmake")
+    set(NBN_CPP_API_CMAKE_DIR "$ENV{NBN_CPP_API_CMAKE_DIR}")
+    include("${NBN_CPP_API_CMAKE_DIR}/nbn-init.cmake")
+elseif(DEFINED ENV{NBN_CPP_API_CMAKE_DIR})
+    message(WARNING "NBN_CPP_API_CMAKE_DIR does not contain nbn-init.cmake; using standalone CMake defaults")
 endif()
 
 project(nbn-cpp-api-core VERSION "${NBN_PROJECT_VERSION}" LANGUAGES CXX)
@@ -48,6 +48,13 @@ option(NBN_CORE_DOXYGEN_ENABLE "Generate nbn::core classes documentation with Do
 option(NBN_ENABLE_WARNINGS "Enable the project's compiler warning policy" ON)
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
+
+add_library(nbn-benchmark INTERFACE)
+set_target_properties(nbn-benchmark PROPERTIES EXPORT_NAME benchmark)
+target_include_directories(nbn-benchmark INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/tests/core/utilities>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+)
 
 # nbn-init.cmake normally defines and configures this option. Keep the same
 # contract in the standalone project so clang-tidy is not lost when the core
@@ -94,7 +101,7 @@ if(NBN_BUILD_TESTS)
 endif()
 
 if(NBN_BUILD_BENCHMARKS)
-    add_subdirectory(benchmark)
+    add_subdirectory(tests/core/utilities)
 endif()
 
 install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/nbn/
@@ -103,6 +110,13 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/src/nbn/
     PATTERN "CMakeFiles" EXCLUDE
 )
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/nbn/config.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/nbn)
+install(FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/tests/core/utilities/benchmark_support.h
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/nbn/benchmark
+)
+install(TARGETS nbn-benchmark
+    EXPORT nbn-cpp-api-core-targets
+)
 
 set(NBN_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/nbn-cpp-api-core")
 configure_package_config_file(

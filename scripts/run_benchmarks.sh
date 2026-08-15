@@ -10,7 +10,7 @@ build_dir=''
 executable=''
 tool='normal'
 output_dir=''
-report_dir='quality-reports/benchmark'
+report_dir='doc/quality-reports/benchmark'
 program_args=()
 while (($# > 0)); do
     case "$1" in
@@ -46,7 +46,7 @@ cat > "$readme_path" <<EOF
 
 The raw output for this run is stored in \`$output_dir\`. This page is the published entry point for the run.
 
-<span style="color:green">✅ PASS</span>
+[PASS]
 EOF
 
 case "$tool" in

@@ -5,8 +5,8 @@ Generated from `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgri
 ## Status
 
 - **Memcheck:** ✅ no invalid-access or definite/indirect-loss findings
-- **Massif:** ✅ reports analyzed
-- **Callgrind:** ✅ reports analyzed
+- **Massif:** ℹ️ no reports found
+- **Callgrind:** ℹ️ no reports found
 
 ## Reports
 
