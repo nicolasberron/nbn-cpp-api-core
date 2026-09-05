@@ -263,6 +263,46 @@ def write(path: Path, content: str) -> None:
     path.write_text(content.rstrip() + "\n", encoding="utf-8")
 
 
+def latest_analysis_log(reports: Path) -> Path | None:
+    """Return the analysis log matching the latest timestamped failure log."""
+    failure_logs = sorted(
+        (reports.parent / "Testing" / "Temporary").glob("LastTestsFailed_*.log")
+    )
+    if not failure_logs:
+        return None
+    suffix = failure_logs[-1].stem.removeprefix("LastTestsFailed_")
+    candidate = failure_logs[-1].with_name(f"LastDynamicAnalysis_{suffix}.log")
+    return candidate if candidate.is_file() else None
+
+
+def failure_details(reports: Path, failed_tests: list[str]) -> list[str]:
+    """Extract the assertion and source location for the stopped CTest test."""
+    if not failed_tests:
+        return []
+    analysis_log = latest_analysis_log(reports)
+    if analysis_log is None:
+        return []
+    text = read_text(analysis_log)
+    details: list[str] = []
+    for test_entry in failed_tests:
+        test_name = test_entry.split(":", 1)[-1].strip()
+        marker = f'"{test_name}"'
+        start = text.rfind(marker, 0, text.find("Test Failed.") + 1)
+        end = text.find("Test Failed.", start)
+        if start < 0 or end < 0:
+            continue
+        block = text[start:end]
+        for line in block.splitlines():
+            stripped = line.strip()
+            if (
+                "FAILED:" in stripped
+                or "Uncaught exception:" in stripped
+                or ("tests/" in stripped and ":" in stripped)
+            ):
+                details.append(f"{test_name}: {stripped}")
+    return details
+
+
 def main() -> int:  # NOSONAR - coordinates independent report-family writers.
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--reports", type=Path, default=Path("build/valgrind-results"), help="Valgrind result directory")
@@ -272,6 +312,21 @@ def main() -> int:  # NOSONAR - coordinates independent report-family writers.
     reports = args.reports.resolve()
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=True)
+    failed_tests = []
+    failure_marker = reports / "failed-tests.txt"
+    if failure_marker.is_file():
+        failed_tests = read_text(failure_marker).splitlines()
+    else:
+        failure_logs = sorted(
+            (reports.parent / "Testing" / "Temporary").glob(
+                "LastTestsFailed_*.log"
+            )
+        )
+        if failure_logs:
+            failed_tests = read_text(failure_logs[-1]).splitlines()
+    failed_test_entries = failed_tests[:]
+    failed_test_details = failure_details(reports, failed_test_entries)
+    failed_tests.extend(failed_test_details)
     memchecks = [parse_memcheck(path) for path in sorted((reports / "memcheck").glob("*.log"))]
     massifs = [parse_massif(path) for path in sorted((reports / "massif").glob("*.out"))]
     callgrinds = [parse_callgrind(path) for path in sorted((reports / "callgrind").glob("*.out"))]
@@ -364,6 +419,16 @@ def main() -> int:  # NOSONAR - coordinates independent report-family writers.
 
     warning_items = [(item, warning, count) for item in memchecks for warning, count in item.warnings.items()]
     reachable_items = [(item, record) for item in memchecks for record in item.reachable_records]
+    if peak:
+        massif_status = "🔵 **Observation**"
+        massif_summary = f"Peak heap: {format_bytes(peak.peak_heap)}"
+    elif failed_tests:
+        massif_status = "🔴 **Not run**"
+        massif_summary = "The Valgrind sequence stopped before Massif because an earlier test failed"
+    else:
+        massif_status = "⚪ **Unavailable**"
+        massif_summary = "No Massif peak was available"
+    massif_action = "Fix the failed test, then rerun Massif" if failed_tests else "Compare against a workload baseline before optimizing"
     recommendations = [
         "# Recommendations",
         "",
@@ -376,7 +441,7 @@ def main() -> int:  # NOSONAR - coordinates independent report-family writers.
         f"| Memcheck | {memcheck_status} | {memcheck_summary} | {'Fix and rerun the affected test(s)' if bad_memchecks else 'Continue monitoring possibly lost and still-reachable memory'} |",
         f"| Still reachable | {'🟡 **Review**' if reachable_items else '🟢 **None found**'} | {len(reachable_items)} allocation record(s) remain reachable at process exit | Confirm ownership and intended lifetime |",
         f"| Valgrind warnings | {'🟡 **Review**' if warning_items else '🟢 **None found**'} | {len(warning_items)} warning occurrence group(s) were recorded | Correct actionable warnings, then rerun Memcheck |",
-        f"| Massif | {'🔵 **Observation**' if peak else '⚪ **Unavailable**'} | {'Peak heap: ' + format_bytes(peak.peak_heap) if peak else 'No Massif peak was available'} | Compare against a workload baseline before optimizing |",
+        f"| Massif | {massif_status} | {massif_summary} | {massif_action} |",
         f"| Callgrind | {'🔵 **Observation**' if callgrinds else '⚪ **Unavailable**'} | {'Instruction hotspots were collected' if callgrinds else 'No Callgrind reports were available'} | Validate candidates with a normal benchmark |",
         "",
     ]
@@ -442,6 +507,16 @@ def main() -> int:  # NOSONAR - coordinates independent report-family writers.
         else:
             recommendations.append("No project-owned hotspot was identified in the parsed top rows. Loader, libc, and standard-library startup rows are instrumentation context rather than actionable application targets.")
         recommendations.append("")
+    if failed_tests:
+        recommendations += [
+            "## Valgrind test failure",
+            "The Valgrind sequence stopped at the first failing test. Massif was not run, so no Massif peak exists for this attempt.",
+            "",
+            *[f"- {line}" for line in failed_tests],
+            "",
+            "**Required next step:** fix or reproduce the failing test, rerun the complete Valgrind sequence, and then review the Massif peak.",
+            "",
+        ]
     recommendations += ["## Repeatable workflow", "", "1. Keep raw reports beside the generated Markdown so every finding remains traceable.", "2. Reproduce one affected executable with the same build and Valgrind options.", "3. Apply one focused change, rerun the relevant profile, and compare the result.", "4. Use normal benchmark timings—not Valgrind instruction counts—for performance decisions.", ""]
     write(output / "recommendations.md", "\n".join(recommendations))
 
@@ -451,8 +526,9 @@ Generated from `{reports}`.
 
 ## Status
 
+- **CTest:** {'❌ failed; see Recommendations' if failed_tests else '✅ passed'}
 - **Memcheck:** {'⚠️ findings require investigation' if bad_memchecks else '✅ no invalid-access or definite/indirect-loss findings'}
-- **Massif:** {'✅ reports analyzed' if massifs else 'ℹ️ no reports found'}
+- **Massif:** {'✅ reports analyzed' if massifs else ('❌ not run because CTest stopped at the first failure' if failed_tests else 'ℹ️ no reports found')}
 - **Callgrind:** {'✅ reports analyzed' if callgrinds else 'ℹ️ no reports found'}
 
 ## Reports
@@ -463,6 +539,13 @@ Generated from `{reports}`.
 - [Callgrind hotspots](callgrind.md)
 - [Recommendations](recommendations.md)
 """)
+    with (output / "README.md").open("a", encoding="utf-8") as report:
+        report.write("\n<a id=\"ctest-failures\"></a>\n\n## CTest failures\n\n")
+        if failed_tests:
+            report.write("\n".join(f"- {line}" for line in failed_tests))
+        else:
+            report.write("No CTest failures were recorded.")
+        report.write("\n")
     print(f"Generated Markdown analysis in {output}")
     return 0
 

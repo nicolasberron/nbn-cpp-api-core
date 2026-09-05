@@ -387,23 +387,35 @@ def generate(reports_dirs: list[Path], output: Path) -> None:
         recommendations.append("- **TSan:** no ThreadSanitizer report was supplied.")
     recommendations += ["", "## Informational", "", "- The consolidated status is based on sanitizer diagnostics, explicit CTest pass/fail markers, and sanitizer build-directory context.", "- CTest's `LastTestsFailed.log` entries are reconciled with explicit `Test Passed.` and `Test Failed.` markers in `LastTest.log` so stale entries do not remain failures.", "- Repeated sanitizer findings are deduplicated separately.", "- No timeout or expected-signal classification was inferred unless it was present in the supplied logs.", "", "## Exact next action", ""]
     if failure_details:
-        recommendations += ["- Investigate every unresolved CTest failure listed below; a failed test without a sanitizer marker is still a failed validation and must not be reported as a clean sanitizer run.", "", "## CTest failures requiring follow-up", ""]
-        finding_tests = {(finding.sanitizer, finding.test) for report in reports for finding in report.findings}
+        recommendations += ["- Resolve each deduplicated sanitizer root cause below; the affected test list is grouped to avoid treating repeated reports as independent defects.", "", "## CTest failures requiring follow-up", ""]
+        findings_by_test: dict[tuple[str, str], tuple[str, str, int | None]] = {}
+        for report in reports:
+            for finding in report.findings:
+                findings_by_test[(finding.sanitizer, finding.test)] = (finding.summary, finding.source, finding.line)
+        failure_groups: dict[tuple[str, tuple[str, str, int | None], Path], list[tuple[str, str]]] = {}
         for report, test, detail in failure_details:
-            classification = "sanitizer finding" if (report.sanitizer, test) in finding_tests else "non-sanitizer test failure"
-            report_link = f"[{report.path.name}]({rel_link(report.path, output)})"
-            if (report.sanitizer, test) in finding_tests:
+            root_key = findings_by_test.get((report.sanitizer, test), ("", "", None))
+            group_key = (report.sanitizer, root_key, report.path)
+            failure_groups.setdefault(group_key, []).append((test, detail))
+        for (sanitizer, root_key, report_path), test_details in failure_groups.items():
+            tests = [test for test, _ in test_details]
+            detail = test_details[0][1]
+            has_finding = bool(root_key[0])
+            classification = "sanitizer finding" if has_finding else "non-sanitizer test failure"
+            test_list = ", ".join(f"`{test}`" for test in tests)
+            report_link = f"[{report_path.name}]({rel_link(report_path, output)})"
+            if has_finding:
                 recommendations.append(
-                    f"- **{classification}** `{test}`: {detail}; raw log: {report_link}; "
-                    f"full failure entry: [failures.md](failures.md)."
+                    f"- **{classification}** ({sanitizer}) affecting {len(tests)} test(s): {test_list}; "
+                    f"{detail}; raw log: {report_link}; full failure entry: [failures.md](failures.md)."
                 )
             else:
                 recommendations.append(
-                    f"- **{classification}** `{test}` ({report.sanitizer}): {detail}. "
+                    f"- **{classification}** ({sanitizer}) affecting {len(tests)} test(s): {test_list}; {detail}. "
                     "**Severity:** unresolved validation failure. **Cause:** CTest recorded "
                     "a failure without a sanitizer diagnostic, so this is a test assertion, "
                     "exit-status, timeout, or infrastructure failure. **How to fix:** rerun "
-                    f"`{test}` with complete CTest output, classify the failure, fix the test "
+                    "the affected tests with complete CTest output, classify the failure, fix the test "
                     "or production defect, and rerun the focused test. The failure list is "
                     f"{report_link}; full failure entry: [failures.md](failures.md)."
                 )

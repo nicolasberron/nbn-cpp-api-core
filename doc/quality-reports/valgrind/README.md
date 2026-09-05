@@ -4,9 +4,10 @@ Generated from `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgri
 
 ## Status
 
+- **CTest:** ✅ passed
 - **Memcheck:** ✅ no invalid-access or definite/indirect-loss findings
-- **Massif:** ℹ️ no reports found
-- **Callgrind:** ℹ️ no reports found
+- **Massif:** ✅ reports analyzed
+- **Callgrind:** ✅ reports analyzed
 
 ## Reports
 
@@ -15,3 +16,9 @@ Generated from `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgri
 - [Massif heap observations](massif.md)
 - [Callgrind hotspots](callgrind.md)
 - [Recommendations](recommendations.md)
+
+<a id="ctest-failures"></a>
+
+## CTest failures
+
+No CTest failures were recorded.

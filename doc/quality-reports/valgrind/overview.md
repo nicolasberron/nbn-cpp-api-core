@@ -2,9 +2,9 @@
 
 | Report family | Reports | Status |
 |---|---:|---|
-| Memcheck | 0 | ✅ no invalid-access or definite/indirect-loss findings |
-| Massif | 0 | ℹ️ no reports |
-| Callgrind | 0 | ℹ️ no reports |
+| Memcheck | 27 | ✅ no invalid-access or definite/indirect-loss findings |
+| Massif | 25 | ✅ collected |
+| Callgrind | 25 | ✅ collected |
 
-- Peak observed heap: **n/a**
-- Aggregate Callgrind instruction count: **0**
+- Peak observed heap: **16.7 MiB** in `test_Serialization` ([massif-3476663.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/massif/massif-3476663.out))
+- Aggregate Callgrind instruction count: **10,181,528,185**

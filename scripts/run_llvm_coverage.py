@@ -208,11 +208,11 @@ def generate_reports(
     if result.returncode != 0:
         raise SystemExit(result.returncode)
 
-    for binary in test_binaries:
-        name = binary.name
-        test_profile = test_profiles.get(name)
-        if test_profile is None:
-            fail(f"No per-test LLVM profile was generated for {name}.")
+    binaries_by_name = {binary.name: binary for binary in test_binaries}
+    for name, test_profile in test_profiles.items():
+        binary = binaries_by_name.get(name)
+        if binary is None:
+            continue
         report = coverage_dir / f"{name}.txt"
         try:
             run_and_tee(
@@ -352,6 +352,7 @@ def main() -> int:
     environment = os.environ.copy()
     environment["LLVM_PROFILE_FILE"] = str(profile_dir / "%p.profraw")
     test_profile_files: dict[str, list[Path]] = {}
+    failed_tests: list[str] = []
     for test_name in test_names:
         profile_pattern = profile_dir / f"{test_name}-%p.profraw"
         environment["LLVM_PROFILE_FILE"] = str(profile_pattern)
@@ -368,10 +369,10 @@ def main() -> int:
             environment=environment,
         )
         if tests.returncode != 0:
-            return tests.returncode
-        test_profile_files[test_name] = sorted(
-            profile_dir.glob(f"{test_name}-*.profraw")
-        )
+            failed_tests.append(test_name)
+        profiles = sorted(profile_dir.glob(f"{test_name}-*.profraw"))
+        if profiles:
+            test_profile_files[test_name] = profiles
 
     test_binaries, objects = find_coverage_inputs(build_dir)
     all_profiles = sorted(
@@ -401,8 +402,19 @@ def main() -> int:
         report_dir,
         test_profiles,
     )
+    if failed_tests:
+        (coverage_dir / "failed-tests.txt").write_text(
+            "\n".join(failed_tests) + "\n", encoding="utf-8"
+        )
     remove_published_html(args.output_dir)
     print(f"LLVM coverage reports generated at {coverage_dir}")
+    if failed_tests:
+        print(
+            "Coverage reports were generated with failed tests: "
+            + ", ".join(failed_tests),
+            file=sys.stderr,
+        )
+        return 1
     return 0
 
 

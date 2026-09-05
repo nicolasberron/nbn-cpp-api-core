@@ -13,6 +13,7 @@ REPORT_README = "README.md"
 PASS_BADGE = '<span style="color:green">✅ PASS</span>'
 ERROR_BADGE = '<span style="color:red">❌ ERROR</span>'
 REVIEW_BADGE = '<span style="color:#9a6700">⚠️ REVIEW</span>'
+CAPTURED_CTEST_OUTPUT = "Captured CTest output:"
 
 
 def read_lines(path: Path) -> list[str]:
@@ -25,8 +26,16 @@ def ctest_status(build_dir: Path) -> tuple[str, list[str]]:
     failed = read_lines(build_dir / "Testing" / "Temporary" / "LastTestsFailed.log")
     last_test = build_dir / "Testing" / "Temporary" / "LastTest.log"
     captured = read_lines(build_dir / "quality-ctest.log")
-    last_test_text = "\n".join(read_lines(last_test))
+    last_test_lines = read_lines(last_test) if last_test.is_file() else captured
+    last_test_text = "\n".join(last_test_lines)
+    if captured and re.search(
+        r"\b[1-9]\d*\s+tests failed\b|Test Failed\.",
+        "\n".join(captured),
+        re.IGNORECASE,
+    ):
+        return "FAILED", [CAPTURED_CTEST_OUTPUT, *captured]
     passed = set(re.findall(r"Test Passed\.\s*\n\"([^\"]+)\" end time", last_test_text))
+    passed.update(re.findall(r"Test\s+#?\d+:\s+(test_[A-Za-z0-9_]+).*Passed", last_test_text))
     failed = [
         entry
         for entry in failed
@@ -35,7 +44,7 @@ def ctest_status(build_dir: Path) -> tuple[str, list[str]]:
     details: list[str] = []
     if failed:
         details.extend([f"CTest failed tests: {', '.join(failed)}", *read_lines(last_test)])
-        return "FAILED", [*details, "Captured CTest output:", *captured]
+        return "FAILED", [*details, CAPTURED_CTEST_OUTPUT, *captured]
     if last_test.is_file():
         if re.search(r"\b[1-9]\d*\s+tests failed\b|Test Failed\.", last_test_text, re.IGNORECASE):
             return "FAILED", ["Latest CTest output:", *read_lines(last_test)]
@@ -51,9 +60,18 @@ def ctest_status(build_dir: Path) -> tuple[str, list[str]]:
         or "errors while running ctest" in line.lower()
         for line in captured
     ):
-        return "FAILED", ["Captured CTest output:", *captured]
+        return "FAILED", [CAPTURED_CTEST_OUTPUT, *captured]
     if last_test.is_file():
         return "PASSED", captured
+    if captured:
+        if re.search(r"\b[1-9]\d*\s+tests failed\b|Test Failed\.", last_test_text, re.IGNORECASE):
+            return "FAILED", [CAPTURED_CTEST_OUTPUT, *captured]
+        if (
+            "Test Passed." in last_test_text
+            or re.search(r"\b\d+\/\d+\s+Test\s+#?\d+:.*Passed", last_test_text)
+            or re.search(r"\b0\s+tests failed\b", last_test_text, re.IGNORECASE)
+        ):
+            return "PASSED", []
     return "NOT RUN", [f"CTest log not found: {last_test}", *captured]
 
 
@@ -155,6 +173,15 @@ def main() -> int:
         coverage, ["production.txt", "metrics.txt"]
     )
     metrics = read_lines(coverage / "metrics.txt")
+    failed_coverage_tests = read_lines(coverage / "failed-tests.txt")
+    if failed_coverage_tests:
+        coverage_details.extend(
+            [
+                "Coverage tests failed:",
+                *failed_coverage_tests,
+            ]
+        )
+        coverage_status = "FAILED"
     if metrics:
         coverage_details.extend(["Coverage metrics output:", *metrics])
         if any("coverage: FAIL" in line or "coverage metrics error:" in line for line in metrics):
@@ -162,6 +189,20 @@ def main() -> int:
     valgrind_status, valgrind_details = report_status(
         quality / "valgrind", [REPORT_README]
     )
+    valgrind_failures = read_lines(
+        build_root / "linux-clang19-debug" / "valgrind-results" / "failed-tests.txt"
+    )
+    if not valgrind_failures:
+        failure_logs = sorted(
+            (build_root / "linux-clang19-debug" / "Testing" / "Temporary").glob(
+                "LastTestsFailed_*.log"
+            )
+        )
+        if failure_logs:
+            valgrind_failures = read_lines(failure_logs[-1])
+    if valgrind_failures:
+        valgrind_status = "FAILED"
+        valgrind_details.extend(["Valgrind tests failed:", *valgrind_failures])
     benchmark_status, benchmark_details = report_status(
         quality / "benchmark", [REPORT_README]
     )

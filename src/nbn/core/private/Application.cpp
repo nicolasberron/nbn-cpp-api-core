@@ -129,7 +129,11 @@ Application::Application()
         // SIGKILL and SIGSTOP cannot be caught or overridden by POSIX. Avoid
         // asking the runtime to install handlers for them; Valgrind reports
         // those attempts as ignored sigaction requests.
-        if (!isCatchableSignal(i)) {
+        // SIGCHLD is generated whenever a child process exits. It is not an
+        // application interruption signal, and routing it through the normal
+        // logging/dispatch path would call non-async-signal-safe code while
+        // another thread may be inside libc.
+        if (!isCatchableSignal(i) || i == SIGCHLD) {
             continue;
         }
         std::signal(i, isCrashSignal(i) ? hardwaretSignalHandler : signalInterruptHandler);

@@ -7,14 +7,64 @@
 | Area | Status | What it means | Next action |
 |---|---|---|---|
 | Memcheck | 🟢 **Clear** | No invalid accesses or definite/indirect leaks were detected | Continue monitoring possibly lost and still-reachable memory |
-| Still reachable | 🟢 **None found** | 0 allocation record(s) remain reachable at process exit | Confirm ownership and intended lifetime |
+| Still reachable | 🟡 **Review** | 63 allocation record(s) remain reachable at process exit | Confirm ownership and intended lifetime |
 | Valgrind warnings | 🟢 **None found** | 0 warning occurrence group(s) were recorded | Correct actionable warnings, then rerun Memcheck |
-| Massif | ⚪ **Unavailable** | No Massif peak was available | Compare against a workload baseline before optimizing |
-| Callgrind | ⚪ **Unavailable** | No Callgrind reports were available | Validate candidates with a normal benchmark |
+| Massif | 🔵 **Observation** | Peak heap: 16.7 MiB | Compare against a workload baseline before optimizing |
+| Callgrind | 🔵 **Observation** | Instruction hotspots were collected | Validate candidates with a normal benchmark |
 
 ## 1. Memcheck status: clear
 
 No invalid-access errors or definite/indirect leaks were detected in the analyzed logs. Review `possibly lost` and `still reachable` allocations only if they grow across repeated runs or violate the intended lifetime model.
+
+## 2. Still-reachable allocations
+
+63 record(s) were found in 3 report(s). `still reachable` means Valgrind can still find a pointer at process exit; it is not proof of a leak.
+
+| Classification | Records | Interpretation | Action |
+|---|---:|---|---|
+| 🟢 Expected process lifetime | 63 | Intentional exit tests: `test_ApplicationSegfault`, `test_ApplicationUncaughtException`, `test_CommandLineParserHelp` | Do not add artificial production cleanup; preserve the exit semantics |
+
+<details>
+<summary>Representative records and raw reports</summary>
+
+| Test | Allocation record | Report |
+|---|---|---|
+| `test_ApplicationUncaughtException` | 29 bytes in 1 block(s); first project frame `src/nbn/core/utils.cpp:86` | [memcheck-3469651.log](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/memcheck/memcheck-3469651.log) |
+| `test_ApplicationUncaughtException` | 32 bytes in 1 block(s); first project frame `src/nbn/core/../../nbn/core/detail/Signal.h:59` | [memcheck-3469651.log](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/memcheck/memcheck-3469651.log) |
+| `test_ApplicationUncaughtException` | 32 bytes in 1 block(s); first project frame `src/nbn/core/detail/Signal.h:118` | [memcheck-3469651.log](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/memcheck/memcheck-3469651.log) |
+| `test_ApplicationUncaughtException` | 37 bytes in 1 block(s); first project frame `src/nbn/core/utils.cpp:146` | [memcheck-3469651.log](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/memcheck/memcheck-3469651.log) |
+| `test_ApplicationUncaughtException` | 37 bytes in 1 block(s); first project frame `src/nbn/core/utils.cpp:146` | [memcheck-3469651.log](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/memcheck/memcheck-3469651.log) |
+| `test_ApplicationUncaughtException` | 40 bytes in 1 block(s); first project frame `src/nbn/core/detail/ObjectFeature.cpp:9` | [memcheck-3469651.log](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/memcheck/memcheck-3469651.log) |
+| `test_ApplicationUncaughtException` | 40 bytes in 1 block(s); first project frame `src/nbn/core/detail/ObjectFeature.cpp:9` | [memcheck-3469651.log](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/memcheck/memcheck-3469651.log) |
+| `test_ApplicationUncaughtException` | 40 bytes in 1 block(s); first project frame `src/nbn/core/detail/ObjectFeature.cpp:9` | [memcheck-3469651.log](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/memcheck/memcheck-3469651.log) |
+| `test_ApplicationUncaughtException` | 48 bytes in 1 block(s); first project frame `tests/nbn/core/ApplicationUncaughtException.cpp:12` | [memcheck-3469651.log](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/memcheck/memcheck-3469651.log) |
+| `test_ApplicationUncaughtException` | 60 bytes in 1 block(s); first project frame `src/nbn/core/UnitTests.cpp:51` | [memcheck-3469651.log](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/memcheck/memcheck-3469651.log) |
+
+All affected reports: [memcheck-3469651.log](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/memcheck/memcheck-3469651.log), [memcheck-3474712.log](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/memcheck/memcheck-3474712.log), [memcheck-3474777.log](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/memcheck/memcheck-3474777.log).
+
+</details>
+
+## 4. Massif peak
+
+| Test | Peak heap | Report |
+|---|---:|---|
+| `test_Serialization` | **16.7 MiB** | [massif-3476663.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/massif/massif-3476663.out) |
+
+This is a measured peak, not proof of a leak. Inspect the peak snapshot’s allocation tree, identify the owning container or buffer, and compare the same test against a baseline before changing allocation behavior.
+
+## 5. Callgrind hotspots
+
+Instruction counts locate hot functions but are not wall-clock timings. Validate any optimization with a normal benchmark.
+
+| Instructions | Project-owned hotspot |
+|---:|---|
+| 6,137,165,360 | `/home/nbn/src/github.com/nicolasberron/nbn-cpp-api-core/src/nbn/core/private/Thread.cpp:nbn::core::Thread::Impl::run()::{lambda()#2}::operator()()` |
+| 4,704,448,956 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2 [/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_Serialization]` |
+| 3,598,741,051 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2 [/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_UnitTests]` |
+| 2,710,864,209 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2 [/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_FiniteStateMachine]` |
+| 2,575,327,393 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2 [/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_utils]` |
+
+**Required next step:** add a focused benchmark and compare wall-clock timings outside Valgrind before changing code.
 
 ## Repeatable workflow
 

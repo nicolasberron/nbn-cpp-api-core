@@ -126,15 +126,16 @@ void test_application_threads_manager_repeated_shutdown_stops_async_workers() {
             nbn::core::Task::RunMode::Loop);
         auto threadForVerification = thread;
         manager.submit(std::move(thread));
-        manager.run();
         const auto deadline = std::chrono::steady_clock::now() + kShutdownStressTimeout;
         while (!started.load(std::memory_order_acquire) && std::chrono::steady_clock::now() < deadline) {
             std::this_thread::yield();
         }
         allRoundsPassed = started.load(std::memory_order_acquire) && allRoundsPassed;
+        manager.run();
         manager.stop();
         manager.wait();
-        allRoundsPassed = allRoundsPassed && threadForVerification->isStopRequested() && !threadForVerification->isRunning();
+        const auto workerStopped = threadForVerification->isStopRequested() && !threadForVerification->isRunning();
+        allRoundsPassed = allRoundsPassed && workerStopped;
     }
     nbn::core::unit_tests::isTrue("Repeated manager shutdown should stop every async worker", allRoundsPassed);
 }

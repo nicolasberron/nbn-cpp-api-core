@@ -14,11 +14,4 @@
 
 ## Exact next action
 
-## Reconciled CTest entries
-
-The following entries were present in `LastTestsFailed.log` but had an explicit `Test Passed.` marker in `LastTest.log`. They are reported here for traceability and are not counted as unresolved failures.
-
-- **stale failure entry** `test_ApplicationThreadsManager`: explicit CTest pass reconciled the failure; failure list: [LastTestsFailed.log](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-asan/Testing/Temporary/LastTestsFailed.log); full failure entry: [failures.md](failures.md).
-- **stale failure entry** `test_Logger`: explicit CTest pass reconciled the failure; failure list: [LastTestsFailed.log](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-tsan/Testing/Temporary/LastTestsFailed.log); full failure entry: [failures.md](failures.md).
-
 No sanitizer findings or unresolved test failures were detected in the analyzed logs.

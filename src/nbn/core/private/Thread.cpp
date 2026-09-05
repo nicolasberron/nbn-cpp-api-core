@@ -120,11 +120,8 @@ class Thread::Impl {
 #if defined(PLATFORMIO_BUILD)
         if (isRunning()) {
 #else
-        bool hasThread{false};
-        {
-            std::lock_guard<std::mutex> lock(m_threadMutex);
-            hasThread = m_thread.joinable();
-        }
+        std::lock_guard<std::mutex> threadLock(m_threadMutex);
+        const bool hasThread{m_thread.joinable()};
         if (isRunning() || hasThread) {
 #endif
             {
@@ -148,7 +145,6 @@ class Thread::Impl {
             }
 #else
             if (currentThreadImpl() != this) {
-                std::lock_guard<std::mutex> lock(m_threadMutex);
                 if (m_thread.joinable()) {
                     m_thread.join();
                     emitStoppedOnce();
