@@ -94,6 +94,12 @@
             "type": "shell",
             "command": "python scripts/run_nbn_task.py coverage-metrics",
             "dependsOn": "nbn: Coverage",
+            "options": {
+                "cwd": "${workspaceFolder}",
+                "env": {
+                    "NBN_COPILOT_WORKSPACE": "${workspaceFolder:nbn-main-vscode-workspace}"
+                }
+            },
             "problemMatcher": [],
             "continueOnError": true,
             "group": "build",
@@ -215,6 +221,12 @@
             "label": "nbn: Valgrind All",
             "type": "shell",
             "command": "python scripts/run_nbn_task.py valgrind-all",
+            "options": {
+                "cwd": "${workspaceFolder}",
+                "env": {
+                    "NBN_COPILOT_WORKSPACE": "${workspaceFolder:nbn-main-vscode-workspace}"
+                }
+            },
             "problemMatcher": [],
             "continueOnError": true,
             "group": "test",
@@ -230,6 +242,12 @@
             "type": "shell",
             "command": "python scripts/run_nbn_task.py valgrind-report",
             "dependsOn": "nbn: Valgrind All",
+            "options": {
+                "cwd": "${workspaceFolder}",
+                "env": {
+                    "NBN_COPILOT_WORKSPACE": "${workspaceFolder:nbn-main-vscode-workspace}"
+                }
+            },
             "problemMatcher": [],
             "continueOnError": true,
             "group": "test",
@@ -244,6 +262,12 @@
             "label": "nbn: Coverage All",
             "type": "shell",
             "command": "python scripts/run_nbn_task.py coverage-all",
+            "options": {
+                "cwd": "${workspaceFolder}",
+                "env": {
+                    "NBN_COPILOT_WORKSPACE": "${workspaceFolder:nbn-main-vscode-workspace}"
+                }
+            },
             "problemMatcher": [],
             "group": "test",
             "presentation": {
@@ -345,6 +369,12 @@
             "label": "nbn: Sanitizers All",
             "type": "shell",
             "command": "python scripts/run_nbn_task.py sanitizers-all",
+            "options": {
+                "cwd": "${workspaceFolder}",
+                "env": {
+                    "NBN_COPILOT_WORKSPACE": "${workspaceFolder:nbn-main-vscode-workspace}"
+                }
+            },
             "problemMatcher": [],
             "continueOnError": true,
             "group": "test",
@@ -360,6 +390,12 @@
             "type": "shell",
             "command": "python scripts/run_nbn_task.py sanitizer-report",
             "dependsOn": "nbn: Sanitizers All",
+            "options": {
+                "cwd": "${workspaceFolder}",
+                "env": {
+                    "NBN_COPILOT_WORKSPACE": "${workspaceFolder:nbn-main-vscode-workspace}"
+                }
+            },
             "problemMatcher": [],
             "continueOnError": true,
             "group": "test",
@@ -375,7 +411,10 @@
             "type": "shell",
             "command": "python scripts/run_nbn_task.py quality-reports-clean",
             "options": {
-                "cwd": "${workspaceFolder}"
+                "cwd": "${workspaceFolder}",
+                "env": {
+                    "NBN_COPILOT_WORKSPACE": "${workspaceFolder:nbn-main-vscode-workspace}"
+                }
             },
             "problemMatcher": [],
             "group": "test",
@@ -390,11 +429,14 @@
             "label": "nbn: Quality Reports",
             "type": "shell",
             "command": "python scripts/run_nbn_task.py quality-reports",
+            "options": {
+                "cwd": "${workspaceFolder}",
+                "env": {
+                    "NBN_COPILOT_WORKSPACE": "${workspaceFolder:nbn-main-vscode-workspace}"
+                }
+            },
             "problemMatcher": [],
             "continueOnError": true,
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
             "group": "test",
             "presentation": {
                 "echo": true,

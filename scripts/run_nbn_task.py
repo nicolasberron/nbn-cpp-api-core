@@ -55,6 +55,17 @@ class TaskContext:
     def quality_reports(self) -> Path:
         return self.workspace / "doc" / QUALITY_REPORTS_NAME
 
+    @property
+    def copilot_workspace(self) -> Path:
+        """Return the workspace containing shared Copilot skills."""
+        configured_workspace = os.environ.get("NBN_COPILOT_WORKSPACE")
+        if configured_workspace:
+            return Path(configured_workspace).expanduser().resolve()
+        sibling_workspace = self.workspace.parent / "nbn-main-vscode-workspace"
+        if (sibling_workspace / ".github/skills").is_dir():
+            return sibling_workspace
+        return self.workspace
+
     def command_environment(self) -> dict[str, str]:
         """Return a copy of the process environment for a child command."""
         return os.environ.copy()
@@ -377,7 +388,7 @@ def valgrind_report(context: TaskContext) -> int:
         return 1
     return run_python(
         context,
-        context.workspace
+        context.copilot_workspace
         / ".github/skills/nbn-analyze-valgrind-reports/scripts/analyze_valgrind.py",
         [
             "--reports",
@@ -504,7 +515,7 @@ def sanitizer_report(context: TaskContext) -> int:
             report_directory.mkdir(parents=True, exist_ok=True)
         report_directories.append(report_directory)
     analyzer = (
-        context.workspace
+        context.copilot_workspace
         / ".github/skills/nbn-analyze-llvm-sanitizer-reports/scripts"
         / "analyze_llvm_sanitizers.py"
     )

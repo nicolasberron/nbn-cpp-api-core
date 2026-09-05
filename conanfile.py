@@ -28,8 +28,6 @@ class NbnCppApiCoreConan(ConanFile):
         "src/*",
         "tests/*",
         "scripts/*",
-        ".vscode/*",
-        ".github/*",
         "README.md",
         "!**/__pycache__/*",
         "!**/*.pyc",
@@ -70,22 +68,6 @@ class NbnCppApiCoreConan(ConanFile):
             dst=os.path.join(package_root, "scripts"),
             excludes=GENERATED_SCRIPT_EXCLUDES,
         )
-        # Package downstream VS Code and AgentX assets separately from C++ files.
-        copy(
-            self,
-            "*",
-            src=os.path.join(source_root, ".vscode"),
-            dst=os.path.join(package_root, "vscode", ".vscode"),
-            excludes=GENERATED_SCRIPT_EXCLUDES,
-        )
-        copy(
-            self,
-            "*",
-            src=os.path.join(source_root, ".github"),
-            dst=os.path.join(package_root, "vscode", ".github"),
-            excludes=GENERATED_SCRIPT_EXCLUDES,
-        )
-
 
     def package_info(self):
         core = self.cpp_info.components["core"]
