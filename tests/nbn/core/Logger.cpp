@@ -23,6 +23,7 @@ struct LoggerIdleState {
     std::mutex m_mutex;
     bool m_reached{false};
     bool m_release{false};
+    unsigned int m_activeHooks{0};
     nbn::core::Logger* m_logger{nullptr};
 };
 
@@ -59,6 +60,7 @@ void pauseLoggerAtStopCheck() {
     auto& state = loggerIdleState();
     {
         std::lock_guard lock{state.m_mutex};
+        ++state.m_activeHooks;
         state.m_reached = true;
         state.m_condition.notify_one();
     }
@@ -66,6 +68,8 @@ void pauseLoggerAtStopCheck() {
 
     std::unique_lock lock{state.m_mutex};
     state.m_condition.wait(lock, [&state] { return state.m_release; });
+    --state.m_activeHooks;
+    state.m_condition.notify_all();
 }
 
 }  // namespace
@@ -163,6 +167,7 @@ void test_logger_worker_stop_request_does_not_self_join() {
         std::lock_guard lock{state.m_mutex};
         state.m_reached = false;
         state.m_release = false;
+        state.m_activeHooks = 0;
         state.m_logger = &logger;
     }
     nbn::core::detail::logger_test::setHook(&pauseLoggerAtStopCheck);
@@ -181,6 +186,10 @@ void test_logger_worker_stop_request_does_not_self_join() {
     state.m_condition.notify_one();
     logger.stop();
     nbn::core::detail::logger_test::setHook(nullptr);
+    {
+        std::unique_lock lock{state.m_mutex};
+        state.m_condition.wait(lock, [&state] { return state.m_activeHooks == 0; });
+    }
     nbn::core::unit_tests::isTrue("Logger worker should reach the stop-check hook", reached);
 }
 

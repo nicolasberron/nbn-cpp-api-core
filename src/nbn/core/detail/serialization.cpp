@@ -204,7 +204,6 @@ auto hexValue(char c) -> uint32_t {
         return HEX_ALPHA_OFFSET + static_cast<uint32_t>(c - 'A');
     }
     nbn::log::fatal(std::format("Invalid JSON string: Invalid unicode escape hex character '{}'.", c));
-    return 0;
 }
 
 auto parseHex4(std::string_view json, size_t start) -> uint32_t {
@@ -543,14 +542,11 @@ auto skipString(std::string_view json, size_t& pos) -> void {
                 } else if (codepoint >= LOW_SURROGATE_START && codepoint <= LOW_SURROGATE_END) {
                     nbn::log::fatal("Invalid JSON string: Unexpected low surrogate without preceding high surrogate.");
                 }
-                // fatal() is noreturn; reaching this break would require continuing after a fatal parse error.
-                // LLVM-COV EXCL START
                 break;
             }
             default:
                 nbn::log::fatal(std::format(R"(Invalid JSON string: Expected one of '{}' at index {} and got '{}')",
                                             R"([\"\/bfnrtu])", pos, json[pos]));
-                // LLVM-COV EXCL STOP
         }
     }
 
@@ -1092,8 +1088,7 @@ auto findDeserializerBySize(const T& deserializers, size_t size) -> deserializer
             return candidate;
         }
     }
-    // fatal() is noreturn; this return exists only to satisfy the compiler's control-flow analysis.
-    return {};  // LLVM-COV EXCL_LINE
+    return {};
 }
 
 namespace integer {
@@ -1242,8 +1237,6 @@ auto deserialize(std::string_view numStr) -> serializable_variants_t {
     }
 
     nbn::log::fatal(std::format("Integer value out of range: '{}'.", numStr));
-    // fatal() is noreturn; this return exists only to satisfy the compiler's control-flow analysis.
-    return {};  // LLVM-COV EXCL_LINE
 }
 }  // namespace arithmetic_deserializers
 
@@ -1291,7 +1284,6 @@ auto deserialize<serializable_variants_t>(std::string_view str) -> serializable_
             }
     }
     nbn::log::fatal(std::format("Invalid JSON string: Unexpected character '{}'.", str[pos]));
-    return {};
 }
 
 }  // namespace value

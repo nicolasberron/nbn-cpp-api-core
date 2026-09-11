@@ -6,5 +6,5 @@
 | Massif | 25 | ✅ collected |
 | Callgrind | 25 | ✅ collected |
 
-- Peak observed heap: **16.7 MiB** in `test_Serialization` ([massif-3476663.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/massif/massif-3476663.out))
-- Aggregate Callgrind instruction count: **10,181,528,185**
+- Peak observed heap: **16.7 MiB** in `test_Serialization` ([massif-729332.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/massif/massif-729332.out))
+- Aggregate Callgrind instruction count: **11,144,874,587**

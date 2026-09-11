@@ -193,7 +193,6 @@ bool fromString<bool>(std::string_view str) {
         return false;
     }
     nbn::log::fatal(std::format("Cannot convert string '{}' to bool", str));
-    return false;
 }
 
 template <>

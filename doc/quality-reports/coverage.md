@@ -48,7 +48,7 @@ lines: 100.00%
 | `private/Application.cpp` | 100.00% | 100.00% | 100.00% | 95.24% |
 | `private/Application.h` | 100.00% | 100.00% | 100.00% | - |
 | `private/ApplicationMainThread.cpp` | 100.00% | 100.00% | 100.00% | 90.00% |
-| `private/ApplicationThreadsManager.cpp` | 100.00% | 100.00% | 100.00% | 93.75% |
+| `private/ApplicationThreadsManager.cpp` | 100.00% | 100.00% | 100.00% | 90.62% |
 | `private/Object.cpp` | 100.00% | 100.00% | 100.00% | 85.42% |
 | `private/Object.h` | 100.00% | 100.00% | 100.00% | - |
 | `private/Task.h` | 100.00% | 100.00% | 100.00% | 100.00% |

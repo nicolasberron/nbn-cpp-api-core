@@ -5,7 +5,9 @@
             "label": "nbn: CMake Configure (Conan Debug)",
             "type": "shell",
             "command": "python scripts/run_nbn_task.py cmake-configure-debug",
-            "problemMatcher": ["$gcc"],
+            "problemMatcher": [
+                "$gcc"
+            ],
             "group": "build",
             "presentation": {
                 "echo": true,
@@ -19,7 +21,9 @@
             "type": "shell",
             "command": "python scripts/run_nbn_task.py cmake-build-debug",
             "dependsOn": "nbn: CMake Configure (Conan Debug)",
-            "problemMatcher": ["$gcc"],
+            "problemMatcher": [
+                "$gcc"
+            ],
             "group": "build",
             "presentation": {
                 "echo": true,
@@ -64,7 +68,9 @@
             "label": "nbn: Coverage Configure",
             "type": "shell",
             "command": "python scripts/run_nbn_task.py coverage-configure",
-            "problemMatcher": ["$gcc"],
+            "problemMatcher": [
+                "$gcc"
+            ],
             "continueOnError": true,
             "group": "build",
             "presentation": {
@@ -79,7 +85,9 @@
             "type": "shell",
             "command": "python scripts/run_nbn_task.py coverage-build",
             "dependsOn": "nbn: Coverage Configure",
-            "problemMatcher": ["$gcc"],
+            "problemMatcher": [
+                "$gcc"
+            ],
             "continueOnError": true,
             "group": "build",
             "presentation": {
@@ -138,7 +146,9 @@
             "options": {
                 "cwd": "${workspaceFolder}"
             },
-            "problemMatcher": ["$gcc"],
+            "problemMatcher": [
+                "$gcc"
+            ],
             "continueOnError": true,
             "group": "build",
             "presentation": {
@@ -156,7 +166,9 @@
             "options": {
                 "cwd": "${workspaceFolder}"
             },
-            "problemMatcher": ["$gcc"],
+            "problemMatcher": [
+                "$gcc"
+            ],
             "continueOnError": true,
             "group": "build",
             "presentation": {
@@ -281,7 +293,9 @@
             "label": "nbn: AddressSanitizer Configure",
             "type": "shell",
             "command": "python scripts/run_nbn_task.py asan-configure",
-            "problemMatcher": ["$gcc"],
+            "problemMatcher": [
+                "$gcc"
+            ],
             "continueOnError": true,
             "group": "build",
             "presentation": {
@@ -296,7 +310,9 @@
             "type": "shell",
             "command": "python scripts/run_nbn_task.py asan-build",
             "dependsOn": "nbn: AddressSanitizer Configure",
-            "problemMatcher": ["$gcc"],
+            "problemMatcher": [
+                "$gcc"
+            ],
             "continueOnError": true,
             "group": "build",
             "presentation": {
@@ -325,7 +341,9 @@
             "label": "nbn: ThreadSanitizer Configure",
             "type": "shell",
             "command": "python scripts/run_nbn_task.py tsan-configure",
-            "problemMatcher": ["$gcc"],
+            "problemMatcher": [
+                "$gcc"
+            ],
             "continueOnError": true,
             "group": "build",
             "presentation": {
@@ -340,7 +358,9 @@
             "type": "shell",
             "command": "python scripts/run_nbn_task.py tsan-build",
             "dependsOn": "nbn: ThreadSanitizer Configure",
-            "problemMatcher": ["$gcc"],
+            "problemMatcher": [
+                "$gcc"
+            ],
             "continueOnError": true,
             "group": "build",
             "presentation": {

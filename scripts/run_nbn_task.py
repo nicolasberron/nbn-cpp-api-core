@@ -23,6 +23,7 @@ DEBUG_BUILD_NAME = "linux-clang19-debug"
 ASAN_BUILD_NAME = "linux-clang19-asan"
 TSAN_BUILD_NAME = "linux-clang19-tsan"
 QUALITY_REPORTS_NAME = "quality-reports"
+MAX_BUILD_JOBS = os.cpu_count() or 1
 
 
 @dataclass(frozen=True)
@@ -127,6 +128,14 @@ def shell_command(command: str) -> list[str]:
     return ["bash", "-o", "pipefail", "-c", command]
 
 
+def cmake_build_command(build_directory: Path, target: str | None = None) -> list[str]:
+    """Build with all CPUs available to the host."""
+    command = ["cmake", "--build", str(build_directory), "--parallel", str(MAX_BUILD_JOBS)]
+    if target is not None:
+        command.extend(["--target", target])
+    return command
+
+
 def run_python(context: TaskContext, script: Path, arguments: Sequence[str]) -> int:
     """Run a repository Python script with the current interpreter."""
     return run_command(context, [sys.executable, str(script), *arguments])
@@ -212,7 +221,7 @@ def build_debug(context: TaskContext) -> int:
     """Build the standard Conan debug preset."""
     if require_build_tree(context, context.debug_build, "debug build", require_ninja=True):
         return 1
-    return run_command(context, ["cmake", "--build", str(context.debug_build)])
+    return run_command(context, cmake_build_command(context.debug_build))
 
 
 def conan_install(context: TaskContext) -> int:
@@ -267,7 +276,7 @@ def build_coverage(context: TaskContext) -> int:
         return 1
     return run_command(
         context,
-        ["cmake", "--build", str(context.coverage_build)],
+        cmake_build_command(context.coverage_build),
         cwd=context.workspace,
     )
 
@@ -343,14 +352,7 @@ def build_valgrind(context: TaskContext) -> int:
     """Build the default target containing the UI tests used by Valgrind."""
     if require_build_tree(context, context.debug_build, "Valgrind build", require_ninja=True):
         return 1
-    return run_command(
-        context,
-        [
-            "cmake",
-            "--build",
-            str(context.debug_build),
-        ],
-    )
+    return run_command(context, cmake_build_command(context.debug_build))
 
 
 def valgrind_tool(context: TaskContext, tool: str) -> int:
@@ -418,7 +420,7 @@ def benchmark_all(context: TaskContext) -> int:
         return result
     result = run_command(
         context,
-        ["cmake", "--build", str(context.debug_build), "--target", BENCHMARK_TARGET],
+        cmake_build_command(context.debug_build, BENCHMARK_TARGET),
     )
     if result != 0:
         return result
@@ -476,7 +478,7 @@ def build_sanitizer(context: TaskContext, sanitizer: str) -> int:
         return 1
     return run_command(
         context,
-        ["cmake", "--build", str(build_directory)],
+        cmake_build_command(build_directory),
     )
 
 
@@ -588,6 +590,7 @@ def run_sequence(context: TaskContext, tasks: Sequence[TaskFunction]) -> int:
 
 def coverage_all(context: TaskContext) -> int:
     """Run coverage and publish metrics even when collection reports failures."""
+    reset_build_directory(context.coverage_build)
     result = run_sequence(context, [configure_coverage, build_coverage])
     if result != 0:
         return result

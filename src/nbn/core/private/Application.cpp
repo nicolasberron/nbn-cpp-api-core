@@ -79,34 +79,8 @@ auto c_terminateHandler() noexcept -> void {
 // Note: if the crash occurred while the logger mutex was held, this will deadlock.
 auto hardwaretSignalHandler(int signum) noexcept -> void {
     nbn::log::debug(std::format("Signal {} ({}) received. Entering hardware-fault handler.", signum, ::strsignal(signum)));
-#if !defined(NBN_LLVM_COVERAGE_ENABLE)
-    if (!isCrashSignal(signum)) {
-        // This handler must not consume signals it does not own. Restore the
-        // default action and re-emit the signal so the operating system can
-        // handle it normally.
-        // Re-raising a non-crash signal terminates the test process by design; it cannot be exercised safely in-process.
-        // LLVM-COV EXCL START
-        nbn::log::info(
-            std::format("Signal {} ({}) received. Restoring default handler and re-raising.", signum, ::strsignal(signum)));
-        std::signal(signum, SIG_DFL);
-        std::raise(signum);
-        // Capture the signal again in case the default handler returns (e.g., on Windows).
-        std::signal(signum, hardwaretSignalHandler);
-        // LLVM-COV EXCL STOP
-        return;
-    }
-#endif
-
-// Guard against re-entrant crashes (e.g. a second fault during log or emit).
-#if !defined(NBN_LLVM_COVERAGE_ENABLE)
-    static std::atomic<bool> sCrashing{false};
-    if (sCrashing.exchange(true)) {
-        // This branch requires a second hardware fault while handling the first and intentionally exits immediately.
-        _exit(2);  // LLVM-COV EXCL_LINE
-    }
-#endif
     nbn::log::error(
-        stackTraceMessage(std::format("Fatal: signal {} ({}) received — exiting with code 1", signum, ::strsignal(signum))));
+        stackTraceMessage(std::format("Fatal: signal {} ({}) received - exiting with code 1", signum, ::strsignal(signum))));
     nbn::core::Application::signalAboutToQuit()->emit();
 // Do not enter the normal application shutdown path from a signal handler. The
 // handler runs on the faulting thread, and stopping/joining the thread manager
@@ -140,10 +114,7 @@ Application::Application()
     }
 #endif
     std::set_terminate(c_terminateHandler);
-    setTerminateHandler([this]() noexcept {
-        // Calling the process terminate handler would end the test process before coverage data can be collected.
-        quit(1);  // LLVM-COV EXCL_LINE
-    });
+    setTerminateHandler([this]() noexcept { quit(1); });
 }
 
 Application::~Application() {

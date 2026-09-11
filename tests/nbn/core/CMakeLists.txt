@@ -56,6 +56,12 @@ add_executable(test_CommandLineParserHelp CommandLineParserHelp.cpp)
 target_link_libraries(test_CommandLineParserHelp PRIVATE nbn-core ${PTHREAD_LIB} atomic)
 add_test(NAME test_CommandLineParserHelp COMMAND test_CommandLineParserHelp)
 
+# Fatal logging must preserve its throwing contract before Application::init()
+# creates the logger used by the regular unit-test runner.
+add_executable(test_ApplicationFatalBeforeInit ApplicationFatalBeforeInit.cpp)
+target_link_libraries(test_ApplicationFatalBeforeInit PRIVATE nbn-core ${PTHREAD_LIB} atomic)
+add_test(NAME test_ApplicationFatalBeforeInit COMMAND test_ApplicationFatalBeforeInit)
+
 # The crash test must run before Application::init() starts Logger's worker
 # thread. Otherwise a forked crash child inherits a live std::jthread control
 # block that cannot be reclaimed on the _exit() signal-handler path.

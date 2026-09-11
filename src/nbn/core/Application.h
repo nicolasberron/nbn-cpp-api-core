@@ -95,7 +95,8 @@ nbn_export_core void error(std::string_view message, const std::source_location&
 /**
  * @brief Writes a fatal-level message.
  */
-nbn_export_core void fatal(std::string_view message, const std::source_location& location = std::source_location::current());
+[[noreturn]] nbn_export_core void fatal(std::string_view message,
+                                        const std::source_location& location = std::source_location::current());
 
 nbn_export_core void debug_if(bool isCondition,
                               std::string_view message,

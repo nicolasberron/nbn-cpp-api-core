@@ -140,8 +140,8 @@ void notEqual(std::string_view message,
     if (detail::areEqual(expected, actual)) {
         nbn::log::fatal(
             std::format("FAILED: {}. Expected {} to be different from {}.", message, toTestString(expected), toTestString(actual)));
-    }  // LCOV EXCL_LINE
-}  // LCOV EXCL_LINE
+    }
+}
 
 /**
  * @brief Asserts that a value converts to true.

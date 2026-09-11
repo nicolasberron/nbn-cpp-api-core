@@ -143,16 +143,16 @@ void error(std::string_view message, const std::source_location& location) {
     }
 }
 
-void fatal(std::string_view message, const std::source_location& location) {
+[[noreturn]] void fatal(std::string_view message, const std::source_location& location) {
     auto spLogger{nbn::core::private_ns::Application::self().logger()};
     if (spLogger != nullptr) {
         const auto fatalMessage{nbn::core::private_ns::stackTraceMessage(std::format("Fatal: {}", message))};
         try {
             spLogger->fatal(location.file_name(), location.line(), location.column(), location.function_name(), fatalMessage);
         } catch (const std::runtime_error&) {
-            throw std::runtime_error(std::string(message));
         }
     }
+    throw std::runtime_error(std::string(message));
 }
 
 void debug_if(bool isCondition, std::string_view message, const std::source_location& location) {

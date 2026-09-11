@@ -71,8 +71,8 @@ auto compare(std::string_view lhs, std::string_view rhs) -> std::optional<int> {
     const auto& lhsValues = *lhsParts;
     const auto& rhsValues = *rhsParts;
     const auto maxParts = std::max(lhsValues.size(), rhsValues.size());
-    // A valid semantic version always has at least one component; the uncovered zero-iteration mapping is compiler-generated.
-    for (size_t i = 0; i < maxParts; ++i) {  // LLVM-COV EXCL_LINE
+    size_t i = 0;
+    while (i < maxParts) {
         const auto lhsValue = (i < lhsValues.size()) ? lhsValues[i] : detail::kMissingComponent;
         const auto rhsValue = (i < rhsValues.size()) ? rhsValues[i] : detail::kMissingComponent;
         if (lhsValue < rhsValue) {
@@ -81,6 +81,7 @@ auto compare(std::string_view lhs, std::string_view rhs) -> std::optional<int> {
         if (lhsValue > rhsValue) {
             return detail::kGreaterComparison;
         }
+        ++i;
     }
 
     return detail::kEqualComparison;

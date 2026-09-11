@@ -77,16 +77,10 @@ static auto const registerToFactory{[]() { return Object::factoryRegister<Logger
         case Logger::Level::ERROR:
             return "ERROR:  ";
         case Logger::Level::FATAL:
+        default:
             return "FATAL:  ";
     }
-
-        // The enum is exhaustive; this fallback is retained for non-coverage builds as a compiler assertion.
-#if !defined(NBN_LLVM_COVERAGE_ENABLE)
-    std::unreachable();
-#endif
-    // An invalid enum value cannot be produced through Logger's public logging API; LLVM reports the
-    // exhaustive-switch exit as a separate region even though the fallback is unreachable.
-}  // LLVM-COV EXCL_LINE
+}
 
 // Define logger private implementation
 
@@ -331,7 +325,7 @@ Logger::~Logger() {
 
 #ifdef NBN_LOGGER_TEST_HOOK
 void Logger::requestStopForTest() {
-    m_spImpl->Thread::stop();
+    m_spImpl->Thread::requestStop();
 }
 
 void Logger::enqueueForTest(std::string message) {
