@@ -7,10 +7,12 @@
 
 namespace nbn::core {
 
+class Logger;
+
 #ifdef NBN_LOGGER_TEST_HOOK
 namespace detail::logger_test {
 
-using hook_t = void (*)();
+using hook_t = void (*)(Logger*);
 
 nbn_export_core auto setHook(hook_t callback) noexcept -> void;
 

@@ -91,9 +91,12 @@ class ConcurrentStack {
             spNewNode = std::make_shared<Node>(value);
         }
         auto spHead = m_head.load(std::memory_order_relaxed);
-        do {
+        while (true) {
             spNewNode->m_spNext.store(spHead, std::memory_order_relaxed);
-        } while (!m_head.compare_exchange_weak(spHead, spNewNode, std::memory_order_release, std::memory_order_relaxed));
+            if (m_head.compare_exchange_weak(spHead, spNewNode, std::memory_order_release, std::memory_order_relaxed)) {
+                return;
+            }
+        }
     }
 
     /**
@@ -108,12 +111,15 @@ class ConcurrentStack {
         }
         std::shared_ptr<Node> spNewHead;
 
-        do {  // NOLINT(cppcoreguidelines-avoid-do-while,-warnings-as-errors)
-            if (spHead == nullptr) {
-                return false;
-            }
+        while (spHead != nullptr) {
             spNewHead = spHead->m_spNext.load(std::memory_order_acquire);
-        } while (!m_head.compare_exchange_weak(spHead, spNewHead, std::memory_order_acq_rel, std::memory_order_relaxed));
+            if (m_head.compare_exchange_weak(spHead, spNewHead, std::memory_order_acq_rel, std::memory_order_relaxed)) {
+                break;
+            }
+        }
+        if (spHead == nullptr) {
+            return false;
+        }
 
         if constexpr (is_smart_ptr<T>::value) {
             dest = std::move(spHead->m_value);

@@ -11,7 +11,7 @@ lines: 100.00%
 
 | File | Regions | Functions | Lines | Branches |
 | --- | ---: | ---: | ---: | ---: |
-| `Application.cpp` | 100.00% | 100.00% | 100.00% | 86.36% |
+| `Application.cpp` | 100.00% | 100.00% | 100.00% | 90.91% |
 | `Color.cpp` | 100.00% | 100.00% | 100.00% | 93.75% |
 | `CommandLineParser.cpp` | 100.00% | 100.00% | 100.00% | 94.29% |
 | `ConcurrentQueue.cpp` | 100.00% | 100.00% | 100.00% | 100.00% |

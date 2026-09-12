@@ -56,8 +56,8 @@ struct State : public Object, public interfaces::IState, public std::enable_shar
     std::vector<signal_transition_t> m_signalTransitions;
 
     explicit State(interfaces::IMachineImpl* pMachineImpl,
+                   const slot_t& onEnter = nullptr,
                    std::string iName = "",
-                   const slot_t& onEnter = nullptr,  // NOLINT(bugprone-easily-swappable-parameters)
                    const slot_t& onLeave = nullptr)
         : m_pMachineImpl{pMachineImpl}, m_onEnter{onEnter}, m_onLeave{onLeave} {
         name()->set(iName.empty() ? ::nbn::core::format("State_{}", Object::getUuid()) : iName);
@@ -98,11 +98,11 @@ class Transition {
     explicit Transition(std::shared_ptr<interfaces::IState> spFromState,
                         std::shared_ptr<interfaces::IState> spToState,
                         const slot_t& onTransition)
-        : Transition(std::move(spFromState), std::move(spToState), onTransition, {}) {}
+        : Transition(std::move(spFromState), onTransition, std::move(spToState), {}) {}
 
     Transition(std::shared_ptr<interfaces::IState> spFromState,
+               const slot_t& onTransition,
                std::shared_ptr<interfaces::IState> spToState,
-               const slot_t& onTransition,  // NOLINT(bugprone-easily-swappable-parameters)
                const Machine::condition_t& condition)
         : m_spFromState{std::move(spFromState)},
           m_spToState{std::move(spToState)},
@@ -182,7 +182,7 @@ class Machine::Impl : public Thread, public ::nbn::core::fsm::interfaces::IMachi
                        std::shared_ptr<interfaces::IState> spToState,
                        condition_t condition,
                        slot_t onTransition = nullptr) -> void {
-        auto spTransition{std::make_shared<Transition>(std::move(spFromState), std::move(spToState), std::move(onTransition),
+        auto spTransition{std::make_shared<Transition>(std::move(spFromState), std::move(onTransition), std::move(spToState),
                                                        std::move(condition))};
         m_transitions.emplace_back(spTransition);
         m_conditionalTransitionsRingBuffer.push_back(std::move(spTransition));
@@ -238,7 +238,7 @@ Machine::Machine() : m_spImpl(std::make_unique<Machine::Impl>()) {
 Machine::~Machine() = default;
 
 auto Machine::addState(std::string name, const slot_t& onEnter, const slot_t& onLeave) -> std::shared_ptr<interfaces::IState> {
-    return m_spImpl->addState(std::make_shared<State>(m_spImpl.get(), std::move(name), onEnter, onLeave));
+    return m_spImpl->addState(std::make_shared<State>(m_spImpl.get(), onEnter, std::move(name), onLeave));
 }
 
 auto Machine::addTransition(std::shared_ptr<interfaces::IState> spFromState,

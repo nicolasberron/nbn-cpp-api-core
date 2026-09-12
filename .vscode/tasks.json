@@ -84,7 +84,6 @@
             "label": "nbn: Coverage Build",
             "type": "shell",
             "command": "python scripts/run_nbn_task.py coverage-build",
-            "dependsOn": "nbn: Coverage Configure",
             "problemMatcher": [
                 "$gcc"
             ],
@@ -162,14 +161,12 @@
             "label": "nbn: Valgrind Build Core Tests",
             "type": "shell",
             "command": "python scripts/run_nbn_task.py valgrind-build",
-            "dependsOn": "nbn: Valgrind Configure Tests",
             "options": {
                 "cwd": "${workspaceFolder}"
             },
             "problemMatcher": [
                 "$gcc"
             ],
-            "continueOnError": true,
             "group": "build",
             "presentation": {
                 "echo": true,
@@ -309,7 +306,6 @@
             "label": "nbn: AddressSanitizer Build Core Tests",
             "type": "shell",
             "command": "python scripts/run_nbn_task.py asan-build",
-            "dependsOn": "nbn: AddressSanitizer Configure",
             "problemMatcher": [
                 "$gcc"
             ],
@@ -357,7 +353,6 @@
             "label": "nbn: ThreadSanitizer Build Core Tests",
             "type": "shell",
             "command": "python scripts/run_nbn_task.py tsan-build",
-            "dependsOn": "nbn: ThreadSanitizer Configure",
             "problemMatcher": [
                 "$gcc"
             ],

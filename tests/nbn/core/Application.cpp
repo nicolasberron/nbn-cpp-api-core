@@ -145,30 +145,6 @@ void test_application_run_async_throw_and_catch_exception() {
     std::this_thread::sleep_for(std::chrono::milliseconds(TIME_TO_SLEEP));
 }
 
-void test_throw_no_catch_no_crash() {
-    const std::string fatalMessage = "Log should contain this fatal message";
-
-    auto isFatalLogged = false;
-    auto fatalSignal = Application::signalLogFatal();
-    std::function<void(const std::string&)> fatalLogger = [&isFatalLogged, fatalMessage](const std::string& text) {
-        if (text.find(fatalMessage) != std::string::npos) {
-            isFatalLogged = true;
-        }
-    };
-    fatalSignal->connect(fatalLogger);
-
-    // Launch a task that throws (nbn::log::fatal() logs and then throws) without catching the exception.
-    // We deliberately do NOT call wait(): wait() would rethrow the exception into this thread. The point of
-    // this test is that an uncaught async exception still logs its message and does not crash the application.
-    auto throwingTask = Application::runAsync([fatalMessage]() { nbn::log::fatal(fatalMessage); }, Task::RunMode::SingleShot);
-
-    const auto TIME_TO_SLEEP = 500;
-    std::this_thread::sleep_for(std::chrono::milliseconds(TIME_TO_SLEEP));
-
-    unit_tests::equal("Fatal message should be logged", true, isFatalLogged);
-    fatalSignal->disconnect(fatalLogger);
-}
-
 namespace {
 
 constexpr auto kPrivateApplicationName = "private-application";
@@ -232,4 +208,28 @@ void test_private_application_default_terminate_handler_stops_application() {
     handler();
 
     unit_tests::equal("Default terminate handler should set the quit code", kDefaultTerminateExitCode, application.exec());
+}
+
+void test_throw_no_catch_no_crash() {
+    const std::string fatalMessage = "Log should contain this fatal message";
+
+    auto isFatalLogged = false;
+    auto fatalSignal = Application::signalLogFatal();
+    std::function<void(const std::string&)> fatalLogger = [&isFatalLogged, fatalMessage](const std::string& text) {
+        if (text.find(fatalMessage) != std::string::npos) {
+            isFatalLogged = true;
+        }
+    };
+    fatalSignal->connect(fatalLogger);
+
+    // Launch a task that throws (nbn::log::fatal() logs and then throws) without catching the exception.
+    // We deliberately do NOT call wait(): wait() would rethrow the exception into this thread. The point of
+    // this test is that an uncaught async exception still logs its message and does not crash the application.
+    auto throwingTask = Application::runAsync([fatalMessage]() { nbn::log::fatal(fatalMessage); }, Task::RunMode::SingleShot);
+
+    const auto TIME_TO_SLEEP = 500;
+    std::this_thread::sleep_for(std::chrono::milliseconds(TIME_TO_SLEEP));
+
+    unit_tests::equal("Fatal message should be logged", true, isFatalLogged);
+    fatalSignal->disconnect(fatalLogger);
 }

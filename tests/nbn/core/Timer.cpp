@@ -1,86 +1,95 @@
 #include <nbn/core/Timer.h>
 #include <nbn/core/UnitTests.h>
 
+#include <condition_variable>
+#include <mutex>
+
 // Test Signal
 
 using namespace nbn::core;
 
+namespace {
+
+constexpr auto kTimerCallbackTimeout = std::chrono::seconds{5};
+
+class CallbackSignal {
+   public:
+    auto notify() -> void {
+        {
+            std::lock_guard lock{m_mutex};
+            m_fired = true;
+        }
+        m_condition.notify_one();
+    }
+
+    [[nodiscard]] auto wait() -> bool {
+        std::unique_lock lock{m_mutex};
+        return m_condition.wait_for(lock, kTimerCallbackTimeout, [this]() { return m_fired; });
+    }
+
+   private:
+    std::mutex m_mutex;
+    std::condition_variable m_condition;
+    bool m_fired{false};
+};
+
+}  // namespace
+
 void test_timer_basic() {
-    // Create a timer with a 10ms interval and a callback that increments a counter
-    int count = 0;
+    CallbackSignal callbackFired;
     const int timerInterval = 10;
-    nbn::core::Timer timer(std::chrono::milliseconds(timerInterval), [&count]() { ++count; });
+    nbn::core::Timer timer(std::chrono::milliseconds(timerInterval), [&callbackFired]() { callbackFired.notify(); });
 
-    // Start the timer and wait for it to run for a while
     timer.run();
-    const int timeToSleep = 50;
-    std::this_thread::sleep_for(std::chrono::milliseconds(timeToSleep));
-
-    // Stop the timer and check that the counter has been incremented at least once
+    const auto didFire = callbackFired.wait();
     timer.stop();
-    unit_tests::isTrue("Timer time out should have been called at least once", count > 0);
+    unit_tests::isTrue("Timer time out should have been called at least once", didFire);
 }
 
 void test_timer_change_interval() {
-    // Create a timer with a 10ms interval and a callback that increments a counter
-    int count = 0;
+    CallbackSignal callbackFired;
     const int timerInterval = 10;
-    nbn::core::Timer timer(std::chrono::milliseconds(timerInterval), [&count]() { ++count; });
+    nbn::core::Timer timer(std::chrono::milliseconds(timerInterval), [&callbackFired]() { callbackFired.notify(); });
 
-    // Start the timer and wait for it to run for a while
     timer.run();
-    const int timeToSleep = 50;
-    std::this_thread::sleep_for(std::chrono::milliseconds(timeToSleep));
+    unit_tests::isTrue("Timer callback should fire before changing its interval", callbackFired.wait());
 
-    // Change the interval to 20ms and wait for the timer to run again
     const int newTimerInterval = 20;
     unit_tests::isThrowing<std::runtime_error>(
         "Timer should throw when changing interval while running",
         [&timer, newTimerInterval]() { timer.run(std::chrono::milliseconds(newTimerInterval), nullptr); });
 
-    const int newTimeToSleep = 50;
-    std::this_thread::sleep_for(std::chrono::milliseconds(newTimeToSleep));
     nbn::log::info("Previous log should be the exception thrown by the timer");
 
-    // Stop the timer and check that the counter has been incremented at least three times
     timer.stop();
     unit_tests::isTrue("Timer should be stopped", !timer.isRunning());
 }
 
 void test_timer_no_callback() {
-    // Create a timer with a 10ms interval and no callback
     const int timerInterval = 10;
-    nbn::core::Timer timer(std::chrono::milliseconds(timerInterval), nullptr);
+    nbn::core::Timer timer(std::chrono::milliseconds(timerInterval), nullptr, 1U);
 
-    // Start the timer and wait for it to run for a while
     timer.run();
-    const int timeToSleep = 50;
-    std::this_thread::sleep_for(std::chrono::milliseconds(timeToSleep));
-
-    // Stop the timer and expect no errors
-    timer.stop();
+    timer.wait();
 }
 
 void test_timer_multiple_timers() {
-    // Create two timers with different intervals and callbacks that increment different counters
-    int count1 = 0;
-    int count2 = 0;
+    CallbackSignal timer1Fired;
+    CallbackSignal timer2Fired;
     const int timer1Interval = 10;
-    nbn::core::Timer timer1(std::chrono::milliseconds(timer1Interval), [&count1]() { ++count1; });
+    nbn::core::Timer timer1(std::chrono::milliseconds(timer1Interval), [&timer1Fired]() { timer1Fired.notify(); });
     const int timer2Interval = 20;
-    nbn::core::Timer timer2(std::chrono::milliseconds(timer2Interval), [&count2]() { ++count2; });
+    nbn::core::Timer timer2(std::chrono::milliseconds(timer2Interval), [&timer2Fired]() { timer2Fired.notify(); });
 
-    // Start both timers and wait for them to run for a while
     timer1.run();
     timer2.run();
-    const int timeToSleep = 50;
-    std::this_thread::sleep_for(std::chrono::milliseconds(timeToSleep));
+    const auto timer1DidFire = timer1Fired.wait();
+    const auto timer2DidFire = timer2Fired.wait();
 
-    // Stop both timers and check that each counter has been incremented at least once
     timer1.stop();
     timer2.stop();
-    unit_tests::isTrue("Timer 1 time out should have been called at least once", count1 > 0);
-    unit_tests::isTrue("Timer 2 time out should have been called at least once", count2 > 0);
+    unit_tests::isTrue("Timer 1 time out should have been called at least once", timer1DidFire);
+    unit_tests::isTrue("Timer 2 time out should have been called at least once", timer2DidFire);
 }
 
 void test_timer_repeat_count() {

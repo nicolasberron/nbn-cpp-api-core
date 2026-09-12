@@ -53,7 +53,7 @@ void test_objectsync_a_to_b() {
     initA(a);
     initB(b);
 
-    auto sync = ObjectSync::create(a, b);
+    auto sync = ObjectSync::create({a, b});
 
     a->text()->set("hello");
     unit_tests::equal("B.text follows A.text", std::string{"hello"}, b->text()->get());
@@ -69,7 +69,7 @@ void test_objectsync_b_to_a() {
     initA(a);
     initB(b);
 
-    auto sync = ObjectSync::create(a, b);
+    auto sync = ObjectSync::create({a, b});
 
     b->text()->set("world");
     unit_tests::equal("A.text follows B.text", std::string{"world"}, a->text()->get());
@@ -85,7 +85,7 @@ void test_objectsync_no_infinite_loop() {
     initA(a);
     initB(b);
 
-    auto sync = ObjectSync::create(a, b);
+    auto sync = ObjectSync::create({a, b});
 
     int aChanges = 0;
     int bChanges = 0;
@@ -105,7 +105,7 @@ void test_objectsync_unmatched_properties_ignored() {
     initA(a);
     initB(b);
 
-    auto sync = ObjectSync::create(a, b);
+    auto sync = ObjectSync::create({a, b});
 
     // 'extra' exists only on A — changing it must not crash
     a->extra()->set(true);
@@ -125,7 +125,7 @@ void test_objectsync_deactivation() {
     initB(b);
 
     {
-        auto sync = ObjectSync::create(a, b);
+        auto sync = ObjectSync::create({a, b});
         a->text()->set("active");
         unit_tests::equal("B.text follows while sync is alive", std::string{"active"}, b->text()->get());
     }  // sync destroyed here
@@ -147,7 +147,7 @@ void test_objectsync_initial_values_not_propagated_on_create() {
     b->text()->set("B-initial");
 
     // Creating the sync must NOT overwrite either side
-    auto sync = ObjectSync::create(a, b);
+    auto sync = ObjectSync::create({a, b});
 
     unit_tests::equal("A.text unchanged after sync creation", std::string{"A-initial"}, a->text()->get());
     unit_tests::equal("B.text unchanged after sync creation", std::string{"B-initial"}, b->text()->get());
@@ -158,7 +158,7 @@ void test_objectsync_ignores_changes_after_peer_destruction() {
     auto b = std::make_shared<ObjB>();
     initA(a);
     initB(b);
-    auto sync = ObjectSync::create(a, b);
+    auto sync = ObjectSync::create({a, b});
     const auto bText = b->text();
     b.reset();
 
@@ -171,7 +171,7 @@ void test_objectsync_ignores_changes_after_the_other_peer_is_destroyed() {
     auto b = std::make_shared<ObjB>();
     initA(a);
     initB(b);
-    auto sync = ObjectSync::create(a, b);
+    auto sync = ObjectSync::create({a, b});
     a.reset();
 
     b->text()->set("peer-destroyed");

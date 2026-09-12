@@ -8,6 +8,7 @@
 #include <ostream>
 #include <string>
 #include <string_view>
+#include <utility>
 #include <vector>
 
 namespace nbn::benchmark {
@@ -57,13 +58,10 @@ inline auto escapeJson(std::string_view value) -> std::string {
 }  // namespace detail
 
 template <typename Callable>
-auto measure(std::string_view name,
-             std::size_t iterations,
-             const Configuration& configuration,
-             Callable&& callable)  // NOLINT(cppcoreguidelines-missing-std-forward): the operation is intentionally reused.
-    -> Result {
+auto measure(std::string_view name, std::size_t iterations, const Configuration& configuration, Callable&& callable) -> Result {
+    auto&& operation = std::forward<Callable>(callable);
     for (std::size_t iteration{}; iteration < configuration.warmupIterations; ++iteration) {
-        callable();
+        operation();
     }
 
     constexpr std::size_t medianPercentile{50U};
@@ -77,7 +75,7 @@ auto measure(std::string_view name,
     for (std::size_t run{}; run < configuration.sampleRuns; ++run) {
         const auto start = std::chrono::steady_clock::now();
         for (std::size_t iteration{}; iteration < iterations; ++iteration) {
-            callable();
+            operation();
         }
         const auto elapsed = std::chrono::duration<double>(std::chrono::steady_clock::now() - start).count();
         const auto safeElapsed = std::max(elapsed, std::numeric_limits<double>::min());
@@ -98,10 +96,11 @@ auto measure(std::string_view name,
 }
 
 inline auto writeHuman(std::ostream& output, const Result& result) -> void {
+    constexpr int latencyPrecision{6};
     output << result.name << '\n'
            << "  samples=" << result.sampleRuns << " warmup=" << result.warmupIterations << " iterations=" << result.iterations
            << '\n'
-           << std::fixed << std::setprecision(6) << "  latency(s): median=" << result.medianLatencySeconds
+           << std::fixed << std::setprecision(latencyPrecision) << "  latency(s): median=" << result.medianLatencySeconds
            << " p90=" << result.p90LatencySeconds << " p95=" << result.p95LatencySeconds << '\n'
            << std::setprecision(2) << "  throughput(ops/s): median=" << result.medianThroughput << " p90=" << result.p90Throughput
            << " p95=" << result.p95Throughput << '\n';

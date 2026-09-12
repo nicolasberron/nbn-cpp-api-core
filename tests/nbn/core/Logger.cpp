@@ -56,15 +56,20 @@ void pauseLoggerQueuePush() {
     state.condition.notify_all();
     state.condition.wait(lock, [&state] { return state.releasePush; });
 }
-void pauseLoggerAtStopCheck() {
+void pauseLoggerAtStopCheck(nbn::core::Logger* invokingLogger) {
     auto& state = loggerIdleState();
+    nbn::core::Logger* targetLogger{nullptr};
     {
         std::lock_guard lock{state.m_mutex};
+        if (invokingLogger != state.m_logger) {
+            return;
+        }
+        targetLogger = state.m_logger;
         ++state.m_activeHooks;
         state.m_reached = true;
         state.m_condition.notify_one();
     }
-    state.m_logger->requestStopForTest();
+    targetLogger->requestStopForTest();
 
     std::unique_lock lock{state.m_mutex};
     state.m_condition.wait(lock, [&state] { return state.m_release; });

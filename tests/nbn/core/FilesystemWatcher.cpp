@@ -90,7 +90,8 @@ void test_filesystem_watcher_reports_modified_and_removed_files() {
     watcher.run();
     unit_tests::isTrue("Watcher should be running", watcher.isRunning());
     unit_tests::isFalse("Watcher should not initially request stop", watcher.isStopRequested());
-    std::this_thread::sleep_for(std::chrono::milliseconds{100});
+    constexpr auto kOneHundred{100};
+    std::this_thread::sleep_for(std::chrono::milliseconds{kOneHundred});
 
     {
         std::ofstream output{file, std::ios::app};
@@ -170,7 +171,8 @@ void test_filesystem_watcher_handles_directory_access_errors() {
     filesystem::Watcher watcher{directory};
     std::filesystem::permissions(directory, kNoPermissions, std::filesystem::perm_options::replace, error);
     watcher.run();
-    std::this_thread::sleep_for(std::chrono::milliseconds{100});
+    constexpr auto kOneHundred{100};
+    std::this_thread::sleep_for(std::chrono::milliseconds{kOneHundred});
     std::filesystem::permissions(directory, kOwnerDirectoryPermissions, std::filesystem::perm_options::replace, error);
     watcher.stop();
     watcher.wait();
@@ -188,7 +190,8 @@ void test_filesystem_watcher_recovers_when_directory_disappears() {
     filesystem::Watcher watcher{directory};
     std::filesystem::remove_all(directory, error);
     watcher.run();
-    std::this_thread::sleep_for(std::chrono::milliseconds{100});
+    constexpr auto kOneHundred{100};
+    std::this_thread::sleep_for(std::chrono::milliseconds{kOneHundred});
     watcher.stop();
     watcher.wait();
 
@@ -208,7 +211,8 @@ void test_filesystem_watcher_ignores_unchanged_files() {
 
     filesystem::Watcher watcher{directory};
     watcher.run();
-    std::this_thread::sleep_for(std::chrono::milliseconds{150});
+    constexpr auto kOneHundredFifty{150};
+    std::this_thread::sleep_for(std::chrono::milliseconds{kOneHundredFifty});
     watcher.stop();
     watcher.wait();
 

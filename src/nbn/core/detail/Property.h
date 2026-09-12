@@ -198,12 +198,7 @@ class EnumProperty final : public detail::ObjectFeature, public interfaces::IPro
         const auto oldValue = hadOldValue ? valueAtLocked(oldIndex) : type{};
 
         m_values = std::move(normalizedValues);
-        // NOLINTNEXTLINE(bugprone-branch-clone)
-        if (typedValues != nullptr) {
-            m_enumValues = *typedValues;
-        } else {
-            m_enumValues.clear();
-        }
+        m_enumValues = typedValues != nullptr ? *typedValues : std::vector<type>{};
 
         if (m_values.empty()) {
             m_index = 0;
@@ -285,12 +280,8 @@ class EnumProperty final : public detail::ObjectFeature, public interfaces::IPro
         const auto itValues = properties.find("values");
         const auto itIndex = properties.find("index");
 
-        // NOLINTNEXTLINE(bugprone-branch-clone)
-        if (itValues != properties.end()) {
-            setValues(serialization::deserialize<serializable_vector_t>(itValues->second));
-        } else {
-            setValues({});
-        }
+        setValues(itValues != properties.end() ? serialization::deserialize<serializable_vector_t>(itValues->second)
+                                               : serializable_vector_t{});
 
         if (itIndex != properties.end()) {
             setIndex(serialization::deserialize<int>(itIndex->second));

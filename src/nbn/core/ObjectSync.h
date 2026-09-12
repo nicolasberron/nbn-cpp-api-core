@@ -36,18 +36,23 @@ namespace nbn::core {
  * auto lvglBtn  = std::make_shared<nbn::ui::lvgl::Button>("btn");
  *
  * // ensure properties are initialized first (e.g. via deserialize or direct access)
- * auto sync = nbn::core::ObjectSync::create(htmlBtn, lvglBtn);
+ * auto sync = nbn::core::ObjectSync::create({htmlBtn, lvglBtn});
  *
  * htmlBtn->text()->set("Click me");  // lvglBtn->text() follows automatically
  * @endcode
  */
 class nbn_export_core ObjectSync {
    public:
+    struct Objects {
+        std::shared_ptr<Object> first;
+        std::shared_ptr<Object> second;
+    };
+
     /**
-     * @brief Connect matching properties of @p a and @p b for bidirectional sync.
+     * @brief Connect matching properties of @p objects for bidirectional sync.
      * @return A shared ObjectSync handle; destroy it to disconnect.
      */
-    [[nodiscard]] static auto create(std::shared_ptr<Object> a, std::shared_ptr<Object> b) -> std::shared_ptr<ObjectSync>;
+    [[nodiscard]] static auto create(Objects objects) -> std::shared_ptr<ObjectSync>;
 
     ~ObjectSync();
 

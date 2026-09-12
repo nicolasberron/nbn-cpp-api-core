@@ -23,6 +23,7 @@ DEBUG_BUILD_NAME = "linux-clang19-debug"
 ASAN_BUILD_NAME = "linux-clang19-asan"
 TSAN_BUILD_NAME = "linux-clang19-tsan"
 QUALITY_REPORTS_NAME = "quality-reports"
+CMAKE_CLANG_TIDY_ON = "-DNBN_CLANG_TIDY_ENABLE=ON"
 MAX_BUILD_JOBS = os.cpu_count() or 1
 
 
@@ -212,7 +213,8 @@ def configure_debug(context: TaskContext) -> int:
         context.debug_build,
         [
             "-DCMAKE_BUILD_TYPE=Debug",
-            "-DNBN_CLANG_TIDY_ENABLE=ON",
+            "-DNBN_BUILD_TESTS=ON",
+            CMAKE_CLANG_TIDY_ON,
         ],
     )
 
@@ -265,7 +267,7 @@ def configure_coverage(context: TaskContext) -> int:
             "-DCMAKE_BUILD_TYPE=Debug",
             "-DNBN_BUILD_TESTS=ON",
             "-DNBN_LLVM_COVERAGE_ENABLE=ON",
-            "-DNBN_CLANG_TIDY_ENABLE=OFF",
+            CMAKE_CLANG_TIDY_ON,
         ],
     )
 
@@ -343,7 +345,7 @@ def configure_valgrind(context: TaskContext) -> int:
             "-DNBN_BUILD_TESTS=ON",
             "-DNBN_BUILD_BENCHMARKS=OFF",
             "-DNBN_TEST_TIMEOUT_SECONDS=300",
-            "-DNBN_CLANG_TIDY_ENABLE=OFF",
+            CMAKE_CLANG_TIDY_ON,
         ],
     )
 
@@ -413,7 +415,7 @@ def benchmark_all(context: TaskContext) -> int:
         [
             "-DCMAKE_BUILD_TYPE=Debug",
             "-DNBN_BUILD_BENCHMARKS=ON",
-            "-DNBN_CLANG_TIDY_ENABLE=OFF",
+            CMAKE_CLANG_TIDY_ON,
         ],
     )
     if result != 0:
@@ -463,7 +465,7 @@ def configure_sanitizer(context: TaskContext, sanitizer: str) -> int:
         "-DNBN_BUILD_TESTS=ON",
         "-DNBN_BUILD_BENCHMARKS=OFF",
         "-DNBN_LLVM_COVERAGE_ENABLE=OFF",
-        "-DNBN_CLANG_TIDY_ENABLE=OFF",
+        CMAKE_CLANG_TIDY_ON,
         "-DNBN_TEST_TIMEOUT_SECONDS=300",
     ]
     if extra_options:

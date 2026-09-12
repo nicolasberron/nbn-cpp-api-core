@@ -4,10 +4,11 @@
 
 namespace nbn::core {
 
-auto ObjectSync::create(std::shared_ptr<Object> a,  // NOLINT(bugprone-easily-swappable-parameters)
-                        std::shared_ptr<Object> b) -> std::shared_ptr<ObjectSync> {
+auto ObjectSync::create(Objects objects) -> std::shared_ptr<ObjectSync> {
     auto spSync = std::shared_ptr<ObjectSync>(new ObjectSync{});
     auto active = spSync->m_active;
+    const auto& a = objects.first;
+    const auto& b = objects.second;
 
     const auto propsA = a->getProperties();
     const auto propsB = b->getProperties();

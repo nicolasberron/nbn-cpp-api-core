@@ -10,7 +10,7 @@
 namespace nbn::core::private_ns {
 
 #if defined(NBN_LLVM_COVERAGE_ENABLE)
-extern "C" auto __llvm_profile_write_file() -> int;
+extern "C" auto llvmProfileWriteFile() -> int asm("__llvm_profile_write_file");
 #endif
 
 namespace {
@@ -87,7 +87,7 @@ auto hardwaretSignalHandler(int signum) noexcept -> void {
 // from there can deadlock. The logger has already accepted the diagnostic above;
 // terminate without invoking destructors or joining threads.
 #if defined(NBN_LLVM_COVERAGE_ENABLE)
-    (void)__llvm_profile_write_file();
+    (void)llvmProfileWriteFile();
 #endif
     _exit(kFatalSignalExitCode);
 }

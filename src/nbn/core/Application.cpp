@@ -150,6 +150,7 @@ void error(std::string_view message, const std::source_location& location) {
         try {
             spLogger->fatal(location.file_name(), location.line(), location.column(), location.function_name(), fatalMessage);
         } catch (const std::runtime_error&) {
+            throw std::runtime_error(std::string(message));
         }
     }
     throw std::runtime_error(std::string(message));

@@ -70,6 +70,19 @@ template <typename Left, typename Right>
     }
 }
 
+template <typename T>
+    requires std::is_enum_v<T> && enum_serializable_c<T>
+auto enumToTestString(const T& value) -> std::string {
+    return std::string(enum_serialization<T>::toString(value));
+}
+
+template <typename T>
+    requires std::is_enum_v<T> && (!enum_serializable_c<T>)
+auto enumToTestString(const T& value) -> std::string {
+    using underlying_t = std::underlying_type_t<T>;
+    return std::format("{}", static_cast<underlying_t>(value));
+}
+
 }  // namespace detail
 
 /**
@@ -95,13 +108,7 @@ auto toTestString(const T& value) -> std::string {
         result += "]";
         return result;
     } else if constexpr (std::is_enum_v<value_t>) {
-        // NOLINTNEXTLINE(bugprone-branch-clone)
-        if constexpr (enum_serializable_c<value_t>) {
-            return std::string(enum_serialization<value_t>::toString(value));
-        } else {
-            using underlying_t = std::underlying_type_t<value_t>;
-            return std::format("{}", static_cast<underlying_t>(value));
-        }
+        return detail::enumToTestString(value);
     } else {
         return std::format("{}", value);
     }
@@ -191,8 +198,9 @@ void isThrowing(std::string_view message,
         expr();
         nbn::log::fatal(std::format("FAILED: {}. Expected exception of type {}, but no exception was thrown.", message,
                                     typeid(Exception).name()));
-        // NOLINTNEXTLINE(bugprone-empty-catch)
     } catch (...) {
+        // Do nothing, exception of the expected type was thrown.
+        return;
     }
 }
 

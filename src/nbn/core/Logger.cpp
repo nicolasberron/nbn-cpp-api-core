@@ -17,8 +17,8 @@
 
 #if defined(_WIN32) || defined(_WIN64)
 #include <windows.h>
-#elif defined(__unix__) || (defined(__APPLE__) && defined(__MACH__))
-#include <sys/syscall.h>
+#elif defined(__linux__)
+#include <unistd.h>
 #endif
 
 #include "Application.h"
@@ -52,10 +52,10 @@ auto setHook(hook_t callback) noexcept -> void {
     hookStorage().store(callback, std::memory_order_release);
 }
 
-auto invokeHook() noexcept -> void {
+auto invokeHook(Logger* logger) noexcept -> void {
     const auto callback = hookStorage().load(std::memory_order_acquire);
     if (callback != nullptr) {
-        callback();
+        callback(logger);
     }
 }
 
@@ -143,11 +143,6 @@ class Logger::Impl : public Thread {
     }
 #endif
 
-    /*
-    The `threadId()` function is implemented to retrieve the Linux thread ID in WSL, which matches what is shown in VSCode's
-    debugger. This is achieved by using the `gettid()` syscall, as `std::this_thread::get_id()` and `pthread_self()` may return IDs
-    that differ from the debugger's display due to differences between the Linux and Windows thread identification systems.
-    */
     [[nodiscard]] static auto threadId() -> std::string {
         std::stringstream ss;
 
@@ -157,10 +152,10 @@ class Logger::Impl : public Thread {
 #elif defined(PLATFORMIO_BUILD)
         // Avoid pthread-dependent thread-id APIs on embedded targets.
         ss << "embedded";
+#elif defined(__linux__)
+        ss << ::gettid();
 #elif defined(__unix__) || (defined(__APPLE__) && defined(__MACH__))
-        // POSIX compliant system (Linux, macOS) implementation.
-        // Using gettid() to get the thread ID as the Linux kernel sees it.
-        ss << syscall(SYS_gettid);  // NOLINT(cppcoreguidelines-pro-type-vararg)
+        ss << std::this_thread::get_id();
 #else
 #error "Unsupported platform"
 #endif
@@ -257,7 +252,7 @@ class Logger::Impl : public Thread {
             writeToFile(message.m_text, message.m_level);
         } else {
 #ifdef NBN_LOGGER_TEST_HOOK
-            detail::logger_test::invokeHook();
+            detail::logger_test::invokeHook(m_pDecl);
 #endif
             if (isStopRequested()) {
                 return;

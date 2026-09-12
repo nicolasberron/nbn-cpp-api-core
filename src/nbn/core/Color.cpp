@@ -29,6 +29,13 @@ struct Rgba {
     unsigned char alpha{};
 };
 
+struct RgbaProperties {
+    property_ptr<unsigned char> red;
+    property_ptr<unsigned char> green;
+    property_ptr<unsigned char> blue;
+    property_ptr<unsigned char> alpha;
+};
+
 struct SynchronizationReset {
     explicit SynchronizationReset(bool* pIsSynchronizing) : m_pIsSynchronizing(pIsSynchronizing) {}
 
@@ -80,12 +87,7 @@ auto onRgbOrAlphaChanged(const Rgba& rgba, property_ptr<std::string> hexProperty
     hexProperty->set(getHex(rgba));
 }
 
-auto onHexChanged(std::string_view hex,
-                  property_ptr<unsigned char> redProperty,    // NOLINT(bugprone-easily-swappable-parameters)
-                  property_ptr<unsigned char> greenProperty,  // NOLINT(bugprone-easily-swappable-parameters)
-                  property_ptr<unsigned char> blueProperty,   // NOLINT(bugprone-easily-swappable-parameters)
-                  property_ptr<unsigned char> alphaProperty,  // NOLINT(bugprone-easily-swappable-parameters)
-                  bool& isSynchronizing) -> void {
+auto onHexChanged(std::string_view hex, const RgbaProperties& properties, bool& isSynchronizing) -> void {
     if (isSynchronizing) {
         return;
     }
@@ -94,10 +96,10 @@ auto onHexChanged(std::string_view hex,
     if (rgba.has_value()) {
         isSynchronizing = true;
         const SynchronizationReset resetSynchronization{&isSynchronizing};
-        redProperty->set(rgba->red);
-        greenProperty->set(rgba->green);
-        blueProperty->set(rgba->blue);
-        alphaProperty->set(rgba->alpha);
+        properties.red->set(rgba->red);
+        properties.green->set(rgba->green);
+        properties.blue->set(rgba->blue);
+        properties.alpha->set(rgba->alpha);
     }
 }
 
@@ -129,7 +131,7 @@ Color::Color() : m_spImpl(std::make_unique<Impl>()) {
     });
 
     hex()->signalValueChanged()->connect([this]([[maybe_unused]] std::string oldHex, std::string hex) {
-        onHexChanged(hex, red(), green(), blue(), alpha(), m_spImpl->isSynchronizing);
+        onHexChanged(hex, RgbaProperties{red(), green(), blue(), alpha()}, m_spImpl->isSynchronizing);
     });
 }
 

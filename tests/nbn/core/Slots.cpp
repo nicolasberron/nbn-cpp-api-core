@@ -64,15 +64,21 @@ class Receiver {
     }
 };
 
-// Free-function handlers (file scope)
-static int g_freeCount{0};     // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
-static int g_freeIntCount{0};  // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+auto freePingCount() -> int& {
+    static int count{0};
+    return count;
+}
+
+auto freeIntCount() -> int& {
+    static int count{0};
+    return count;
+}
 
 static void freePingHandler() {
-    ++g_freeCount;
+    ++freePingCount();
 }
 static void freeIntHandler(int) {
-    ++g_freeIntCount;
+    ++freeIntCount();
 }
 
 // Minimal two-state FSM: A → B (immediate conditional transition)
@@ -169,31 +175,31 @@ void test_slot_returns_existing_instances_for_all_argument_types() {
 // ---------------------------------------------------------------------------
 
 void test_slot_free_function() {
-    g_freeCount = 0;
+    freePingCount() = 0;
     TestObject obj{};
 
     obj.signalPing()->connect(freePingHandler);
     obj.signalPing()->emit();
-    unit_tests::equal("slot connected to free function should fire", 1, g_freeCount);
+    unit_tests::equal("slot connected to free function should fire", 1, freePingCount());
 
     obj.signalPing()->disconnect(freePingHandler);
     obj.signalPing()->emit();
-    unit_tests::equal("slot disconnected from free function should not fire", 1, g_freeCount);
+    unit_tests::equal("slot disconnected from free function should not fire", 1, freePingCount());
 }
 
 void test_signal_free_function() {
     TestObject obj{};
 
-    g_freeIntCount = 0;
+    freeIntCount() = 0;
     constexpr int kTestValue{7};
 
     obj.signalFired()->connect(freeIntHandler);
     obj.signalFired()->emit(kTestValue);
-    unit_tests::equal("signal connected to free function should fire", 1, g_freeIntCount);
+    unit_tests::equal("signal connected to free function should fire", 1, freeIntCount());
 
     obj.signalFired()->disconnect(freeIntHandler);
     obj.signalFired()->emit(kTestValue);
-    unit_tests::equal("signal disconnected from free function should not fire", 1, g_freeIntCount);
+    unit_tests::equal("signal disconnected from free function should not fire", 1, freeIntCount());
 }
 
 // ---------------------------------------------------------------------------

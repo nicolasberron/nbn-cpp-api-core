@@ -6,9 +6,9 @@ Callgrind instruction counts are useful for locating hot functions. They are not
 
 ## `test_Application`
 
-- Report: [callgrind-724070.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-724070.out)
-- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_Application (PID 724070, part 1)`
-- Program instructions: **851,423,947**
+- Report: [callgrind-500327.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-500327.out)
+- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_Application (PID 500327, part 1)`
+- Program instructions: **849,132,876**
 
 <details>
 <summary>Callgrind hotspots by ownership</summary>
@@ -17,28 +17,28 @@ Callgrind instruction counts are useful for locating hot functions. They are not
 
 | Instructions | Function / location |
 |---:|---|
-| 843,133,811 | [src/nbn/core/private/Thread.cpp:nbn::core::Thread::Impl::run()::{lambda()#2}::operator()()](../../../../nbn-main-vscode-workspace/src/nbn/core/private/Thread.cpp) |
+| 840,861,853 | [src/nbn/core/private/Thread.cpp:nbn::core::Thread::Impl::run()::{lambda()#2}::operator()()](../../../../nbn-main-vscode-workspace/src/nbn/core/private/Thread.cpp) |
 
 ### External and runtime code
 
 | Instructions | Function / location |
 |---:|---|
-| 1,673,418,582 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2` |
-| 843,255,926 | `./nptl/./nptl/pthread_create.c:start_thread` |
-| 843,157,026 | `???:0x00000000000e0e50` |
-| 843,144,991 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> > >::_M_run()` |
-| 843,143,801 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::operator()()` |
-| 843,142,369 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:void std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::_M_invoke<0ul>(std::_Index_tuple<0ul>)` |
-| 843,136,051 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:std::__invoke_result<nbn::core::Thread::Impl::run()::{lambda()#2}>::type std::__invoke<nbn::core::Thread::Impl::run()::{lambda()#2}>(nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
-| 843,134,791 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:void std::__invoke_impl<void, nbn::core::Thread::Impl::run()::{lambda()#2}>(std::__invoke_other, nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
+| 1,668,641,600 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2` |
+| 840,979,998 | `./nptl/./nptl/pthread_create.c:start_thread` |
+| 840,885,068 | `???:0x00000000000e0e50` |
+| 840,873,033 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> > >::_M_run()` |
+| 840,871,843 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::operator()()` |
+| 840,870,411 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:void std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::_M_invoke<0ul>(std::_Index_tuple<0ul>)` |
+| 840,864,093 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:std::__invoke_result<nbn::core::Thread::Impl::run()::{lambda()#2}>::type std::__invoke<nbn::core::Thread::Impl::run()::{lambda()#2}>(nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
+| 840,862,833 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:void std::__invoke_impl<void, nbn::core::Thread::Impl::run()::{lambda()#2}>(std::__invoke_other, nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
 
 </details>
 
 ## `test_ApplicationSignalInterrupt`
 
-- Report: [callgrind-724181.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-724181.out)
-- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_ApplicationSignalInterrupt (PID 724181, part 1)`
-- Program instructions: **8,177,603**
+- Report: [callgrind-500441.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-500441.out)
+- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_ApplicationSignalInterrupt (PID 500441, part 1)`
+- Program instructions: **8,187,998**
 
 <details>
 <summary>Callgrind hotspots by ownership</summary>
@@ -53,24 +53,24 @@ Callgrind instruction counts are useful for locating hot functions. They are not
 
 | Instructions | Function / location |
 |---:|---|
-| 7,387,906 | `???:0x000000000001d2c0` |
-| 5,071,030 | `./elf/./elf/dl-lookup.c:_dl_lookup_symbol_x` |
-| 3,276,892 | `./elf/./elf/rtld.c:_dl_start` |
-| 3,276,151 | `./elf/../sysdeps/unix/sysv/linux/dl-sysdep.c:_dl_sysdep_start` |
-| 3,243,181 | `./elf/./elf/rtld.c:dl_main` |
-| 3,207,462 | `???:(below main)` |
-| 3,207,451 | `./csu/../csu/libc-start.c:__libc_start_main@@GLIBC_2.34` |
-| 3,207,284 | `./csu/../sysdeps/nptl/libc_start_call_main.h:(below main)` |
-| 3,128,188 | `./elf/./elf/dl-reloc.c:_dl_relocate_object` |
-| 3,128,169 | `./elf/./elf/dl-reloc.c:_dl_relocate_object_no_relro` |
+| 7,359,328 | `???:0x000000000001d2c0` |
+| 5,071,986 | `./elf/./elf/dl-lookup.c:_dl_lookup_symbol_x` |
+| 3,275,294 | `./elf/./elf/rtld.c:_dl_start` |
+| 3,274,553 | `./elf/../sysdeps/unix/sysv/linux/dl-sysdep.c:_dl_sysdep_start` |
+| 3,243,774 | `./elf/./elf/rtld.c:dl_main` |
+| 3,180,244 | `???:(below main)` |
+| 3,180,233 | `./csu/../csu/libc-start.c:__libc_start_main@@GLIBC_2.34` |
+| 3,180,066 | `./csu/../sysdeps/nptl/libc_start_call_main.h:(below main)` |
+| 3,127,658 | `./elf/./elf/dl-reloc.c:_dl_relocate_object` |
+| 3,127,639 | `./elf/./elf/dl-reloc.c:_dl_relocate_object_no_relro` |
 
 </details>
 
 ## `test_ApplicationTerminateHandler`
 
-- Report: [callgrind-724214.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-724214.out)
-- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_ApplicationTerminateHandler (PID 724214, part 1)`
-- Program instructions: **8,216,328**
+- Report: [callgrind-500467.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-500467.out)
+- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_ApplicationTerminateHandler (PID 500467, part 1)`
+- Program instructions: **8,215,406**
 
 <details>
 <summary>Callgrind hotspots by ownership</summary>
@@ -85,24 +85,24 @@ Callgrind instruction counts are useful for locating hot functions. They are not
 
 | Instructions | Function / location |
 |---:|---|
-| 7,510,192 | `???:0x000000000001d2c0` |
-| 5,093,390 | `./elf/./elf/dl-lookup.c:_dl_lookup_symbol_x` |
-| 3,269,873 | `./elf/./elf/rtld.c:_dl_start` |
-| 3,269,132 | `./elf/../sysdeps/unix/sysv/linux/dl-sysdep.c:_dl_sysdep_start` |
-| 3,236,162 | `./elf/./elf/rtld.c:dl_main` |
-| 3,196,739 | `???:(below main)` |
-| 3,196,728 | `./csu/../csu/libc-start.c:__libc_start_main@@GLIBC_2.34` |
-| 3,196,561 | `./csu/../sysdeps/nptl/libc_start_call_main.h:(below main)` |
-| 3,124,128 | `./elf/./elf/dl-reloc.c:_dl_relocate_object` |
-| 3,124,109 | `./elf/./elf/dl-reloc.c:_dl_relocate_object_no_relro` |
+| 7,496,678 | `???:0x000000000001d2c0` |
+| 5,094,471 | `./elf/./elf/dl-lookup.c:_dl_lookup_symbol_x` |
+| 3,268,130 | `./elf/./elf/rtld.c:_dl_start` |
+| 3,267,389 | `./elf/../sysdeps/unix/sysv/linux/dl-sysdep.c:_dl_sysdep_start` |
+| 3,236,610 | `./elf/./elf/rtld.c:dl_main` |
+| 3,184,538 | `???:(below main)` |
+| 3,184,527 | `./csu/../csu/libc-start.c:__libc_start_main@@GLIBC_2.34` |
+| 3,184,360 | `./csu/../sysdeps/nptl/libc_start_call_main.h:(below main)` |
+| 3,123,453 | `./elf/./elf/dl-reloc.c:_dl_relocate_object` |
+| 3,123,434 | `./elf/./elf/dl-reloc.c:_dl_relocate_object_no_relro` |
 
 </details>
 
 ## `test_ApplicationThreadsManager`
 
-- Report: [callgrind-724226.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-724226.out)
-- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_ApplicationThreadsManager (PID 724226, part 1)`
-- Program instructions: **26,883,913**
+- Report: [callgrind-500471.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-500471.out)
+- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_ApplicationThreadsManager (PID 500471, part 1)`
+- Program instructions: **26,975,357**
 
 <details>
 <summary>Callgrind hotspots by ownership</summary>
@@ -111,28 +111,28 @@ Callgrind instruction counts are useful for locating hot functions. They are not
 
 | Instructions | Function / location |
 |---:|---|
-| 19,394,030 | [src/nbn/core/private/Thread.cpp:nbn::core::Thread::Impl::run()::{lambda()#2}::operator()()](../../../../nbn-main-vscode-workspace/src/nbn/core/private/Thread.cpp) |
+| 19,557,413 | [src/nbn/core/private/Thread.cpp:nbn::core::Thread::Impl::run()::{lambda()#2}::operator()()](../../../../nbn-main-vscode-workspace/src/nbn/core/private/Thread.cpp) |
 
 ### External and runtime code
 
 | Instructions | Function / location |
 |---:|---|
-| 28,520,097 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2` |
-| 19,682,485 | `./nptl/./nptl/pthread_create.c:start_thread` |
-| 19,437,000 | `???:0x00000000000e0e50` |
-| 19,409,260 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> > >::_M_run()` |
-| 19,407,575 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::operator()()` |
-| 19,405,693 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:void std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::_M_invoke<0ul>(std::_Index_tuple<0ul>)` |
-| 19,397,170 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:std::__invoke_result<nbn::core::Thread::Impl::run()::{lambda()#2}>::type std::__invoke<nbn::core::Thread::Impl::run()::{lambda()#2}>(nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
-| 19,395,460 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:void std::__invoke_impl<void, nbn::core::Thread::Impl::run()::{lambda()#2}>(std::__invoke_other, nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
+| 28,465,428 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2` |
+| 19,844,772 | `./nptl/./nptl/pthread_create.c:start_thread` |
+| 19,600,383 | `???:0x00000000000e0e50` |
+| 19,572,643 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> > >::_M_run()` |
+| 19,570,958 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::operator()()` |
+| 19,569,076 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:void std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::_M_invoke<0ul>(std::_Index_tuple<0ul>)` |
+| 19,560,553 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:std::__invoke_result<nbn::core::Thread::Impl::run()::{lambda()#2}>::type std::__invoke<nbn::core::Thread::Impl::run()::{lambda()#2}>(nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
+| 19,558,843 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:void std::__invoke_impl<void, nbn::core::Thread::Impl::run()::{lambda()#2}>(std::__invoke_other, nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
 
 </details>
 
 ## `test_ApplicationUncaughtException`
 
-- Report: [callgrind-724313.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-724313.out)
-- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_ApplicationUncaughtException (PID 724313, part 1)`
-- Program instructions: **707,398,536**
+- Report: [callgrind-500565.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-500565.out)
+- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_ApplicationUncaughtException (PID 500565, part 1)`
+- Program instructions: **704,857,305**
 
 <details>
 <summary>Callgrind hotspots by ownership</summary>
@@ -141,27 +141,27 @@ Callgrind instruction counts are useful for locating hot functions. They are not
 
 | Instructions | Function / location |
 |---:|---|
-| 699,210,998 | [src/nbn/core/Application.cpp:nbn::core::Application::exec()](../../../../nbn-main-vscode-workspace/src/nbn/core/Application.cpp) |
-| 699,210,169 | [src/nbn/core/private/Application.cpp:nbn::core::private_ns::Application::exec()](../../../../nbn-main-vscode-workspace/src/nbn/core/private/Application.cpp) |
+| 696,703,752 | [src/nbn/core/Application.cpp:nbn::core::Application::exec()](../../../../nbn-main-vscode-workspace/src/nbn/core/Application.cpp) |
+| 696,702,923 | [src/nbn/core/private/Application.cpp:nbn::core::private_ns::Application::exec()](../../../../nbn-main-vscode-workspace/src/nbn/core/private/Application.cpp) |
 
 ### External and runtime code
 
 | Instructions | Function / location |
 |---:|---|
 | 758,777,057 | `???:elf_zlib_inflate.cold'2` |
-| 705,755,736 | `???:0x000000000001d2c0` |
-| 701,444,190 | `???:(below main)` |
-| 701,444,179 | `./csu/../csu/libc-start.c:__libc_start_main@@GLIBC_2.34` |
-| 701,444,012 | `./csu/../sysdeps/nptl/libc_start_call_main.h:(below main)` |
-| 701,443,962 | `tests/nbn/core/main_test_ApplicationUncaughtException.cpp:main` |
+| 703,245,996 | `???:0x000000000001d2c0` |
+| 698,936,177 | `???:(below main)` |
+| 698,936,166 | `./csu/../csu/libc-start.c:__libc_start_main@@GLIBC_2.34` |
+| 698,935,999 | `./csu/../sysdeps/nptl/libc_start_call_main.h:(below main)` |
+| 698,935,949 | `tests/nbn/core/main_test_ApplicationUncaughtException.cpp:main` |
 
 </details>
 
 ## `test_Color`
 
-- Report: [callgrind-724389.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-724389.out)
-- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_Color (PID 724389, part 1)`
-- Program instructions: **18,330,696**
+- Report: [callgrind-500639.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-500639.out)
+- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_Color (PID 500639, part 1)`
+- Program instructions: **18,309,392**
 
 <details>
 <summary>Callgrind hotspots by ownership</summary>
@@ -170,29 +170,29 @@ Callgrind instruction counts are useful for locating hot functions. They are not
 
 | Instructions | Function / location |
 |---:|---|
-| 10,973,748 | [src/nbn/core/private/Thread.cpp:nbn::core::Thread::Impl::run()::{lambda()#2}::operator()()](../../../../nbn-main-vscode-workspace/src/nbn/core/private/Thread.cpp) |
+| 10,991,950 | [src/nbn/core/private/Thread.cpp:nbn::core::Thread::Impl::run()::{lambda()#2}::operator()()](../../../../nbn-main-vscode-workspace/src/nbn/core/private/Thread.cpp) |
 
 ### External and runtime code
 
 | Instructions | Function / location |
 |---:|---|
-| 20,358,599 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2` |
-| 11,325,701 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const` |
-| 11,018,119 | `./nptl/./nptl/pthread_create.c:start_thread` |
-| 10,990,420 | `???:0x00000000000e0e50` |
-| 10,983,620 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> > >::_M_run()` |
-| 10,982,560 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::operator()()` |
-| 10,981,278 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:void std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::_M_invoke<0ul>(std::_Index_tuple<0ul>)` |
-| 10,975,688 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:std::__invoke_result<nbn::core::Thread::Impl::run()::{lambda()#2}>::type std::__invoke<nbn::core::Thread::Impl::run()::{lambda()#2}>(nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
-| 10,974,578 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:void std::__invoke_impl<void, nbn::core::Thread::Impl::run()::{lambda()#2}>(std::__invoke_other, nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
+| 20,348,555 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2` |
+| 11,356,018 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const` |
+| 11,040,542 | `./nptl/./nptl/pthread_create.c:start_thread` |
+| 11,008,622 | `???:0x00000000000e0e50` |
+| 11,001,822 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> > >::_M_run()` |
+| 11,000,762 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::operator()()` |
+| 10,999,480 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:void std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::_M_invoke<0ul>(std::_Index_tuple<0ul>)` |
+| 10,993,890 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:std::__invoke_result<nbn::core::Thread::Impl::run()::{lambda()#2}>::type std::__invoke<nbn::core::Thread::Impl::run()::{lambda()#2}>(nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
+| 10,992,780 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:void std::__invoke_impl<void, nbn::core::Thread::Impl::run()::{lambda()#2}>(std::__invoke_other, nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
 
 </details>
 
 ## `test_CommandLineParser`
 
-- Report: [callgrind-724417.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-724417.out)
-- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_CommandLineParser (PID 724417, part 1)`
-- Program instructions: **10,953,684**
+- Report: [callgrind-500670.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-500670.out)
+- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_CommandLineParser (PID 500670, part 1)`
+- Program instructions: **10,955,486**
 
 <details>
 <summary>Callgrind hotspots by ownership</summary>
@@ -207,24 +207,24 @@ Callgrind instruction counts are useful for locating hot functions. They are not
 
 | Instructions | Function / location |
 |---:|---|
-| 7,238,871 | `???:0x000000000001d2c0` |
-| 5,740,669 | `./elf/./elf/dl-lookup.c:_dl_lookup_symbol_x` |
-| 5,727,834 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2` |
-| 4,030,697 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const` |
-| 3,714,792 | `./nptl/./nptl/pthread_create.c:start_thread` |
-| 3,710,524 | `./elf/../sysdeps/x86_64/dl-trampoline.h:_dl_runtime_resolve_xsave` |
-| 3,694,775 | `???:0x00000000000e0e50` |
-| 3,687,975 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> > >::_M_run()` |
-| 3,686,950 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::operator()()` |
-| 3,685,668 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:void std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::_M_invoke<0ul>(std::_Index_tuple<0ul>)` |
+| 7,235,713 | `???:0x000000000001d2c0` |
+| 5,741,572 | `./elf/./elf/dl-lookup.c:_dl_lookup_symbol_x` |
+| 5,727,312 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2` |
+| 4,034,884 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const` |
+| 3,719,752 | `./nptl/./nptl/pthread_create.c:start_thread` |
+| 3,711,763 | `./elf/../sysdeps/x86_64/dl-trampoline.h:_dl_runtime_resolve_xsave` |
+| 3,699,735 | `???:0x00000000000e0e50` |
+| 3,692,935 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> > >::_M_run()` |
+| 3,691,910 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::operator()()` |
+| 3,690,628 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:void std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::_M_invoke<0ul>(std::_Index_tuple<0ul>)` |
 
 </details>
 
 ## `test_ConcurrentStack`
 
-- Report: [callgrind-724424.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-724424.out)
-- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_ConcurrentStack (PID 724424, part 1)`
-- Program instructions: **520,252,194**
+- Report: [callgrind-500677.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-500677.out)
+- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_ConcurrentStack (PID 500677, part 1)`
+- Program instructions: **520,644,303**
 
 <details>
 <summary>Callgrind hotspots by ownership</summary>
@@ -233,28 +233,28 @@ Callgrind instruction counts are useful for locating hot functions. They are not
 
 | Instructions | Function / location |
 |---:|---|
-| 156,697,545 | [src/nbn/core/../../nbn/core/ConcurrentStack.h:nbn::core::ConcurrentStack<int>::push(int)](../../../../nbn-main-vscode-workspace/src/nbn/core/ConcurrentStack.h) |
-| 146,748,060 | [src/nbn/core/../../nbn/core/ConcurrentStack.h:nbn::core::ConcurrentStack<int>::pop(int&)](../../../../nbn-main-vscode-workspace/src/nbn/core/ConcurrentStack.h) |
+| 157,004,639 | [src/nbn/core/../../nbn/core/ConcurrentStack.h:nbn::core::ConcurrentStack<int>::push(int)](../../../../nbn-main-vscode-workspace/src/nbn/core/ConcurrentStack.h) |
+| 148,709,366 | [src/nbn/core/../../nbn/core/ConcurrentStack.h:nbn::core::ConcurrentStack<int>::pop(int&)](../../../../nbn-main-vscode-workspace/src/nbn/core/ConcurrentStack.h) |
 
 ### External and runtime code
 
 | Instructions | Function / location |
 |---:|---|
-| 512,884,266 | `./nptl/./nptl/pthread_create.c:start_thread` |
-| 512,754,842 | `???:0x00000000000e0e50` |
-| 510,686,190 | `./nptl/./nptl/pthread_create.c:start_thread'2` |
-| 269,036,144 | `./misc/../sysdeps/unix/sysv/linux/x86_64/clone.S:start_thread` |
-| 241,650,326 | `./misc/../sysdeps/unix/sysv/linux/x86_64/clone.S:start_thread'2` |
-| 102,654,266 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/shared_ptr_base.h:std::__shared_count<(__gnu_cxx::_Lock_policy)2>::~__shared_count()` |
-| 96,215,275 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<(anonymous namespace)::runStackStress<std::unique_ptr<int, std::default_delete<int> >, test_concurrent_stack_high_contention_preserves_unique_move_only_values()::$_0, test_concurrent_stack_high_contention_preserves_unique_move_only_values()::$_1>(test_concurrent_stack_high_contention_preserves_unique_move_only_values()::$_0, test_concurrent_stack_high_contention_preserves_unique_move_only_values()::$_1)::{lambda()#2}> > >::_M_run()` |
+| 513,367,486 | `./nptl/./nptl/pthread_create.c:start_thread` |
+| 513,234,290 | `???:0x00000000000e0e50` |
+| 505,626,387 | `./nptl/./nptl/pthread_create.c:start_thread'2` |
+| 267,983,839 | `./misc/../sysdeps/unix/sysv/linux/x86_64/clone.S:start_thread` |
+| 237,642,828 | `./misc/../sysdeps/unix/sysv/linux/x86_64/clone.S:start_thread'2` |
+| 102,656,920 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/shared_ptr_base.h:std::__shared_count<(__gnu_cxx::_Lock_policy)2>::~__shared_count()` |
+| 97,082,851 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<(anonymous namespace)::runStackStress<std::unique_ptr<int, std::default_delete<int> >, test_concurrent_stack_high_contention_preserves_unique_move_only_values()::$_0, test_concurrent_stack_high_contention_preserves_unique_move_only_values()::$_1>(test_concurrent_stack_high_contention_preserves_unique_move_only_values()::$_0, test_concurrent_stack_high_contention_preserves_unique_move_only_values()::$_1)::{lambda()#2}> > >::_M_run()` |
 
 </details>
 
 ## `test_ElapsedTimer`
 
-- Report: [callgrind-724581.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-724581.out)
-- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_ElapsedTimer (PID 724581, part 1)`
-- Program instructions: **8,543,804**
+- Report: [callgrind-500818.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-500818.out)
+- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_ElapsedTimer (PID 500818, part 1)`
+- Program instructions: **8,568,278**
 
 <details>
 <summary>Callgrind hotspots by ownership</summary>
@@ -269,24 +269,24 @@ Callgrind instruction counts are useful for locating hot functions. They are not
 
 | Instructions | Function / location |
 |---:|---|
-| 7,211,628 | `???:0x000000000001d2c0` |
-| 5,008,538 | `./elf/./elf/dl-lookup.c:_dl_lookup_symbol_x` |
-| 3,274,779 | `./elf/./elf/rtld.c:_dl_start` |
-| 3,274,038 | `./elf/../sysdeps/unix/sysv/linux/dl-sysdep.c:_dl_sysdep_start` |
-| 3,241,068 | `./elf/./elf/rtld.c:dl_main` |
-| 3,127,385 | `./elf/./elf/dl-reloc.c:_dl_relocate_object` |
-| 3,127,366 | `./elf/./elf/dl-reloc.c:_dl_relocate_object_no_relro` |
-| 3,029,986 | `???:(below main)` |
-| 3,029,975 | `./csu/../csu/libc-start.c:__libc_start_main@@GLIBC_2.34` |
-| 3,029,808 | `./csu/../sysdeps/nptl/libc_start_call_main.h:(below main)` |
+| 7,197,613 | `???:0x000000000001d2c0` |
+| 5,009,836 | `./elf/./elf/dl-lookup.c:_dl_lookup_symbol_x` |
+| 3,273,187 | `./elf/./elf/rtld.c:_dl_start` |
+| 3,272,446 | `./elf/../sysdeps/unix/sysv/linux/dl-sysdep.c:_dl_sysdep_start` |
+| 3,241,667 | `./elf/./elf/rtld.c:dl_main` |
+| 3,126,861 | `./elf/./elf/dl-reloc.c:_dl_relocate_object` |
+| 3,126,842 | `./elf/./elf/dl-reloc.c:_dl_relocate_object_no_relro` |
+| 3,016,976 | `???:(below main)` |
+| 3,016,965 | `./csu/../csu/libc-start.c:__libc_start_main@@GLIBC_2.34` |
+| 3,016,798 | `./csu/../sysdeps/nptl/libc_start_call_main.h:(below main)` |
 
 </details>
 
 ## `test_FilesystemWatcher`
 
-- Report: [callgrind-724612.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-724612.out)
-- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_FilesystemWatcher (PID 724612, part 1)`
-- Program instructions: **16,923,250**
+- Report: [callgrind-500840.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-500840.out)
+- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_FilesystemWatcher (PID 500840, part 1)`
+- Program instructions: **16,969,799**
 
 <details>
 <summary>Callgrind hotspots by ownership</summary>
@@ -295,28 +295,29 @@ Callgrind instruction counts are useful for locating hot functions. They are not
 
 | Instructions | Function / location |
 |---:|---|
-| 9,899,189 | [src/nbn/core/private/Thread.cpp:nbn::core::Thread::Impl::run()::{lambda()#2}::operator()()](../../../../nbn-main-vscode-workspace/src/nbn/core/private/Thread.cpp) |
+| 9,876,064 | [src/nbn/core/private/Thread.cpp:nbn::core::Thread::Impl::run()::{lambda()#2}::operator()()](../../../../nbn-main-vscode-workspace/src/nbn/core/private/Thread.cpp) |
 
 ### External and runtime code
 
 | Instructions | Function / location |
 |---:|---|
-| 12,049,976 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2` |
-| 9,971,822 | `./nptl/./nptl/pthread_create.c:start_thread` |
-| 9,918,892 | `???:0x00000000000e0e50` |
-| 9,909,649 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> > >::_M_run()` |
-| 9,908,547 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::operator()()` |
-| 9,907,195 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:void std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::_M_invoke<0ul>(std::_Index_tuple<0ul>)` |
-| 9,901,269 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:std::__invoke_result<nbn::core::Thread::Impl::run()::{lambda()#2}>::type std::__invoke<nbn::core::Thread::Impl::run()::{lambda()#2}>(nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
-| 9,900,089 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:void std::__invoke_impl<void, nbn::core::Thread::Impl::run()::{lambda()#2}>(std::__invoke_other, nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
+| 12,045,416 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2` |
+| 9,948,851 | `./nptl/./nptl/pthread_create.c:start_thread` |
+| 9,895,767 | `???:0x00000000000e0e50` |
+| 9,892,724 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const` |
+| 9,886,524 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> > >::_M_run()` |
+| 9,885,422 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::operator()()` |
+| 9,884,070 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:void std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::_M_invoke<0ul>(std::_Index_tuple<0ul>)` |
+| 9,878,144 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:std::__invoke_result<nbn::core::Thread::Impl::run()::{lambda()#2}>::type std::__invoke<nbn::core::Thread::Impl::run()::{lambda()#2}>(nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
+| 9,876,964 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:void std::__invoke_impl<void, nbn::core::Thread::Impl::run()::{lambda()#2}>(std::__invoke_other, nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
 
 </details>
 
 ## `test_FiniteStateMachine`
 
-- Report: [callgrind-724637.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-724637.out)
-- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_FiniteStateMachine (PID 724637, part 1)`
-- Program instructions: **2,574,288,664**
+- Report: [callgrind-500886.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-500886.out)
+- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_FiniteStateMachine (PID 500886, part 1)`
+- Program instructions: **3,086,525,737**
 
 <details>
 <summary>Callgrind hotspots by ownership</summary>
@@ -325,28 +326,28 @@ Callgrind instruction counts are useful for locating hot functions. They are not
 
 | Instructions | Function / location |
 |---:|---|
-| 2,567,103,052 | [src/nbn/core/private/Thread.cpp:nbn::core::Thread::Impl::run()::{lambda()#2}::operator()()](../../../../nbn-main-vscode-workspace/src/nbn/core/private/Thread.cpp) |
+| 3,079,338,163 | [src/nbn/core/private/Thread.cpp:nbn::core::Thread::Impl::run()::{lambda()#2}::operator()()](../../../../nbn-main-vscode-workspace/src/nbn/core/private/Thread.cpp) |
+| 3,079,181,057 | [src/nbn/core/Task.cpp:nbn::core::Task::run()](../../../../nbn-main-vscode-workspace/src/nbn/core/Task.cpp) |
 
 ### External and runtime code
 
 | Instructions | Function / location |
 |---:|---|
-| 2,710,885,356 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2` |
-| 2,567,168,370 | `./nptl/./nptl/pthread_create.c:start_thread` |
-| 2,567,121,480 | `???:0x00000000000e0e50` |
-| 2,567,113,284 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> > >::_M_run()` |
-| 2,567,112,180 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::operator()()` |
-| 2,567,110,858 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:void std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::_M_invoke<0ul>(std::_Index_tuple<0ul>)` |
-| 2,567,105,072 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:std::__invoke_result<nbn::core::Thread::Impl::run()::{lambda()#2}>::type std::__invoke<nbn::core::Thread::Impl::run()::{lambda()#2}>(nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
-| 2,567,103,922 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:void std::__invoke_impl<void, nbn::core::Thread::Impl::run()::{lambda()#2}>(std::__invoke_other, nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
+| 3,079,402,721 | `./nptl/./nptl/pthread_create.c:start_thread` |
+| 3,079,356,591 | `???:0x00000000000e0e50` |
+| 3,079,348,395 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> > >::_M_run()` |
+| 3,079,347,291 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::operator()()` |
+| 3,079,345,969 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:void std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::_M_invoke<0ul>(std::_Index_tuple<0ul>)` |
+| 3,079,340,183 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:std::__invoke_result<nbn::core::Thread::Impl::run()::{lambda()#2}>::type std::__invoke<nbn::core::Thread::Impl::run()::{lambda()#2}>(nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
+| 3,079,339,033 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:void std::__invoke_impl<void, nbn::core::Thread::Impl::run()::{lambda()#2}>(std::__invoke_other, nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
 
 </details>
 
 ## `test_JsonMigratorBase`
 
-- Report: [callgrind-725029.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-725029.out)
-- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_JsonMigratorBase (PID 725029, part 1)`
-- Program instructions: **10,487,425**
+- Report: [callgrind-501358.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-501358.out)
+- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_JsonMigratorBase (PID 501358, part 1)`
+- Program instructions: **10,483,307**
 
 <details>
 <summary>Callgrind hotspots by ownership</summary>
@@ -361,24 +362,24 @@ Callgrind instruction counts are useful for locating hot functions. They are not
 
 | Instructions | Function / location |
 |---:|---|
-| 7,327,623 | `???:0x000000000001d2c0` |
-| 5,527,052 | `./elf/./elf/dl-lookup.c:_dl_lookup_symbol_x` |
-| 4,893,637 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2` |
-| 3,500,195 | `./elf/../sysdeps/x86_64/dl-trampoline.h:_dl_runtime_resolve_xsave` |
-| 3,486,498 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const` |
-| 3,383,235 | `./elf/./elf/dl-runtime.c:_dl_fixup` |
-| 3,275,515 | `./elf/./elf/rtld.c:_dl_start` |
-| 3,274,774 | `./elf/../sysdeps/unix/sysv/linux/dl-sysdep.c:_dl_sysdep_start` |
-| 3,241,804 | `./elf/./elf/rtld.c:dl_main` |
-| 3,167,101 | `???:(below main)` |
+| 7,313,974 | `???:0x000000000001d2c0` |
+| 5,526,339 | `./elf/./elf/dl-lookup.c:_dl_lookup_symbol_x` |
+| 4,887,139 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2` |
+| 3,499,531 | `./elf/../sysdeps/x86_64/dl-trampoline.h:_dl_runtime_resolve_xsave` |
+| 3,483,640 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const` |
+| 3,382,651 | `./elf/./elf/dl-runtime.c:_dl_fixup` |
+| 3,273,710 | `./elf/./elf/rtld.c:_dl_start` |
+| 3,272,969 | `./elf/../sysdeps/unix/sysv/linux/dl-sysdep.c:_dl_sysdep_start` |
+| 3,242,190 | `./elf/./elf/rtld.c:dl_main` |
+| 3,169,312 | `./nptl/./nptl/pthread_create.c:start_thread` |
 
 </details>
 
 ## `test_Object`
 
-- Report: [callgrind-725046.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-725046.out)
-- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_Object (PID 725046, part 1)`
-- Program instructions: **1,023,539,860**
+- Report: [callgrind-501389.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-501389.out)
+- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_Object (PID 501389, part 1)`
+- Program instructions: **1,043,503,657**
 
 <details>
 <summary>Callgrind hotspots by ownership</summary>
@@ -387,29 +388,29 @@ Callgrind instruction counts are useful for locating hot functions. They are not
 
 | Instructions | Function / location |
 |---:|---|
-| 1,016,097,331 | [src/nbn/core/private/Thread.cpp:nbn::core::Thread::Impl::run()::{lambda()#2}::operator()()](../../../../nbn-main-vscode-workspace/src/nbn/core/private/Thread.cpp) |
+| 1,036,087,562 | [src/nbn/core/private/Thread.cpp:nbn::core::Thread::Impl::run()::{lambda()#2}::operator()()](../../../../nbn-main-vscode-workspace/src/nbn/core/private/Thread.cpp) |
 
 ### External and runtime code
 
 | Instructions | Function / location |
 |---:|---|
-| 2,029,679,045 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2` |
-| 1,016,456,492 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const` |
-| 1,016,132,112 | `./nptl/./nptl/pthread_create.c:start_thread` |
-| 1,016,114,004 | `???:0x00000000000e0e50` |
-| 1,016,107,204 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> > >::_M_run()` |
-| 1,016,106,179 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::operator()()` |
-| 1,016,104,897 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:void std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::_M_invoke<0ul>(std::_Index_tuple<0ul>)` |
-| 1,016,099,314 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:std::__invoke_result<nbn::core::Thread::Impl::run()::{lambda()#2}>::type std::__invoke<nbn::core::Thread::Impl::run()::{lambda()#2}>(nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
-| 1,016,098,204 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:void std::__invoke_impl<void, nbn::core::Thread::Impl::run()::{lambda()#2}>(std::__invoke_other, nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
+| 2,069,576,269 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2` |
+| 1,036,445,111 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const` |
+| 1,036,122,777 | `./nptl/./nptl/pthread_create.c:start_thread` |
+| 1,036,104,235 | `???:0x00000000000e0e50` |
+| 1,036,097,435 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> > >::_M_run()` |
+| 1,036,096,410 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::operator()()` |
+| 1,036,095,128 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:void std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::_M_invoke<0ul>(std::_Index_tuple<0ul>)` |
+| 1,036,089,545 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:std::__invoke_result<nbn::core::Thread::Impl::run()::{lambda()#2}>::type std::__invoke<nbn::core::Thread::Impl::run()::{lambda()#2}>(nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
+| 1,036,088,435 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:void std::__invoke_impl<void, nbn::core::Thread::Impl::run()::{lambda()#2}>(std::__invoke_other, nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
 
 </details>
 
 ## `test_ObjectSync`
 
-- Report: [callgrind-725154.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-725154.out)
-- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_ObjectSync (PID 725154, part 1)`
-- Program instructions: **12,010,124**
+- Report: [callgrind-501488.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-501488.out)
+- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_ObjectSync (PID 501488, part 1)`
+- Program instructions: **11,957,922**
 
 <details>
 <summary>Callgrind hotspots by ownership</summary>
@@ -424,24 +425,24 @@ Callgrind instruction counts are useful for locating hot functions. They are not
 
 | Instructions | Function / location |
 |---:|---|
-| 7,291,404 | `???:0x000000000001d2c0` |
-| 7,157,728 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2` |
-| 5,218,106 | `./elf/./elf/dl-lookup.c:_dl_lookup_symbol_x` |
-| 5,046,606 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const` |
-| 4,718,699 | `./nptl/./nptl/pthread_create.c:start_thread` |
-| 4,696,411 | `???:0x00000000000e0e50` |
-| 4,689,611 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> > >::_M_run()` |
-| 4,688,551 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::operator()()` |
-| 4,687,269 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:void std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::_M_invoke<0ul>(std::_Index_tuple<0ul>)` |
-| 4,681,679 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:std::__invoke_result<nbn::core::Thread::Impl::run()::{lambda()#2}>::type std::__invoke<nbn::core::Thread::Impl::run()::{lambda()#2}>(nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
+| 7,350,389 | `???:0x000000000001d2c0` |
+| 7,138,543 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2` |
+| 5,197,953 | `./elf/./elf/dl-lookup.c:_dl_lookup_symbol_x` |
+| 4,941,615 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const` |
+| 4,607,512 | `./nptl/./nptl/pthread_create.c:start_thread` |
+| 4,589,633 | `???:0x00000000000e0e50` |
+| 4,582,833 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> > >::_M_run()` |
+| 4,581,773 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::operator()()` |
+| 4,580,491 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:void std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::_M_invoke<0ul>(std::_Index_tuple<0ul>)` |
+| 4,574,901 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:std::__invoke_result<nbn::core::Thread::Impl::run()::{lambda()#2}>::type std::__invoke<nbn::core::Thread::Impl::run()::{lambda()#2}>(nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
 
 </details>
 
 ## `test_Serialization`
 
-- Report: [callgrind-725187.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-725187.out)
-- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_Serialization (PID 725187, part 1)`
-- Program instructions: **1,811,850,134**
+- Report: [callgrind-501519.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-501519.out)
+- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_Serialization (PID 501519, part 1)`
+- Program instructions: **1,831,317,494**
 
 <details>
 <summary>Callgrind hotspots by ownership</summary>
@@ -450,29 +451,29 @@ Callgrind instruction counts are useful for locating hot functions. They are not
 
 | Instructions | Function / location |
 |---:|---|
-| 3,778,334,617 | [src/nbn/core/detail/serialization.cpp:nbn::core::serialization::json::skipValue(std::basic_string_view<char, std::char_traits<char> >, unsigned long&)'2](../../../../nbn-main-vscode-workspace/src/nbn/core/detail/serialization.cpp) |
-| 3,762,610,020 | [src/nbn/core/detail/serialization.cpp:nbn::core::serialization::json::skipArray(std::basic_string_view<char, std::char_traits<char> >, unsigned long&)'2](../../../../nbn-main-vscode-workspace/src/nbn/core/detail/serialization.cpp) |
+| 3,892,613,533 | [src/nbn/core/detail/serialization.cpp:nbn::core::serialization::json::skipValue(std::basic_string_view<char, std::char_traits<char> >, unsigned long&, unsigned long)'2](../../../../nbn-main-vscode-workspace/src/nbn/core/detail/serialization.cpp) |
+| 3,877,610,685 | [src/nbn/core/detail/serialization.cpp:nbn::core::serialization::json::skipArray(std::basic_string_view<char, std::char_traits<char> >, unsigned long&, unsigned long)'2](../../../../nbn-main-vscode-workspace/src/nbn/core/detail/serialization.cpp) |
 
 ### External and runtime code
 
 | Instructions | Function / location |
 |---:|---|
-| 4,704,421,880 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2` |
-| 1,804,049,916 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const` |
-| 1,803,728,065 | `./nptl/./nptl/pthread_create.c:start_thread` |
-| 1,803,706,793 | `???:0x00000000000e0e50` |
-| 1,803,699,993 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> > >::_M_run()` |
-| 1,803,698,968 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::operator()()` |
-| 1,803,697,686 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:void std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::_M_invoke<0ul>(std::_Index_tuple<0ul>)` |
-| 1,803,692,103 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:std::__invoke_result<nbn::core::Thread::Impl::run()::{lambda()#2}>::type std::__invoke<nbn::core::Thread::Impl::run()::{lambda()#2}>(nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
+| 4,762,683,415 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2` |
+| 1,823,934,852 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const` |
+| 1,823,621,865 | `./nptl/./nptl/pthread_create.c:start_thread` |
+| 1,823,597,089 | `???:0x00000000000e0e50` |
+| 1,823,590,289 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> > >::_M_run()` |
+| 1,823,589,264 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::operator()()` |
+| 1,823,587,982 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:void std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::_M_invoke<0ul>(std::_Index_tuple<0ul>)` |
+| 1,823,582,399 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:std::__invoke_result<nbn::core::Thread::Impl::run()::{lambda()#2}>::type std::__invoke<nbn::core::Thread::Impl::run()::{lambda()#2}>(nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
 
 </details>
 
 ## `test_Signal`
 
-- Report: [callgrind-725386.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-725386.out)
-- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_Signal (PID 725386, part 1)`
-- Program instructions: **11,197,595**
+- Report: [callgrind-501761.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-501761.out)
+- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_Signal (PID 501761, part 1)`
+- Program instructions: **11,200,038**
 
 <details>
 <summary>Callgrind hotspots by ownership</summary>
@@ -487,24 +488,24 @@ Callgrind instruction counts are useful for locating hot functions. They are not
 
 | Instructions | Function / location |
 |---:|---|
-| 7,080,441 | `???:0x000000000001d2c0` |
-| 5,694,024 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2` |
-| 4,950,436 | `./elf/./elf/dl-lookup.c:_dl_lookup_symbol_x` |
-| 4,163,383 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const` |
-| 4,117,063 | `./nptl/./nptl/pthread_create.c:start_thread` |
-| 4,072,610 | `???:0x00000000000e0e50` |
-| 4,012,730 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> > >::_M_run()` |
-| 4,011,705 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::operator()()` |
-| 4,010,423 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:void std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::_M_invoke<0ul>(std::_Index_tuple<0ul>)` |
-| 4,004,774 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:std::__invoke_result<nbn::core::Thread::Impl::run()::{lambda()#2}>::type std::__invoke<nbn::core::Thread::Impl::run()::{lambda()#2}>(nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
+| 7,079,768 | `???:0x000000000001d2c0` |
+| 5,694,647 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2` |
+| 4,951,257 | `./elf/./elf/dl-lookup.c:_dl_lookup_symbol_x` |
+| 4,155,625 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const` |
+| 4,120,172 | `./nptl/./nptl/pthread_create.c:start_thread` |
+| 4,076,382 | `???:0x00000000000e0e50` |
+| 4,017,637 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> > >::_M_run()` |
+| 4,016,612 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::operator()()` |
+| 4,015,330 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:void std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::_M_invoke<0ul>(std::_Index_tuple<0ul>)` |
+| 4,009,681 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:std::__invoke_result<nbn::core::Thread::Impl::run()::{lambda()#2}>::type std::__invoke<nbn::core::Thread::Impl::run()::{lambda()#2}>(nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
 
 </details>
 
 ## `test_Slots`
 
-- Report: [callgrind-725412.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-725412.out)
-- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_Slots (PID 725412, part 1)`
-- Program instructions: **20,696,676**
+- Report: [callgrind-501809.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-501809.out)
+- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_Slots (PID 501809, part 1)`
+- Program instructions: **20,641,543**
 
 <details>
 <summary>Callgrind hotspots by ownership</summary>
@@ -513,29 +514,29 @@ Callgrind instruction counts are useful for locating hot functions. They are not
 
 | Instructions | Function / location |
 |---:|---|
-| 13,396,159 | [src/nbn/core/private/Thread.cpp:nbn::core::Thread::Impl::run()::{lambda()#2}::operator()()](../../../../nbn-main-vscode-workspace/src/nbn/core/private/Thread.cpp) |
+| 13,368,261 | [src/nbn/core/private/Thread.cpp:nbn::core::Thread::Impl::run()::{lambda()#2}::operator()()](../../../../nbn-main-vscode-workspace/src/nbn/core/private/Thread.cpp) |
 
 ### External and runtime code
 
 | Instructions | Function / location |
 |---:|---|
-| 18,804,360 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2` |
-| 13,582,095 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const` |
-| 13,438,049 | `./nptl/./nptl/pthread_create.c:start_thread` |
-| 13,413,228 | `???:0x00000000000e0e50` |
-| 13,406,079 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> > >::_M_run()` |
-| 13,405,043 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::operator()()` |
-| 13,403,751 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:void std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::_M_invoke<0ul>(std::_Index_tuple<0ul>)` |
-| 13,398,119 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:std::__invoke_result<nbn::core::Thread::Impl::run()::{lambda()#2}>::type std::__invoke<nbn::core::Thread::Impl::run()::{lambda()#2}>(nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
-| 13,396,999 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:void std::__invoke_impl<void, nbn::core::Thread::Impl::run()::{lambda()#2}>(std::__invoke_other, nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
+| 18,806,837 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2` |
+| 13,554,573 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const` |
+| 13,407,971 | `./nptl/./nptl/pthread_create.c:start_thread` |
+| 13,385,330 | `???:0x00000000000e0e50` |
+| 13,378,181 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> > >::_M_run()` |
+| 13,377,145 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::operator()()` |
+| 13,375,853 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:void std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::_M_invoke<0ul>(std::_Index_tuple<0ul>)` |
+| 13,370,221 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:std::__invoke_result<nbn::core::Thread::Impl::run()::{lambda()#2}>::type std::__invoke<nbn::core::Thread::Impl::run()::{lambda()#2}>(nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
+| 13,369,101 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:void std::__invoke_impl<void, nbn::core::Thread::Impl::run()::{lambda()#2}>(std::__invoke_other, nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
 
 </details>
 
 ## `test_Task`
 
-- Report: [callgrind-725447.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-725447.out)
-- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_Task (PID 725447, part 1)`
-- Program instructions: **831,758,588**
+- Report: [callgrind-501844.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-501844.out)
+- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_Task (PID 501844, part 1)`
+- Program instructions: **829,250,283**
 
 <details>
 <summary>Callgrind hotspots by ownership</summary>
@@ -544,27 +545,27 @@ Callgrind instruction counts are useful for locating hot functions. They are not
 
 | Instructions | Function / location |
 |---:|---|
-| 1,646,687,631 | [src/nbn/core/Task.cpp:nbn::core::Task::run()'2](../../../../nbn-main-vscode-workspace/src/nbn/core/Task.cpp) |
-| 1,646,687,148 | [src/nbn/core/private/Task.h:nbn::core::Task::Impl::run()'2](../../../../nbn-main-vscode-workspace/src/nbn/core/private/Task.h) |
+| 1,641,639,473 | [src/nbn/core/Task.cpp:nbn::core::Task::run()'2](../../../../nbn-main-vscode-workspace/src/nbn/core/Task.cpp) |
+| 1,641,638,990 | [src/nbn/core/private/Task.h:nbn::core::Task::Impl::run()'2](../../../../nbn-main-vscode-workspace/src/nbn/core/private/Task.h) |
 
 ### External and runtime code
 
 | Instructions | Function / location |
 |---:|---|
-| 2,469,626,562 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2` |
-| 824,900,782 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const` |
-| 824,568,976 | `./nptl/./nptl/pthread_create.c:start_thread` |
-| 824,551,906 | `???:0x00000000000e0e50` |
-| 824,545,106 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> > >::_M_run()` |
-| 824,544,081 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::operator()()` |
+| 2,462,054,483 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2` |
+| 822,393,061 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const` |
+| 822,062,520 | `./nptl/./nptl/pthread_create.c:start_thread` |
+| 822,045,450 | `???:0x00000000000e0e50` |
+| 822,038,650 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> > >::_M_run()` |
+| 822,037,625 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::operator()()` |
 
 </details>
 
 ## `test_Thread`
 
-- Report: [callgrind-725529.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-725529.out)
-- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_Thread (PID 725529, part 1)`
-- Program instructions: **16,640,835**
+- Report: [callgrind-501911.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-501911.out)
+- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_Thread (PID 501911, part 1)`
+- Program instructions: **16,765,743**
 
 <details>
 <summary>Callgrind hotspots by ownership</summary>
@@ -579,24 +580,24 @@ Callgrind instruction counts are useful for locating hot functions. They are not
 
 | Instructions | Function / location |
 |---:|---|
-| 28,366,050 | `./nptl/./nptl/pthread_create.c:start_thread'2` |
-| 26,545,611 | `./misc/../sysdeps/unix/sysv/linux/x86_64/clone.S:start_thread'2` |
-| 13,357,401 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2` |
-| 9,477,732 | `./nptl/./nptl/pthread_create.c:start_thread` |
-| 9,376,008 | `???:0x00000000000e0e50` |
-| 9,309,309 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> > >::_M_run()` |
-| 9,307,899 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::operator()()` |
-| 9,306,267 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:void std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::_M_invoke<0ul>(std::_Index_tuple<0ul>)` |
-| 9,298,969 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:std::__invoke_result<nbn::core::Thread::Impl::run()::{lambda()#2}>::type std::__invoke<nbn::core::Thread::Impl::run()::{lambda()#2}>(nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
-| 9,297,509 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:void std::__invoke_impl<void, nbn::core::Thread::Impl::run()::{lambda()#2}>(std::__invoke_other, nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
+| 22,167,290 | `./nptl/./nptl/pthread_create.c:start_thread'2` |
+| 20,381,483 | `./misc/../sysdeps/unix/sysv/linux/x86_64/clone.S:start_thread'2` |
+| 13,384,833 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2` |
+| 9,616,642 | `./nptl/./nptl/pthread_create.c:start_thread` |
+| 9,522,803 | `???:0x00000000000e0e50` |
+| 9,456,104 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> > >::_M_run()` |
+| 9,454,694 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::operator()()` |
+| 9,453,062 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:void std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::_M_invoke<0ul>(std::_Index_tuple<0ul>)` |
+| 9,445,764 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:std::__invoke_result<nbn::core::Thread::Impl::run()::{lambda()#2}>::type std::__invoke<nbn::core::Thread::Impl::run()::{lambda()#2}>(nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
+| 9,444,304 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:void std::__invoke_impl<void, nbn::core::Thread::Impl::run()::{lambda()#2}>(std::__invoke_other, nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
 
 </details>
 
 ## `test_Timer`
 
-- Report: [callgrind-725583.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-725583.out)
-- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_Timer (PID 725583, part 1)`
-- Program instructions: **861,832,502**
+- Report: [callgrind-501973.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-501973.out)
+- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_Timer (PID 501973, part 1)`
+- Program instructions: **858,992,689**
 
 <details>
 <summary>Callgrind hotspots by ownership</summary>
@@ -605,29 +606,29 @@ Callgrind instruction counts are useful for locating hot functions. They are not
 
 | Instructions | Function / location |
 |---:|---|
-| 854,604,885 | [src/nbn/core/private/Thread.cpp:nbn::core::Thread::Impl::run()::{lambda()#2}::operator()()](../../../../nbn-main-vscode-workspace/src/nbn/core/private/Thread.cpp) |
+| 851,782,641 | [src/nbn/core/private/Thread.cpp:nbn::core::Thread::Impl::run()::{lambda()#2}::operator()()](../../../../nbn-main-vscode-workspace/src/nbn/core/private/Thread.cpp) |
 
 ### External and runtime code
 
 | Instructions | Function / location |
 |---:|---|
-| 2,552,891,088 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2` |
-| 854,670,286 | `./nptl/./nptl/pthread_create.c:start_thread` |
-| 854,627,288 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const` |
-| 854,625,019 | `???:0x00000000000e0e50` |
-| 854,615,435 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> > >::_M_run()` |
-| 854,614,322 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::operator()()` |
-| 854,612,960 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:void std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::_M_invoke<0ul>(std::_Index_tuple<0ul>)` |
-| 854,606,985 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:std::__invoke_result<nbn::core::Thread::Impl::run()::{lambda()#2}>::type std::__invoke<nbn::core::Thread::Impl::run()::{lambda()#2}>(nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
-| 854,605,795 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:void std::__invoke_impl<void, nbn::core::Thread::Impl::run()::{lambda()#2}>(std::__invoke_other, nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
+| 2,546,076,914 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2` |
+| 851,848,402 | `./nptl/./nptl/pthread_create.c:start_thread` |
+| 851,809,862 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const` |
+| 851,802,775 | `???:0x00000000000e0e50` |
+| 851,793,191 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> > >::_M_run()` |
+| 851,792,078 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::operator()()` |
+| 851,790,716 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:void std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::_M_invoke<0ul>(std::_Index_tuple<0ul>)` |
+| 851,784,741 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:std::__invoke_result<nbn::core::Thread::Impl::run()::{lambda()#2}>::type std::__invoke<nbn::core::Thread::Impl::run()::{lambda()#2}>(nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
+| 851,783,551 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:void std::__invoke_impl<void, nbn::core::Thread::Impl::run()::{lambda()#2}>(std::__invoke_other, nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
 
 </details>
 
 ## `test_UnitTests`
 
-- Report: [callgrind-725682.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-725682.out)
-- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_UnitTests (PID 725682, part 1)`
-- Program instructions: **911,940,046**
+- Report: [callgrind-502076.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-502076.out)
+- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_UnitTests (PID 502076, part 1)`
+- Program instructions: **909,771,187**
 
 <details>
 <summary>Callgrind hotspots by ownership</summary>
@@ -636,29 +637,29 @@ Callgrind instruction counts are useful for locating hot functions. They are not
 
 | Instructions | Function / location |
 |---:|---|
-| 904,238,271 | [src/nbn/core/private/Thread.cpp:nbn::core::Thread::Impl::run()::{lambda()#2}::operator()()](../../../../nbn-main-vscode-workspace/src/nbn/core/private/Thread.cpp) |
+| 902,071,268 | [src/nbn/core/private/Thread.cpp:nbn::core::Thread::Impl::run()::{lambda()#2}::operator()()](../../../../nbn-main-vscode-workspace/src/nbn/core/private/Thread.cpp) |
 
 ### External and runtime code
 
 | Instructions | Function / location |
 |---:|---|
-| 3,598,746,415 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2` |
-| 904,599,144 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const` |
-| 904,276,219 | `./nptl/./nptl/pthread_create.c:start_thread` |
-| 904,254,936 | `???:0x00000000000e0e50` |
-| 904,248,136 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> > >::_M_run()` |
-| 904,247,111 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::operator()()` |
-| 904,245,829 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:void std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::_M_invoke<0ul>(std::_Index_tuple<0ul>)` |
-| 904,240,211 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:std::__invoke_result<nbn::core::Thread::Impl::run()::{lambda()#2}>::type std::__invoke<nbn::core::Thread::Impl::run()::{lambda()#2}>(nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
-| 904,239,101 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:void std::__invoke_impl<void, nbn::core::Thread::Impl::run()::{lambda()#2}>(std::__invoke_other, nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
+| 3,588,786,500 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2` |
+| 902,419,857 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const` |
+| 902,109,216 | `./nptl/./nptl/pthread_create.c:start_thread` |
+| 902,087,933 | `???:0x00000000000e0e50` |
+| 902,081,133 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> > >::_M_run()` |
+| 902,080,108 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::operator()()` |
+| 902,078,826 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:void std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::_M_invoke<0ul>(std::_Index_tuple<0ul>)` |
+| 902,073,208 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:std::__invoke_result<nbn::core::Thread::Impl::run()::{lambda()#2}>::type std::__invoke<nbn::core::Thread::Impl::run()::{lambda()#2}>(nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
+| 902,072,098 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:void std::__invoke_impl<void, nbn::core::Thread::Impl::run()::{lambda()#2}>(std::__invoke_other, nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
 
 </details>
 
 ## `test_utils`
 
-- Report: [callgrind-725781.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-725781.out)
-- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_utils (PID 725781, part 1)`
-- Program instructions: **866,745,223**
+- Report: [callgrind-502180.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-502180.out)
+- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_utils (PID 502180, part 1)`
+- Program instructions: **864,539,596**
 
 <details>
 <summary>Callgrind hotspots by ownership</summary>
@@ -667,29 +668,29 @@ Callgrind instruction counts are useful for locating hot functions. They are not
 
 | Instructions | Function / location |
 |---:|---|
-| 859,361,318 | [src/nbn/core/private/Thread.cpp:nbn::core::Thread::Impl::run()::{lambda()#2}::operator()()](../../../../nbn-main-vscode-workspace/src/nbn/core/private/Thread.cpp) |
+| 857,233,215 | [src/nbn/core/private/Thread.cpp:nbn::core::Thread::Impl::run()::{lambda()#2}::operator()()](../../../../nbn-main-vscode-workspace/src/nbn/core/private/Thread.cpp) |
 
 ### External and runtime code
 
 | Instructions | Function / location |
 |---:|---|
-| 2,575,314,108 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2` |
-| 859,721,720 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const` |
-| 859,392,342 | `./nptl/./nptl/pthread_create.c:start_thread` |
-| 859,377,948 | `???:0x00000000000e0e50` |
-| 859,371,148 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> > >::_M_run()` |
-| 859,370,123 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::operator()()` |
-| 859,368,841 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:void std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::_M_invoke<0ul>(std::_Index_tuple<0ul>)` |
-| 859,363,258 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:std::__invoke_result<nbn::core::Thread::Impl::run()::{lambda()#2}>::type std::__invoke<nbn::core::Thread::Impl::run()::{lambda()#2}>(nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
-| 859,362,148 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:void std::__invoke_impl<void, nbn::core::Thread::Impl::run()::{lambda()#2}>(std::__invoke_other, nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
+| 2,568,708,584 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const'2` |
+| 857,504,451 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_function.h:std::function<void ()>::operator()() const` |
+| 857,263,232 | `./nptl/./nptl/pthread_create.c:start_thread` |
+| 857,249,845 | `???:0x00000000000e0e50` |
+| 857,243,045 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_State_impl<std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> > >::_M_run()` |
+| 857,242,020 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::operator()()` |
+| 857,240,738 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/std_thread.h:void std::thread::_Invoker<std::tuple<nbn::core::Thread::Impl::run()::{lambda()#2}> >::_M_invoke<0ul>(std::_Index_tuple<0ul>)` |
+| 857,235,155 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:std::__invoke_result<nbn::core::Thread::Impl::run()::{lambda()#2}>::type std::__invoke<nbn::core::Thread::Impl::run()::{lambda()#2}>(nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
+| 857,234,045 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/bits/invoke.h:void std::__invoke_impl<void, nbn::core::Thread::Impl::run()::{lambda()#2}>(std::__invoke_other, nbn::core::Thread::Impl::run()::{lambda()#2}&&)` |
 
 </details>
 
 ## `test_CommandLineParserHelp`
 
-- Report: [callgrind-725851.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-725851.out)
-- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_CommandLineParserHelp (PID 725851, part 1)`
-- Program instructions: **5,425,298**
+- Report: [callgrind-502264.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-502264.out)
+- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_CommandLineParserHelp (PID 502264, part 1)`
+- Program instructions: **5,424,175**
 
 <details>
 <summary>Callgrind hotspots by ownership</summary>
@@ -704,24 +705,24 @@ Callgrind instruction counts are useful for locating hot functions. They are not
 
 | Instructions | Function / location |
 |---:|---|
-| 5,425,298 | `???:0x000000000001d2c0` |
-| 4,049,601 | `./elf/./elf/dl-lookup.c:_dl_lookup_symbol_x` |
-| 3,259,136 | `./elf/./elf/rtld.c:_dl_start` |
-| 3,258,395 | `./elf/../sysdeps/unix/sysv/linux/dl-sysdep.c:_dl_sysdep_start` |
-| 3,225,425 | `./elf/./elf/rtld.c:dl_main` |
-| 3,114,995 | `./elf/./elf/dl-reloc.c:_dl_relocate_object` |
-| 3,114,976 | `./elf/./elf/dl-reloc.c:_dl_relocate_object_no_relro` |
-| 2,081,364 | `./elf/../sysdeps/generic/dl-new-hash.h:_dl_lookup_symbol_x` |
-| 1,806,370 | `./elf/../sysdeps/x86_64/dl-trampoline.h:_dl_runtime_resolve_xsave` |
-| 1,750,290 | `./elf/./elf/dl-runtime.c:_dl_fixup` |
+| 5,424,175 | `???:0x000000000001d2c0` |
+| 4,049,985 | `./elf/./elf/dl-lookup.c:_dl_lookup_symbol_x` |
+| 3,257,401 | `./elf/./elf/rtld.c:_dl_start` |
+| 3,256,660 | `./elf/../sysdeps/unix/sysv/linux/dl-sysdep.c:_dl_sysdep_start` |
+| 3,225,881 | `./elf/./elf/rtld.c:dl_main` |
+| 3,114,328 | `./elf/./elf/dl-reloc.c:_dl_relocate_object` |
+| 3,114,309 | `./elf/./elf/dl-reloc.c:_dl_relocate_object_no_relro` |
+| 2,081,086 | `./elf/../sysdeps/generic/dl-new-hash.h:_dl_lookup_symbol_x` |
+| 1,807,024 | `./elf/../sysdeps/x86_64/dl-trampoline.h:_dl_runtime_resolve_xsave` |
+| 1,750,944 | `./elf/./elf/dl-runtime.c:_dl_fixup` |
 
 </details>
 
-## `test_ApplicationSegfault`
+## `test_ApplicationFatalBeforeInit`
 
-- Report: [callgrind-725884.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-725884.out)
-- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_ApplicationSegfault (PID 725884, part 1)`
-- Program instructions: **4,540,081**
+- Report: [callgrind-502265.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-502265.out)
+- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_ApplicationFatalBeforeInit (PID 502265, part 1)`
+- Program instructions: **4,881,142**
 
 <details>
 <summary>Callgrind hotspots by ownership</summary>
@@ -730,29 +731,61 @@ Callgrind instruction counts are useful for locating hot functions. They are not
 
 | Instructions | Function / location |
 |---:|---|
-| 664,711,563 | [src/nbn/core/private/Application.cpp:nbn::core::private_ns::hardwaretSignalHandler(int)](../../../../nbn-main-vscode-workspace/src/nbn/core/private/Application.cpp) |
-| 664,528,057 | [src/nbn/core/private/Application.cpp:nbn::core::private_ns::stackTraceMessage[abi:cxx11](std::basic_string_view<char, std::char_traits<char> >)](../../../../nbn-main-vscode-workspace/src/nbn/core/private/Application.cpp) |
+| _none_ | No nbn API functions were identified in the parsed rows |
+
+### External and runtime code
+
+| Instructions | Function / location |
+|---:|---|
+| 4,881,142 | `???:0x000000000001d2c0` |
+| 3,601,978 | `./elf/./elf/dl-lookup.c:_dl_lookup_symbol_x` |
+| 3,261,137 | `./elf/./elf/rtld.c:_dl_start` |
+| 3,260,396 | `./elf/../sysdeps/unix/sysv/linux/dl-sysdep.c:_dl_sysdep_start` |
+| 3,229,617 | `./elf/./elf/rtld.c:dl_main` |
+| 3,119,354 | `./elf/./elf/dl-reloc.c:_dl_relocate_object` |
+| 3,119,335 | `./elf/./elf/dl-reloc.c:_dl_relocate_object_no_relro` |
+| 1,756,112 | `./elf/../sysdeps/generic/dl-new-hash.h:_dl_lookup_symbol_x` |
+| 1,463,792 | `./elf/./elf/dl-lookup.c:do_lookup_x` |
+| 1,308,602 | `./elf/../sysdeps/x86_64/dl-trampoline.h:_dl_runtime_resolve_xsave` |
+
+</details>
+
+## `test_ApplicationSegfault`
+
+- Report: [callgrind-502266.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-502266.out)
+- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_ApplicationSegfault (PID 502266, part 1)`
+- Program instructions: **4,538,717**
+
+<details>
+<summary>Callgrind hotspots by ownership</summary>
+
+### nbn API
+
+| Instructions | Function / location |
+|---:|---|
+| 662,141,911 | [src/nbn/core/private/Application.cpp:nbn::core::private_ns::hardwaretSignalHandler(int)](../../../../nbn-main-vscode-workspace/src/nbn/core/private/Application.cpp) |
+| 661,959,224 | [src/nbn/core/private/Application.cpp:nbn::core::private_ns::stackTraceMessage[abi:cxx11](std::basic_string_view<char, std::char_traits<char> >)](../../../../nbn-main-vscode-workspace/src/nbn/core/private/Application.cpp) |
 
 ### External and runtime code
 
 | Instructions | Function / location |
 |---:|---|
 | 758,777,057 | `???:elf_zlib_inflate.cold'2` |
-| 664,463,030 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/stacktrace:std::ostream& std::operator<< <std::allocator<std::stacktrace_entry> >(std::ostream&, std::basic_stacktrace<std::allocator<std::stacktrace_entry> > const&)` |
-| 664,444,399 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/stacktrace:std::operator<<(std::ostream&, std::stacktrace_entry const&)` |
-| 664,426,826 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/stacktrace:std::stacktrace_entry::_M_get_info(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, int*) const` |
-| 664,423,693 | `???:std::stacktrace_entry::_Info::_M_populate(unsigned long)` |
-| 664,419,325 | `???:__glibcxx_backtrace_pcinfo` |
-| 610,639,459 | `???:fileline_initialize` |
-| 610,635,761 | `???:__glibcxx_backtrace_initialize` |
+| 661,894,162 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/stacktrace:std::ostream& std::operator<< <std::allocator<std::stacktrace_entry> >(std::ostream&, std::basic_stacktrace<std::allocator<std::stacktrace_entry> > const&)` |
+| 661,874,081 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/stacktrace:std::operator<<(std::ostream&, std::stacktrace_entry const&)` |
+| 661,857,963 | `/usr/lib/gcc/x86_64-linux-gnu/14/../../../../include/c++/14/stacktrace:std::stacktrace_entry::_M_get_info(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, int*) const` |
+| 661,854,830 | `???:std::stacktrace_entry::_Info::_M_populate(unsigned long)` |
+| 661,850,462 | `???:__glibcxx_backtrace_pcinfo` |
+| 607,856,427 | `???:fileline_initialize` |
+| 607,852,614 | `???:__glibcxx_backtrace_initialize` |
 
 </details>
 
 ## `test_ApplicationTerminateProcess`
 
-- Report: [callgrind-725915.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-725915.out)
-- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_ApplicationTerminateProcess (PID 725915, part 1)`
-- Program instructions: **4,817,581**
+- Report: [callgrind-502330.out](../../../../../../../dev/builds/nbn-cpp-api-core/linux-clang19-debug/valgrind-results/callgrind/callgrind-502330.out)
+- Command: `/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-debug/tests/nbn/core/test_ApplicationTerminateProcess (PID 502330, part 1)`
+- Program instructions: **4,816,348**
 
 <details>
 <summary>Callgrind hotspots by ownership</summary>
@@ -767,15 +800,15 @@ Callgrind instruction counts are useful for locating hot functions. They are not
 
 | Instructions | Function / location |
 |---:|---|
-| 4,817,581 | `???:0x000000000001d2c0` |
-| 3,567,122 | `./elf/./elf/dl-lookup.c:_dl_lookup_symbol_x` |
-| 3,266,174 | `./elf/./elf/rtld.c:_dl_start` |
-| 3,265,433 | `./elf/../sysdeps/unix/sysv/linux/dl-sysdep.c:_dl_sysdep_start` |
-| 3,232,463 | `./elf/./elf/rtld.c:dl_main` |
-| 3,121,514 | `./elf/./elf/dl-reloc.c:_dl_relocate_object` |
-| 3,121,495 | `./elf/./elf/dl-reloc.c:_dl_relocate_object_no_relro` |
-| 1,741,316 | `./elf/../sysdeps/generic/dl-new-hash.h:_dl_lookup_symbol_x` |
-| 1,447,867 | `./elf/./elf/dl-lookup.c:do_lookup_x` |
-| 1,266,057 | `./elf/../sysdeps/x86_64/dl-trampoline.h:_dl_runtime_resolve_xsave` |
+| 4,816,348 | `???:0x000000000001d2c0` |
+| 3,567,412 | `./elf/./elf/dl-lookup.c:_dl_lookup_symbol_x` |
+| 3,264,439 | `./elf/./elf/rtld.c:_dl_start` |
+| 3,263,698 | `./elf/../sysdeps/unix/sysv/linux/dl-sysdep.c:_dl_sysdep_start` |
+| 3,232,919 | `./elf/./elf/rtld.c:dl_main` |
+| 3,120,847 | `./elf/./elf/dl-reloc.c:_dl_relocate_object` |
+| 3,120,828 | `./elf/./elf/dl-reloc.c:_dl_relocate_object_no_relro` |
+| 1,741,038 | `./elf/../sysdeps/generic/dl-new-hash.h:_dl_lookup_symbol_x` |
+| 1,448,533 | `./elf/./elf/dl-lookup.c:do_lookup_x` |
+| 1,266,617 | `./elf/../sysdeps/x86_64/dl-trampoline.h:_dl_runtime_resolve_xsave` |
 
 </details>

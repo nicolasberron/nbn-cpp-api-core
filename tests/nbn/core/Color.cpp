@@ -3,6 +3,7 @@
 #include <nbn/core/utils.h>
 
 #include <format>
+#include <memory>
 #include <string>
 
 using namespace nbn::core;
@@ -174,7 +175,7 @@ void test_color_ignores_invalid_hex_values_and_supports_rgb_alpha_forms() {
 }
 
 void test_color_destructor() {
-    nbn::core::Object* color = new nbn::core::Color();  // NOLINT(cppcoreguidelines-owning-memory)
-    delete color;                                       // NOLINT(cppcoreguidelines-owning-memory)
+    std::unique_ptr<nbn::core::Object> color{std::make_unique<nbn::core::Color>()};
+    color.reset();
     unit_tests::isTrue("Color destructor should complete without throwing", true);
 }

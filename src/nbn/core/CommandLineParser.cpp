@@ -56,20 +56,20 @@ class CommandLineParser::Impl {
                                          })};
 
         auto programName{std::filesystem::path(m_argv[0]).filename().string()};
-        printHelpFor(programName, usageString, programName.size(), out);
+        printHelpFor(programName, programName.size(), usageString, out);
 
         // Print options and arguments
         out << std::endl << "Options:" << std::endl;
         for (const auto& name : allActionsNames) {
             if (isOption(name)) {
-                printHelpFor(name, m_helps.at(name), widestOptionOrArgument, out);
+                printHelpFor(name, widestOptionOrArgument, m_helps.at(name), out);
             }
         }
 
         if (!m_argumentsNames.empty()) {
             out << std::endl << "Arguments:" << std::endl;
             for (const auto& name : m_argumentsNames) {
-                printHelpFor(name, m_helps.at(name), widestOptionOrArgument, out);
+                printHelpFor(name, widestOptionOrArgument, m_helps.at(name), out);
             }
         }
     }
@@ -166,9 +166,7 @@ class CommandLineParser::Impl {
         return *m_pDecl;
     }
 
-    auto addOption(std::string_view name,  // NOLINT(bugprone-easily-swappable-parameters)
-                   std::string_view help,
-                   action_t action) -> CommandLineParser& {
+    auto addOption(std::string_view name, action_t action, std::string_view help) -> CommandLineParser& {
         std::string optionName{"--" + std::string{name}};
         m_actions.emplace(optionName, std::move(action));
         m_helps.emplace(optionName, help);
@@ -214,10 +212,7 @@ class CommandLineParser::Impl {
 
     auto argumentToUsageString(const std::string& name) const -> std::string { return std::string{name}; }
 
-    auto printHelpFor(std::string_view name,  // NOLINT(bugprone-easily-swappable-parameters)
-                      std::string_view help,
-                      size_t widestName,
-                      std::ostream& out) const -> void {
+    auto printHelpFor(std::string_view name, size_t widestName, std::string_view help, std::ostream& out) const -> void {
         auto nameColumnWidth{widestName + 2};
         auto helpColumnStart{nameColumnWidth + 4};
         auto helpColumnWidth{m_helpMaxColumns - helpColumnStart};
@@ -294,6 +289,6 @@ auto CommandLineParser::addOption(std::string_view name, bool isMandatory, std::
 }
 
 auto CommandLineParser::addOption(std::string_view name, std::string_view help, action_t action) -> CommandLineParser& {
-    return m_spImpl->addOption(name, help, std::move(action));
+    return m_spImpl->addOption(name, std::move(action), help);
 }
 }  // namespace nbn::core

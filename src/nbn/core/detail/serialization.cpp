@@ -98,23 +98,6 @@ auto maximumNestingDepth(std::string_view json) -> size_t {
     return std::min(MAX_NESTING_DEPTH, std::max(size_t{1}, json.size()));
 }
 
-thread_local size_t parseDepth{0};  // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
-
-class ParseDepthGuard final {
-   public:
-    explicit ParseDepthGuard(std::string_view json) {
-        const auto maximumDepth = maximumNestingDepth(json);
-        nbn::log::fatal_if(parseDepth >= maximumDepth,
-                           std::format("Invalid JSON: maximum nesting depth of {} exceeded.", maximumDepth));
-        ++parseDepth;
-    }
-
-    ~ParseDepthGuard() { --parseDepth; }
-
-    ParseDepthGuard(const ParseDepthGuard&) = delete;
-    auto operator=(const ParseDepthGuard&) -> ParseDepthGuard& = delete;
-};
-
 template <typename T>
 auto toString(const T& value) -> std::string;
 
@@ -488,7 +471,7 @@ auto deBeautifyJson(std::string_view json) -> std::string {
     return deBeautifiedJson;
 }
 
-auto skipValue(std::string_view json, size_t& pos) -> void;
+auto skipValue(std::string_view json, size_t& pos, size_t depth) -> void;
 auto checkConstant(std::string_view json, size_t& pos, std::string_view constant) -> void;
 
 auto skipString(std::string_view json, size_t& pos) -> void {
@@ -599,7 +582,7 @@ auto skipNumber(std::string_view json, size_t& pos) -> void {
     }
 }
 
-auto skipObject(std::string_view json, size_t& pos) -> void {
+auto skipObject(std::string_view json, size_t& pos, size_t depth) -> void {
     nbn::log::fatal_if(pos >= json.size() || json[pos] != OPEN_BRACE, unexpectedCharMessage(json, pos, OPEN_BRACE));
     ++pos;
     skipWhitespace(json, pos);
@@ -619,7 +602,7 @@ auto skipObject(std::string_view json, size_t& pos) -> void {
         nbn::log::fatal_if(pos >= json.size() || json[pos] != COLON, unexpectedCharMessage(json, pos, COLON));
         ++pos;
         skipWhitespace(json, pos);
-        skipValue(json, pos);
+        skipValue(json, pos, depth);
         skipWhitespace(json, pos);
 
         if (pos < json.size() && json[pos] == COMMA) {
@@ -636,7 +619,7 @@ auto skipObject(std::string_view json, size_t& pos) -> void {
     ++pos;
 }
 
-auto skipArray(std::string_view json, size_t& pos) -> void {
+auto skipArray(std::string_view json, size_t& pos, size_t depth) -> void {
     nbn::log::fatal_if(pos >= json.size() || json[pos] != OPEN_BRACKET, unexpectedCharMessage(json, pos, OPEN_BRACKET));
     ++pos;
     skipWhitespace(json, pos);
@@ -647,7 +630,7 @@ auto skipArray(std::string_view json, size_t& pos) -> void {
     }
 
     while (pos < json.size() && json[pos] != CLOSE_BRACKET) {
-        skipValue(json, pos);
+        skipValue(json, pos, depth);
         skipWhitespace(json, pos);
 
         if (pos < json.size() && json[pos] == COMMA) {
@@ -664,16 +647,17 @@ auto skipArray(std::string_view json, size_t& pos) -> void {
     ++pos;
 }
 
-auto skipValue(std::string_view json, size_t& pos) -> void {
-    const ParseDepthGuard depthGuard{json};
+auto skipValue(std::string_view json, size_t& pos, size_t depth) -> void {
+    const auto maximumDepth = maximumNestingDepth(json);
+    nbn::log::fatal_if(depth >= maximumDepth, std::format("Invalid JSON: maximum nesting depth of {} exceeded.", maximumDepth));
     skipWhitespace(json, pos);
     nbn::log::fatal_if(pos >= json.size(), "Invalid JSON string: Unexpected end of input.");
     switch (json[pos]) {
         case OPEN_BRACE:
-            skipObject(json, pos);
+            skipObject(json, pos, depth + 1U);
             return;
         case OPEN_BRACKET:
-            skipArray(json, pos);
+            skipArray(json, pos, depth + 1U);
             return;
         case QUOTE:
             skipString(json, pos);
@@ -839,7 +823,7 @@ auto parseValueView(std::string_view json, size_t& pos) -> std::string_view {
     validateInputSize(json);
     skipWhitespace(json, pos);
     const size_t valueStart = pos;
-    skipValue(json, pos);
+    skipValue(json, pos, 0U);
     return json.substr(valueStart, pos - valueStart);
 }
 
