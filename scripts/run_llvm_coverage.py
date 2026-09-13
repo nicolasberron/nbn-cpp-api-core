@@ -19,6 +19,7 @@ from typing import NoReturn
 LLVM_COV_WARNING_FLAGS = ["--no-pgo-warn-mismatch"]
 LLVM_COV_AGGREGATE_FILTER = "--ignore-filename-regex=.*/tests/.*"
 HTML_INDEX_FILENAME = "index.html"
+DEFAULT_LIBRARY_PREFIXES = ("libnbn-core.so", "libnbn-core.a")
 IGNORED_LLVM_WARNING = re.compile(
     r"^warning: (?:\d+ functions have mismatched data|.*profile data may be out of date - object is newer)$"
 )
@@ -139,7 +140,9 @@ def align_coverage_input_timestamps(
         os.utime(path, (profile_time, profile_time))
 
 
-def find_coverage_inputs(build_dir: Path) -> tuple[list[Path], list[Path]]:
+def find_coverage_inputs(
+    build_dir: Path, library_prefixes: tuple[str, ...]
+) -> tuple[list[Path], list[Path]]:
     test_binaries = sorted(
         path
         for path in (build_dir / "tests").rglob("test_*")
@@ -149,7 +152,7 @@ def find_coverage_inputs(build_dir: Path) -> tuple[list[Path], list[Path]]:
         path
         for path in (build_dir / "src").rglob("*")
         if path.is_file()
-        and (path.name.startswith("libnbn-core.so") or path.name == "libnbn-core.a")
+        and path.name.startswith(library_prefixes)
     )
     if not test_binaries:
         fail("No instrumented test executables were found.")
@@ -339,6 +342,12 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("build_dir", nargs="?", type=Path, default=Path("."))
     parser.add_argument("--output-dir", type=Path, default=Path("doc/quality-reports/coverage"))
+    parser.add_argument(
+        "--library-prefix",
+        action="append",
+        dest="library_prefixes",
+        help="production library filename prefix; may be specified more than once",
+    )
     args = parser.parse_args()
     build_dir = args.build_dir.resolve()
     llvm_cov = require_tool(os.environ.get("LLVM-COV", "llvm-cov-19"))
@@ -374,7 +383,8 @@ def main() -> int:
         if profiles:
             test_profile_files[test_name] = profiles
 
-    test_binaries, objects = find_coverage_inputs(build_dir)
+    library_prefixes = tuple(args.library_prefixes or DEFAULT_LIBRARY_PREFIXES)
+    test_binaries, objects = find_coverage_inputs(build_dir, library_prefixes)
     all_profiles = sorted(
         profile for profiles in test_profile_files.values() for profile in profiles
     )

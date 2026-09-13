@@ -70,6 +70,9 @@ class NbnCppApiCoreConan(ConanFile):
         )
 
     def package_info(self):
+        scripts_dir = os.path.join(self.package_folder, "scripts")
+        self.buildenv_info.define_path("NBN_CPP_API_CORE_SCRIPTS_DIR", scripts_dir)
+        self.runenv_info.define_path("NBN_CPP_API_CORE_SCRIPTS_DIR", scripts_dir)
         core = self.cpp_info.components["core"]
         core.libs = ["nbn-core"]
         if self.settings.os == "Linux" and self.settings.compiler in ("gcc", "clang"):

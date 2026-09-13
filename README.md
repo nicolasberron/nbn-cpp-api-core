@@ -16,10 +16,16 @@ published as `nbn-core`.
 
 ## CMake installation and consumption
 
-The project can build the library without Conan when tests are disabled:
+Install the Conan dependencies and activate the generated build environment
+before configuring. The environment supplies the shared CMake modules through
+`NBN_CPP_API_CMAKE_DIR`.
 
 ```sh
-cmake -S . -B build -G Ninja -DNBN_BUILD_TESTS=OFF -DNBN_CORE_DOXYGEN_ENABLE=OFF
+conan install . -of build -pr linux-clang19-debug
+source build/conanbuildenv-debug-x86_64.sh
+cmake -S . -B build -G Ninja \
+	-DCMAKE_TOOLCHAIN_FILE=build/conan_toolchain.cmake \
+	-DNBN_BUILD_TESTS=OFF -DNBN_CORE_DOXYGEN_ENABLE=OFF
 cmake --build build --target nbn-core
 cmake --install build --prefix /tmp/nbn-cpp-api-core
 ```
@@ -42,7 +48,8 @@ provide `nbn-ui`.
 
 The repository also provides standalone VS Code tasks in
 `.vscode/tasks.json` for Conan setup, opening the generated build directory, and
-coverage report generation.
+coverage report generation. Its packaged `scripts/` directory is exposed to
+Conan consumers as `NBN_CPP_API_CORE_SCRIPTS_DIR`.
 
 Optional dependency-free benchmark infrastructure is documented in
 [tests/core/utilities/README.md](tests/core/utilities/README.md). The reusable
