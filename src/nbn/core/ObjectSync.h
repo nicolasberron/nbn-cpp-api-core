@@ -32,13 +32,13 @@ namespace nbn::core {
  *
  * @par Usage example
  * @code{.cpp}
- * auto htmlBtn  = std::make_shared<nbn::ui::html::Button>("btn");
- * auto lvglBtn  = std::make_shared<nbn::ui::lvgl::Button>("btn");
+ * auto firstObject = std::make_shared<MyObject>();
+ * auto secondObject = std::make_shared<MyObject>();
  *
  * // ensure properties are initialized first (e.g. via deserialize or direct access)
- * auto sync = nbn::core::ObjectSync::create({htmlBtn, lvglBtn});
+ * auto sync = nbn::core::ObjectSync::create({firstObject, secondObject});
  *
- * htmlBtn->text()->set("Click me");  // lvglBtn->text() follows automatically
+ * firstObject->value()->set("updated");  // secondObject follows automatically
  * @endcode
  */
 class nbn_export_core ObjectSync {

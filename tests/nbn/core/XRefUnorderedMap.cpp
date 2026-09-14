@@ -4,9 +4,28 @@
 
 #include <nbn/core/UnitTests.h>
 #include <nbn/core/XRefUnorderedMap.h>
-#include <nbn/ui/html/dialogs/FileDialog.h>
-#include <nbn/ui/html/dialogs/FileOpenDialog.h>
-#include <nbn/ui/html/dialogs/MessageBox.h>
+#include <nbn/core/detail/serialization.h>
+
+namespace test_types {
+
+enum class AccessLevel { Worker, Manager, Administrator };
+
+}  // namespace test_types
+
+namespace nbn::core {
+
+template <>
+struct enum_serialization<test_types::AccessLevel>
+    : enum_serialization_xref<enum_serialization<test_types::AccessLevel>, test_types::AccessLevel> {
+    using enum_type = test_types::AccessLevel;
+    using self = enum_serialization<enum_type>;
+    using base = enum_serialization_xref<self, enum_type>;
+
+    enum_serialization()
+        : base({{enum_type::Worker, "worker"}, {enum_type::Manager, "manager"}, {enum_type::Administrator, "administrator"}}) {}
+};
+
+}  // namespace nbn::core
 
 namespace {
 
@@ -16,9 +35,6 @@ constexpr int kMissingKey = 99;
 constexpr auto kFirstValue = "worker";
 constexpr auto kSecondValue = "manager";
 constexpr auto kMissingValue = "missing";
-constexpr auto kFileBrowseModeName = "client";
-constexpr auto kMessageBoxButtonsName = "ok-cancel";
-constexpr auto kFileOpenDialogModeName = "folders";
 
 }  // namespace
 
@@ -61,14 +77,10 @@ void test_xref_unordered_map_reports_missing_entries() {
 }
 
 void test_xref_unordered_map_covers_enum_serialization_lookups() {
-    using FileBrowseMode = nbn::ui::html::dialogs::FileBrowseMode;
-    using MessageBoxButtons = nbn::ui::html::dialogs::MessageBoxButtons;
-    using FileOpenDialogMode = nbn::ui::html::dialogs::FileOpenDialogMode;
+    using test_types::AccessLevel;
 
-    nbn::core::unit_tests::equal("File browse mode should deserialize through the reverse map", FileBrowseMode::Client,
-                                 nbn::core::enum_serialization<FileBrowseMode>::fromString(kFileBrowseModeName));
-    nbn::core::unit_tests::equal("Message box buttons should deserialize through the reverse map", MessageBoxButtons::OkCancel,
-                                 nbn::core::enum_serialization<MessageBoxButtons>::fromString(kMessageBoxButtonsName));
-    nbn::core::unit_tests::equal("File open mode should deserialize through the reverse map", FileOpenDialogMode::Folders,
-                                 nbn::core::enum_serialization<FileOpenDialogMode>::fromString(kFileOpenDialogModeName));
+    nbn::core::unit_tests::equal("Enum should deserialize through the reverse map", AccessLevel::Manager,
+                                 nbn::core::enum_serialization<AccessLevel>::fromString(kSecondValue));
+    nbn::core::unit_tests::equal("Enum should serialize through the forward map", std::string_view{kFirstValue},
+                                 nbn::core::enum_serialization<AccessLevel>::toString(AccessLevel::Worker));
 }
