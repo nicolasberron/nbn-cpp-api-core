@@ -859,6 +859,35 @@ class TaskRunner:
                 raise ValueError(
                     f"workspace does not contain CMakeLists.txt: {workspace}"
                 )
+            workspace_runner = workspace / "scripts" / "run_nbn_task.py"
+            if (
+                type(self) is TaskRunner
+                and workspace_runner.is_file()
+                and workspace_runner.resolve() != Path(__file__).resolve()
+            ):
+                command = [
+                    sys.executable,
+                    str(workspace_runner),
+                    arguments.task,
+                    "--workspace",
+                    str(workspace),
+                    "--profile",
+                    arguments.profile,
+                    "--conan-profile",
+                    arguments.conan_profile,
+                ]
+                if arguments.build_root is not None:
+                    command.extend(
+                        ["--build-root", str(arguments.build_root.resolve())]
+                    )
+                if arguments.dry_run:
+                    command.append("--dry-run")
+                completed = subprocess.run(
+                    command,
+                    cwd=workspace,
+                    check=False,
+                )
+                return completed.returncode
             context = self.context_type(
                 workspace=workspace,
                 build_root=resolve_build_root(arguments, workspace),

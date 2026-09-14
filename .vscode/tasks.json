@@ -4,7 +4,7 @@
         {
             "label": "nbn: CMake Configure (Conan Debug)",
             "type": "shell",
-            "command": "python scripts/run_nbn_task.py cmake-configure-debug",
+            "command": "python ${workspaceFolder:nbn-cpp-api-core}/scripts/run_nbn_task.py cmake-configure-debug --workspace ${workspaceFolder:nbn-cpp-api-core}/../${input:repository}",
             "problemMatcher": [
                 "$gcc"
             ],
@@ -19,7 +19,7 @@
         {
             "label": "nbn: CMake Build (Conan Debug)",
             "type": "shell",
-            "command": "python scripts/run_nbn_task.py cmake-build-debug",
+            "command": "python ${workspaceFolder:nbn-cpp-api-core}/scripts/run_nbn_task.py cmake-build-debug --workspace ${workspaceFolder:nbn-cpp-api-core}/../${input:repository}",
             "dependsOn": "nbn: CMake Configure (Conan Debug)",
             "problemMatcher": [
                 "$gcc"
@@ -35,7 +35,7 @@
         {
             "label": "nbn: Conan Install",
             "type": "shell",
-            "command": "python scripts/run_nbn_task.py conan-install --profile ${input:profile}",
+            "command": "python ${workspaceFolder:nbn-cpp-api-core}/scripts/run_nbn_task.py conan-install --profile ${input:profile} --workspace ${workspaceFolder:nbn-cpp-api-core}/../${input:repository}",
             "problemMatcher": [],
             "group": {
                 "kind": "build",
@@ -51,7 +51,7 @@
         {
             "label": "nbn: Open Integrated Terminal",
             "type": "shell",
-            "command": "python scripts/run_nbn_task.py open-integrated-terminal --profile ${input:profile}",
+            "command": "python ${workspaceFolder:nbn-cpp-api-core}/scripts/run_nbn_task.py open-integrated-terminal --profile ${input:profile} --workspace ${workspaceFolder:nbn-cpp-api-core}/../${input:repository}",
             "problemMatcher": [],
             "group": {
                 "kind": "build",
@@ -67,7 +67,7 @@
         {
             "label": "nbn: Coverage Configure",
             "type": "shell",
-            "command": "python scripts/run_nbn_task.py coverage-configure",
+            "command": "python ${workspaceFolder:nbn-cpp-api-core}/scripts/run_nbn_task.py coverage-configure --workspace ${workspaceFolder:nbn-cpp-api-core}/../${input:repository}",
             "problemMatcher": [
                 "$gcc"
             ],
@@ -83,7 +83,7 @@
         {
             "label": "nbn: Coverage Build",
             "type": "shell",
-            "command": "python scripts/run_nbn_task.py coverage-build",
+            "command": "python ${workspaceFolder:nbn-cpp-api-core}/scripts/run_nbn_task.py coverage-build --workspace ${workspaceFolder:nbn-cpp-api-core}/../${input:repository}",
             "problemMatcher": [
                 "$gcc"
             ],
@@ -99,7 +99,7 @@
         {
             "label": "nbn: Coverage Metrics",
             "type": "shell",
-            "command": "python scripts/run_nbn_task.py coverage-metrics",
+            "command": "python ${workspaceFolder:nbn-cpp-api-core}/scripts/run_nbn_task.py coverage-metrics --workspace ${workspaceFolder:nbn-cpp-api-core}/../${input:repository}",
             "dependsOn": "nbn: Coverage",
             "options": {
                 "cwd": "${workspaceFolder}",
@@ -120,7 +120,7 @@
         {
             "label": "nbn: Coverage",
             "type": "shell",
-            "command": "python scripts/run_nbn_task.py coverage",
+            "command": "python ${workspaceFolder:nbn-cpp-api-core}/scripts/run_nbn_task.py coverage --workspace ${workspaceFolder:nbn-cpp-api-core}/../${input:repository}",
             "dependsOn": "nbn: Coverage Build",
             "options": {
                 "cwd": "${workspaceFolder}"
@@ -141,7 +141,7 @@
         {
             "label": "nbn: Valgrind Configure Tests",
             "type": "shell",
-            "command": "python scripts/run_nbn_task.py valgrind-configure",
+            "command": "python ${workspaceFolder:nbn-cpp-api-core}/scripts/run_nbn_task.py valgrind-configure --workspace ${workspaceFolder:nbn-cpp-api-core}/../${input:repository}",
             "options": {
                 "cwd": "${workspaceFolder}"
             },
@@ -158,9 +158,9 @@
             }
         },
         {
-            "label": "nbn: Valgrind Build Core Tests",
+            "label": "nbn: Valgrind Build Tests",
             "type": "shell",
-            "command": "python scripts/run_nbn_task.py valgrind-build",
+            "command": "python ${workspaceFolder:nbn-cpp-api-core}/scripts/run_nbn_task.py valgrind-build --workspace ${workspaceFolder:nbn-cpp-api-core}/../${input:repository}",
             "options": {
                 "cwd": "${workspaceFolder}"
             },
@@ -178,8 +178,8 @@
         {
             "label": "nbn: Valgrind Callgrind",
             "type": "shell",
-            "command": "python scripts/run_nbn_task.py valgrind-callgrind",
-            "dependsOn": "nbn: Valgrind Build Core Tests",
+            "command": "python ${workspaceFolder:nbn-cpp-api-core}/scripts/run_nbn_task.py valgrind-callgrind --workspace ${workspaceFolder:nbn-cpp-api-core}/../${input:repository}",
+            "dependsOn": "nbn: Valgrind Build Tests",
             "options": {
                 "cwd": "${workspaceFolder}"
             },
@@ -195,8 +195,8 @@
         {
             "label": "nbn: Valgrind Massif",
             "type": "shell",
-            "command": "python scripts/run_nbn_task.py valgrind-massif",
-            "dependsOn": "nbn: Valgrind Build Core Tests",
+            "command": "python ${workspaceFolder:nbn-cpp-api-core}/scripts/run_nbn_task.py valgrind-massif --workspace ${workspaceFolder:nbn-cpp-api-core}/../${input:repository}",
+            "dependsOn": "nbn: Valgrind Build Tests",
             "options": {
                 "cwd": "${workspaceFolder}"
             },
@@ -212,8 +212,8 @@
         {
             "label": "nbn: Valgrind Memcheck",
             "type": "shell",
-            "command": "python scripts/run_nbn_task.py valgrind-memcheck",
-            "dependsOn": "nbn: Valgrind Build Core Tests",
+            "command": "python ${workspaceFolder:nbn-cpp-api-core}/scripts/run_nbn_task.py valgrind-memcheck --workspace ${workspaceFolder:nbn-cpp-api-core}/../${input:repository}",
+            "dependsOn": "nbn: Valgrind Build Tests",
             "options": {
                 "cwd": "${workspaceFolder}"
             },
@@ -229,7 +229,7 @@
         {
             "label": "nbn: Valgrind All",
             "type": "shell",
-            "command": "python scripts/run_nbn_task.py valgrind-all",
+            "command": "python ${workspaceFolder:nbn-cpp-api-core}/scripts/run_nbn_task.py valgrind-all --workspace ${workspaceFolder:nbn-cpp-api-core}/../${input:repository}",
             "options": {
                 "cwd": "${workspaceFolder}",
                 "env": {
@@ -249,7 +249,7 @@
         {
             "label": "nbn: Valgrind Report",
             "type": "shell",
-            "command": "python scripts/run_nbn_task.py valgrind-report",
+            "command": "python ${workspaceFolder:nbn-cpp-api-core}/scripts/run_nbn_task.py valgrind-report --workspace ${workspaceFolder:nbn-cpp-api-core}/../${input:repository}",
             "dependsOn": "nbn: Valgrind All",
             "options": {
                 "cwd": "${workspaceFolder}",
@@ -270,7 +270,7 @@
         {
             "label": "nbn: Coverage All",
             "type": "shell",
-            "command": "python scripts/run_nbn_task.py coverage-all",
+            "command": "python ${workspaceFolder:nbn-cpp-api-core}/scripts/run_nbn_task.py coverage-all --workspace ${workspaceFolder:nbn-cpp-api-core}/../${input:repository}",
             "options": {
                 "cwd": "${workspaceFolder}",
                 "env": {
@@ -289,7 +289,7 @@
         {
             "label": "nbn: AddressSanitizer Configure",
             "type": "shell",
-            "command": "python scripts/run_nbn_task.py asan-configure",
+            "command": "python ${workspaceFolder:nbn-cpp-api-core}/scripts/run_nbn_task.py asan-configure --workspace ${workspaceFolder:nbn-cpp-api-core}/../${input:repository}",
             "problemMatcher": [
                 "$gcc"
             ],
@@ -303,9 +303,9 @@
             }
         },
         {
-            "label": "nbn: AddressSanitizer Build Core Tests",
+            "label": "nbn: AddressSanitizer Build Tests",
             "type": "shell",
-            "command": "python scripts/run_nbn_task.py asan-build",
+            "command": "python ${workspaceFolder:nbn-cpp-api-core}/scripts/run_nbn_task.py asan-build --workspace ${workspaceFolder:nbn-cpp-api-core}/../${input:repository}",
             "problemMatcher": [
                 "$gcc"
             ],
@@ -321,8 +321,8 @@
         {
             "label": "nbn: AddressSanitizer",
             "type": "shell",
-            "command": "python scripts/run_nbn_task.py asan",
-            "dependsOn": "nbn: AddressSanitizer Build Core Tests",
+            "command": "python ${workspaceFolder:nbn-cpp-api-core}/scripts/run_nbn_task.py asan --workspace ${workspaceFolder:nbn-cpp-api-core}/../${input:repository}",
+            "dependsOn": "nbn: AddressSanitizer Build Tests",
             "problemMatcher": [],
             "continueOnError": true,
             "group": "test",
@@ -336,7 +336,7 @@
         {
             "label": "nbn: ThreadSanitizer Configure",
             "type": "shell",
-            "command": "python scripts/run_nbn_task.py tsan-configure",
+            "command": "python ${workspaceFolder:nbn-cpp-api-core}/scripts/run_nbn_task.py tsan-configure --workspace ${workspaceFolder:nbn-cpp-api-core}/../${input:repository}",
             "problemMatcher": [
                 "$gcc"
             ],
@@ -350,9 +350,9 @@
             }
         },
         {
-            "label": "nbn: ThreadSanitizer Build Core Tests",
+            "label": "nbn: ThreadSanitizer Build Tests",
             "type": "shell",
-            "command": "python scripts/run_nbn_task.py tsan-build",
+            "command": "python ${workspaceFolder:nbn-cpp-api-core}/scripts/run_nbn_task.py tsan-build --workspace ${workspaceFolder:nbn-cpp-api-core}/../${input:repository}",
             "problemMatcher": [
                 "$gcc"
             ],
@@ -368,8 +368,8 @@
         {
             "label": "nbn: ThreadSanitizer",
             "type": "shell",
-            "command": "python scripts/run_nbn_task.py tsan",
-            "dependsOn": "nbn: ThreadSanitizer Build Core Tests",
+            "command": "python ${workspaceFolder:nbn-cpp-api-core}/scripts/run_nbn_task.py tsan --workspace ${workspaceFolder:nbn-cpp-api-core}/../${input:repository}",
+            "dependsOn": "nbn: ThreadSanitizer Build Tests",
             "problemMatcher": [],
             "continueOnError": true,
             "group": "test",
@@ -383,7 +383,7 @@
         {
             "label": "nbn: Sanitizers All",
             "type": "shell",
-            "command": "python scripts/run_nbn_task.py sanitizers-all",
+            "command": "python ${workspaceFolder:nbn-cpp-api-core}/scripts/run_nbn_task.py sanitizers-all --workspace ${workspaceFolder:nbn-cpp-api-core}/../${input:repository}",
             "options": {
                 "cwd": "${workspaceFolder}",
                 "env": {
@@ -403,7 +403,7 @@
         {
             "label": "nbn: Sanitizer Report",
             "type": "shell",
-            "command": "python scripts/run_nbn_task.py sanitizer-report",
+            "command": "python ${workspaceFolder:nbn-cpp-api-core}/scripts/run_nbn_task.py sanitizer-report --workspace ${workspaceFolder:nbn-cpp-api-core}/../${input:repository}",
             "dependsOn": "nbn: Sanitizers All",
             "options": {
                 "cwd": "${workspaceFolder}",
@@ -424,7 +424,7 @@
         {
             "label": "nbn: Quality Reports Clean",
             "type": "shell",
-            "command": "python scripts/run_nbn_task.py quality-reports-clean",
+            "command": "python ${workspaceFolder:nbn-cpp-api-core}/scripts/run_nbn_task.py quality-reports-clean --workspace ${workspaceFolder:nbn-cpp-api-core}/../${input:repository}",
             "options": {
                 "cwd": "${workspaceFolder}",
                 "env": {
@@ -443,7 +443,7 @@
         {
             "label": "nbn: Quality Reports",
             "type": "shell",
-            "command": "python scripts/run_nbn_task.py quality-reports",
+            "command": "python ${workspaceFolder:nbn-cpp-api-core}/scripts/run_nbn_task.py quality-reports --workspace ${workspaceFolder:nbn-cpp-api-core}/../${input:repository}",
             "options": {
                 "cwd": "${workspaceFolder}",
                 "env": {
@@ -462,6 +462,26 @@
         }
     ],
     "inputs": [
+        {
+            "id": "repository",
+            "type": "command",
+            "command": "extension.commandvariable.file.pickFile",
+            "args": {
+                "display": "transform",
+                "description": "Select repository",
+                "include": "CMakeLists.txt",
+                "valueTransform": {
+                    "text": "${file}",
+                    "apply": [
+                        {
+                            "find": "^.*[\\\\/]([^\\\\/]+)[\\\\/]CMakeLists\\.txt$",
+                            "replace": "$1"
+                        }
+                    ]
+                },
+                "labelTransform": "valueTransform"
+            }
+        },
         {
             "id": "profile",
             "type": "promptString",
