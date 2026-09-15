@@ -48,8 +48,12 @@ provide `nbn-ui`.
 
 The repository also provides standalone VS Code tasks in
 `.vscode/tasks.json` for Conan setup, opening the generated build directory, and
-coverage report generation. Its packaged `scripts/` directory is exposed to
-Conan consumers as `NBN_CPP_API_CORE_SCRIPTS_DIR`.
+coverage report generation. Its task runner is exposed to Conan consumers as
+`NBN_CPP_API_CORE_SCRIPTS_DIR`; shared quality helpers come from the build-system
+package through `NBN_CPP_API_BUILD_SYSTEM_SCRIPTS_DIR`. Projects that invoke the
+packaged task runner must directly tool-require `nbn-cpp-api-build-system`, as
+the core, UI, and renderer project recipes do; Conan does not compose a
+transitive tool requirement's build environment into the consumer environment.
 
 Optional dependency-free benchmark infrastructure is documented in
 [tests/core/utilities/README.md](tests/core/utilities/README.md). The reusable

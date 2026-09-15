@@ -22,12 +22,14 @@ for the core library. Do not enable benchmarks in normal production builds.
 
 ## Running tools
 
-From the repository root, `scripts/run_benchmarks.sh` accepts `--build-dir`, `--executable`, `--tool`, and
-`--output-dir`. Tools are `normal`, `perf`, `heaptrack`, `callgrind`, `massif`,
-`memcheck`, `asan`, `ubsan`, and `fuzz`. Optional tools are detected before
-execution. Results include metadata and are written below the output directory,
-which defaults to `doc/quality-reports/benchmark`. The directory's `README.md` is the main
-page for the run.
+After activating the Conan build environment,
+`$NBN_CPP_API_BUILD_SYSTEM_SCRIPTS_DIR/run_benchmarks.sh` accepts `--build-dir`,
+`--executable`, `--tool`, and `--output-dir`. Tools are `normal`, `perf`,
+`heaptrack`, `callgrind`, `massif`, `memcheck`, `asan`, `ubsan`, and `fuzz`.
+Optional tools are detected before execution. Results include metadata and are
+written below the output directory, which defaults to
+`tmp/quality-reports/benchmark`. The directory's `README.md` is the main page
+for the run.
 
 Normal and `perf` runs are timing runs. Heaptrack, Valgrind, sanitizers, and
 fuzzing are diagnostic runs; their output must not be compared as performance

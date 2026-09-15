@@ -1,3 +1,6 @@
+# tmp folder
+/tmp/
+
 # Conan and CMake generated files
 /.conan2/
 /build/

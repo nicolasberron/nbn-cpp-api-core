@@ -120,7 +120,7 @@ The runner writes each tool's output below the selected result directory.
 Replace the build directory if a different Conan profile is being used.
 
 ```bash
-./scripts/run_benchmarks.sh \
+"$NBN_CPP_API_BUILD_SYSTEM_SCRIPTS_DIR/run_benchmarks.sh" \
     --build-dir /home/nbn/dev/builds/nbn-cpp-api-core/linux-gcc13-debug \
     --executable tests/core/utilities/benchmark_serialization \
     --tool normal \
@@ -128,7 +128,7 @@ Replace the build directory if a different Conan profile is being used.
 ```
 
 ```bash
-./scripts/run_benchmarks.sh \
+"$NBN_CPP_API_BUILD_SYSTEM_SCRIPTS_DIR/run_benchmarks.sh" \
     --build-dir /home/nbn/dev/builds/nbn-cpp-api-core/linux-gcc13-debug \
     --executable tests/core/utilities/benchmark_serialization \
     --tool perf \
@@ -136,7 +136,7 @@ Replace the build directory if a different Conan profile is being used.
 ```
 
 ```bash
-./scripts/run_benchmarks.sh \
+"$NBN_CPP_API_BUILD_SYSTEM_SCRIPTS_DIR/run_benchmarks.sh" \
     --build-dir /home/nbn/dev/builds/nbn-cpp-api-core/linux-gcc13-debug \
     --executable tests/core/utilities/benchmark_serialization \
     --tool heaptrack \
@@ -147,7 +147,7 @@ Run Valgrind diagnostics with the same runner:
 
 ```bash
 for tool in callgrind massif memcheck; do
-    ./scripts/run_benchmarks.sh \
+    "$NBN_CPP_API_BUILD_SYSTEM_SCRIPTS_DIR/run_benchmarks.sh" \
         --build-dir /home/nbn/dev/builds/nbn-cpp-api-core/linux-gcc13-debug \
         --executable tests/core/utilities/benchmark_serialization \
         --tool "$tool" \
@@ -158,7 +158,7 @@ done
 Run sanitizer and fuzz diagnostics with their separately built executables:
 
 ```bash
-./scripts/run_benchmarks.sh \
+"$NBN_CPP_API_BUILD_SYSTEM_SCRIPTS_DIR/run_benchmarks.sh" \
     --build-dir /home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-asan \
     --executable tests/core/utilities/benchmark_serialization_sanitized \
     --tool asan \
@@ -166,7 +166,7 @@ Run sanitizer and fuzz diagnostics with their separately built executables:
 ```
 
 ```bash
-./scripts/run_benchmarks.sh \
+"$NBN_CPP_API_BUILD_SYSTEM_SCRIPTS_DIR/run_benchmarks.sh" \
     --build-dir /home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-ubsan \
     --executable tests/core/utilities/benchmark_serialization_sanitized \
     --tool ubsan \
@@ -174,7 +174,7 @@ Run sanitizer and fuzz diagnostics with their separately built executables:
 ```
 
 ```bash
-./scripts/run_benchmarks.sh \
+"$NBN_CPP_API_BUILD_SYSTEM_SCRIPTS_DIR/run_benchmarks.sh" \
     --build-dir /home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-fuzz \
     --executable tests/core/utilities/fuzz_serialization \
     --tool fuzz \

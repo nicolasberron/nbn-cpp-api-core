@@ -32,8 +32,62 @@ UBSAN_BUILD_NAME = UBSAN_PROFILE
 VALGRIND_BUILD_NAME = VALGRIND_PROFILE
 QUALITY_REPORTS_NAME = "quality-reports"
 CMAKE_CLANG_TIDY_ON = "-DNBN_CLANG_TIDY_ENABLE=ON"
+BUILD_SYSTEM_ROOT_ENV = "NBN_CPP_API_BUILD_SYSTEM_ROOT"
 BUILD_SYSTEM_PROFILES_ENV = "NBN_CPP_API_PROFILES_DIR"
+COPILOT_WORKSPACE_ENV = "NBN_COPILOT_WORKSPACE"
 MAX_BUILD_JOBS = os.cpu_count() or 1
+
+
+def resolve_shared_scripts(workspace: Path) -> Path:
+    """Find quality scripts from the build-system package or checkout."""
+    candidates = []
+    configured_root = os.environ.get(BUILD_SYSTEM_ROOT_ENV)
+    if configured_root:
+        candidates.append(Path(configured_root).expanduser() / "scripts")
+    candidates.append(
+        workspace.parent / "nbn-cpp-api-build-system" / "scripts"
+    )
+    for candidate in candidates:
+        if (candidate / "run_llvm_coverage.py").is_file():
+            return candidate.resolve()
+    locations = ", ".join(str(candidate) for candidate in candidates)
+    raise ValueError(
+        "Cannot find nbn-cpp-api-build-system scripts. Source the Conan "
+        f"environment or provide a sibling checkout. Checked: {locations}"
+    )
+
+
+def resolve_analyzer_script(
+    workspace: Path,
+    skill_name: str,
+    script_name: str,
+) -> Path:
+    """Find an analyzer in a configured or sibling skill collection."""
+    roots = []
+    configured_workspace = os.environ.get(COPILOT_WORKSPACE_ENV)
+    if configured_workspace:
+        roots.append(Path(configured_workspace).expanduser())
+    configured_build_system = os.environ.get(BUILD_SYSTEM_ROOT_ENV)
+    if configured_build_system:
+        roots.append(Path(configured_build_system).expanduser())
+    roots.extend(
+        [
+            workspace.parent / "nbn-main-vscode-workspace",
+            workspace.parent / "nbn-cpp-api-build-system",
+            workspace,
+        ]
+    )
+    candidates = [
+        root / ".github" / "skills" / skill_name / "scripts" / script_name
+        for root in roots
+    ]
+    for candidate in candidates:
+        if candidate.is_file():
+            return candidate.resolve()
+    locations = ", ".join(str(candidate) for candidate in candidates)
+    raise ValueError(
+        f"Cannot find analyzer script {script_name}. Checked: {locations}"
+    )
 
 
 @dataclass(frozen=True)
@@ -72,12 +126,12 @@ class TaskContext:
 
     @property
     def quality_reports(self) -> Path:
-        return self.workspace / "doc" / QUALITY_REPORTS_NAME
+        return self.workspace / "tmp" / QUALITY_REPORTS_NAME
 
     @property
     def shared_scripts(self) -> Path:
-        """Return the core-owned task helper directory."""
-        return Path(__file__).resolve().parent
+        """Return the shared build-system task helper directory."""
+        return resolve_shared_scripts(self.workspace)
 
     @property
     def production_library_prefixes(self) -> tuple[str, ...]:
@@ -85,20 +139,14 @@ class TaskContext:
         return ("libnbn-core.so", "libnbn-core.a")
 
     @property
+    def coverage_header_only(self) -> bool:
+        """Return whether coverage comes only from test executables."""
+        return False
+
+    @property
     def include_benchmark_report(self) -> bool:
         """Return whether the aggregate report includes benchmark results."""
         return True
-
-    @property
-    def copilot_workspace(self) -> Path:
-        """Return the workspace containing shared Copilot skills."""
-        configured_workspace = os.environ.get("NBN_COPILOT_WORKSPACE")
-        if configured_workspace:
-            return Path(configured_workspace).expanduser().resolve()
-        sibling_workspace = self.workspace.parent / "nbn-main-vscode-workspace"
-        if (sibling_workspace / ".github/skills").is_dir():
-            return sibling_workspace
-        return self.workspace
 
     def command_environment(self) -> dict[str, str]:
         """Return a copy of the process environment for a child command."""
@@ -292,6 +340,7 @@ def install_dependencies(
     conan_profile: str | None = None,
 ) -> int:
     """Install editable Conan dependencies into one build directory."""
+    selected_profile = conan_profile or context.conan_profile
     return run_command(
         context,
         [
@@ -303,8 +352,10 @@ def install_dependencies(
             "-pr",
             resolve_conan_profile(
                 context,
-                conan_profile or context.conan_profile,
+                selected_profile,
             ),
+            "-c:h",
+            f"user.nbn:profile={Path(selected_profile).name}",
             "-o",
             "nbn-cpp-api-ui/*:shared=True",
         ],
@@ -364,6 +415,7 @@ def coverage(context: TaskContext) -> int:
                 for prefix in context.production_library_prefixes
                 for argument in ("--library-prefix", prefix)
             ),
+            *(["--header-only"] if context.coverage_header_only else []),
         ],
     )
 
@@ -459,6 +511,7 @@ def valgrind_tool(context: TaskContext, tool: str) -> int:
             str(context.shared_scripts / "run_valgrind_ctest.cmake"),
             "-VV",
             f"-DCTEST_BINARY_DIRECTORY={context.valgrind_build}",
+            f"-DCTEST_SOURCE_DIRECTORY={context.workspace}",
             f"-DVALGRIND_TOOL={tool}",
             f"-DVALGRIND_OUTPUT_DIR={output_directory}",
         ],
@@ -477,8 +530,11 @@ def valgrind_report(context: TaskContext) -> int:
         return 1
     return run_python(
         context,
-        context.copilot_workspace
-        / ".github/skills/nbn-analyze-valgrind-reports/scripts/analyze_valgrind.py",
+        resolve_analyzer_script(
+            context.workspace,
+            "nbn-analyze-valgrind-reports",
+            "analyze_valgrind.py",
+        ),
         [
             "--reports",
             str(context.valgrind_build / "valgrind-results"),
@@ -514,7 +570,7 @@ def benchmark_all(context: TaskContext) -> int:
     return run_command(
         context,
         [
-            str(context.workspace / "scripts/run_benchmarks.sh"),
+            str(context.shared_scripts / "run_benchmarks.sh"),
             "--build-dir",
             str(context.debug_build),
             "--executable",
@@ -610,10 +666,10 @@ def sanitizer_report(context: TaskContext) -> int:
         if not context.dry_run:
             report_directory.mkdir(parents=True, exist_ok=True)
         report_directories.append(report_directory)
-    analyzer = (
-        context.copilot_workspace
-        / ".github/skills/nbn-analyze-llvm-sanitizer-reports/scripts"
-        / "analyze_llvm_sanitizers.py"
+    analyzer = resolve_analyzer_script(
+        context.workspace,
+        "nbn-analyze-llvm-sanitizer-reports",
+        "analyze_llvm_sanitizers.py",
     )
     return run_python(
         context,
@@ -632,12 +688,15 @@ def clean_quality_reports(context: TaskContext) -> int:
     if context.dry_run:
         print(f"[nbn-task] remove {context.quality_reports}", flush=True)
         return 0
-    expected_parent = context.workspace / "doc"
+    expected_parent = context.workspace / "tmp"
     if (
         context.quality_reports == context.workspace
         or context.quality_reports.parent != expected_parent
     ):
-        raise ValueError("quality report path must be directly below the workspace doc directory")
+        raise ValueError(
+            "quality report path must be directly below the workspace "
+            "tmp directory"
+        )
     if not context.quality_reports.is_relative_to(context.workspace):
         raise ValueError("quality report path must be inside the workspace")
     history_path = context.quality_reports / "benchmark-history.csv"
