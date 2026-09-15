@@ -1,18 +1,21 @@
 # Conan and CMake generated files
-.conan2/
-build/
+/.conan2/
+/build/
 
 # Local editor files
-CMakeUserPresets.json
+/CMakeUserPresets.json
+/tests/package-consumer/CMakeUserPresets.json
 
-# valgrind output
-valgrind-results/*
+# Python generated files
+__pycache__/
+*.py[cod]
 
-*.pyc
+# Runtime analysis output
+/valgrind-results/
+*.profraw
+*.profdata
 
 # --- AgentX (auto-generated, do not edit this block) ---
 # AgentX runtime state
 .agentx/
 # --- /AgentX ---
-
-*.profraw

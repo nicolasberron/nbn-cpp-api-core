@@ -1,6 +1,0 @@
-[requires]
-nbn-cpp-api-core/0.12.0
-
-[generators]
-CMakeDeps
-CMakeToolchain
