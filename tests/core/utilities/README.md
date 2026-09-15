@@ -12,14 +12,13 @@ the header-only `nbn::benchmark` target for reuse by downstream benchmarks.
 Configure with `NBN_BUILD_BENCHMARKS=ON` and build only the desired target:
 
 - `benchmark_serialization`: normal timing plus optional JSON output.
-- `benchmark_serialization_sanitized`: AddressSanitizer and UBSan, when
-  `NBN_BUILD_BENCHMARK_SANITIZERS=ON` and GCC or Clang are available.
-- `fuzz_serialization`: libFuzzer, when `NBN_BUILD_BENCHMARK_FUZZER=ON` and
-  Clang with libFuzzer support is available.
+- `benchmark_serialization_sanitized`: available under the
+  `linux-clang19-asan` and `linux-clang19-ubsan` Conan profiles.
+- `fuzz_serialization`: available under the `linux-clang19-fuzz` Conan profile.
 
-The repository's build directory and presets are Conan-managed; use the same
-toolchain and generated build directory as the core library. Do not enable
-benchmarks in normal production builds.
+The repository's build directory and presets are Conan-managed. Select
+instrumentation through its matching Conan profile and use the same profile
+for the core library. Do not enable benchmarks in normal production builds.
 
 ## Running tools
 

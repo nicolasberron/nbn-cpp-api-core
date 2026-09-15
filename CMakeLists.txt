@@ -7,7 +7,6 @@ include("$ENV{NBN_CPP_API_CMAKE_DIR}/nbn-project.cmake")
 nbn_project_initialize(
     VERSION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/VERSION"
     VERSION_VAR NBN_PROJECT_VERSION
-    LLVM_COVERAGE_DEFAULT OFF
 )
 
 project(nbn-cpp-api-core VERSION "${NBN_PROJECT_VERSION}" LANGUAGES CXX)

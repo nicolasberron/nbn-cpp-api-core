@@ -191,13 +191,17 @@ def main() -> int:
         quality / "valgrind", [REPORT_README]
     )
     valgrind_failures = read_lines(
-        build_root / "linux-clang19-debug" / "valgrind-results" / "failed-tests.txt"
+        build_root
+        / "linux-clang19-valgrind"
+        / "valgrind-results"
+        / "failed-tests.txt"
     )
     if not valgrind_failures:
+        temporary_directory = (
+            build_root / "linux-clang19-valgrind" / "Testing" / "Temporary"
+        )
         failure_logs = sorted(
-            (build_root / "linux-clang19-debug" / "Testing" / "Temporary").glob(
-                "LastTestsFailed_*.log"
-            )
+            temporary_directory.glob("LastTestsFailed_*.log")
         )
         if failure_logs:
             valgrind_failures = read_lines(failure_logs[-1])

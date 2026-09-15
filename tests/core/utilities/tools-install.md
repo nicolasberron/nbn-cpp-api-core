@@ -34,8 +34,8 @@ done
 ## Verify sanitizer support
 
 AddressSanitizer and UndefinedBehaviorSanitizer are provided by Clang. This
-only checks compiler support; the sanitized benchmark target is built later
-with `NBN_BUILD_BENCHMARK_SANITIZERS=ON`.
+only checks compiler support; select `linux-clang19-asan` or
+`linux-clang19-ubsan` when generating the benchmark build.
 
 ```bash
 printf 'clang: '
@@ -81,30 +81,36 @@ cmake --preset conan-debug -DNBN_BUILD_BENCHMARKS=ON
 cmake --build --preset conan-debug --target benchmark_serialization
 ```
 
-Build the sanitizer target separately when required. It can use the existing
-GCC or Clang build directory:
+Build the sanitizer target in a directory generated with the matching Conan
+profile:
 
 ```bash
-cmake --preset conan-debug \
-    -DNBN_BUILD_BENCHMARKS=ON \
-    -DNBN_BUILD_BENCHMARK_SANITIZERS=ON
-cmake --build --preset conan-debug \
+conan install . \
+    -of /home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-asan \
+    -pr linux-clang19-asan
+source /home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-asan/conanbuildenv-debug-x86_64.sh
+cmake -S . \
+    -B /home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-asan \
+    -G Ninja \
+    -DCMAKE_TOOLCHAIN_FILE=/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-asan/conan_toolchain.cmake \
+    -DNBN_BUILD_BENCHMARKS=ON
+cmake --build /home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-asan \
     --target benchmark_serialization_sanitized
 ```
 
-The fuzz target requires Clang's libFuzzer runtime and must use a separate
-Clang-configured build directory. Do not enable it in the GCC Conan Debug
-directory; GCC does not provide the required `-fsanitize=fuzzer` runtime.
+Use `linux-clang19-ubsan` instead for a UBSan-only benchmark. The fuzz target
+requires Clang's libFuzzer runtime and the dedicated fuzz profile:
 
 ```bash
-cmake -S . -B /home/nbn/dev/builds/nbn-cpp-api-core/linux-clang-debug \
+conan install . \
+    -of /home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-fuzz \
+    -pr linux-clang19-fuzz
+source /home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-fuzz/conanbuildenv-debug-x86_64.sh
+cmake -S . -B /home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-fuzz \
     -G Ninja \
-    -DCMAKE_C_COMPILER=clang \
-    -DCMAKE_CXX_COMPILER=clang++ \
-    -DNBN_BUILD_BENCHMARKS=ON \
-    -DNBN_BUILD_BENCHMARK_FUZZER=ON \
-    -DNBN_BUILD_BENCHMARK_SANITIZERS=OFF
-cmake --build /home/nbn/dev/builds/nbn-cpp-api-core/linux-clang-debug \
+    -DCMAKE_TOOLCHAIN_FILE=/home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-fuzz/conan_toolchain.cmake \
+    -DNBN_BUILD_BENCHMARKS=ON
+cmake --build /home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-fuzz \
     --target fuzz_serialization
 ```
 
@@ -153,7 +159,7 @@ Run sanitizer and fuzz diagnostics with their separately built executables:
 
 ```bash
 ./scripts/run_benchmarks.sh \
-    --build-dir /home/nbn/dev/builds/nbn-cpp-api-core/linux-gcc13-debug \
+    --build-dir /home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-asan \
     --executable tests/core/utilities/benchmark_serialization_sanitized \
     --tool asan \
     --output-dir benchmark-results/asan
@@ -161,7 +167,7 @@ Run sanitizer and fuzz diagnostics with their separately built executables:
 
 ```bash
 ./scripts/run_benchmarks.sh \
-    --build-dir /home/nbn/dev/builds/nbn-cpp-api-core/linux-gcc13-debug \
+    --build-dir /home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-ubsan \
     --executable tests/core/utilities/benchmark_serialization_sanitized \
     --tool ubsan \
     --output-dir benchmark-results/ubsan
@@ -169,7 +175,7 @@ Run sanitizer and fuzz diagnostics with their separately built executables:
 
 ```bash
 ./scripts/run_benchmarks.sh \
-    --build-dir /home/nbn/dev/builds/nbn-cpp-api-core/linux-gcc13-debug \
+    --build-dir /home/nbn/dev/builds/nbn-cpp-api-core/linux-clang19-fuzz \
     --executable tests/core/utilities/fuzz_serialization \
     --tool fuzz \
     --output-dir benchmark-results/fuzz

@@ -17,13 +17,22 @@ from typing import Callable, Sequence
 DEFAULT_BUILD_ROOT_NAME = "nbn-cpp-api-core"
 DEFAULT_PROFILE = "conan-debug"
 DEFAULT_CONAN_PROFILE = "linux-clang19-debug"
+DEBUG_PROFILE = "linux-clang19-debug"
+COVERAGE_PROFILE = "linux-clang19-coverage"
+ASAN_PROFILE = "linux-clang19-asan"
+TSAN_PROFILE = "linux-clang19-tsan"
+UBSAN_PROFILE = "linux-clang19-ubsan"
+VALGRIND_PROFILE = "linux-clang19-valgrind"
 BENCHMARK_TARGET = "benchmark_serialization"
-COVERAGE_BUILD_NAME = "linux-clang19-coverage"
-DEBUG_BUILD_NAME = "linux-clang19-debug"
-ASAN_BUILD_NAME = "linux-clang19-asan"
-TSAN_BUILD_NAME = "linux-clang19-tsan"
+COVERAGE_BUILD_NAME = COVERAGE_PROFILE
+DEBUG_BUILD_NAME = DEBUG_PROFILE
+ASAN_BUILD_NAME = ASAN_PROFILE
+TSAN_BUILD_NAME = TSAN_PROFILE
+UBSAN_BUILD_NAME = UBSAN_PROFILE
+VALGRIND_BUILD_NAME = VALGRIND_PROFILE
 QUALITY_REPORTS_NAME = "quality-reports"
 CMAKE_CLANG_TIDY_ON = "-DNBN_CLANG_TIDY_ENABLE=ON"
+BUILD_SYSTEM_PROFILES_ENV = "NBN_CPP_API_PROFILES_DIR"
 MAX_BUILD_JOBS = os.cpu_count() or 1
 
 
@@ -52,6 +61,14 @@ class TaskContext:
     @property
     def tsan_build(self) -> Path:
         return self.build_root / TSAN_BUILD_NAME
+
+    @property
+    def ubsan_build(self) -> Path:
+        return self.build_root / UBSAN_BUILD_NAME
+
+    @property
+    def valgrind_build(self) -> Path:
+        return self.build_root / VALGRIND_BUILD_NAME
 
     @property
     def quality_reports(self) -> Path:
@@ -251,7 +268,29 @@ def conan_install(context: TaskContext) -> int:
     return install_dependencies(context, context.build_root / context.profile)
 
 
-def install_dependencies(context: TaskContext, output_directory: Path) -> int:
+def resolve_conan_profile(context: TaskContext, conan_profile: str) -> str:
+    """Resolve a packaged, sibling, or Conan-cached profile name."""
+    profile_path = Path(conan_profile).expanduser()
+    if profile_path.is_file():
+        return str(profile_path.resolve())
+
+    candidates = []
+    configured_profiles = os.environ.get(BUILD_SYSTEM_PROFILES_ENV)
+    if configured_profiles:
+        candidates.append(Path(configured_profiles).expanduser())
+    candidates.append(context.workspace.parent / "nbn-cpp-api-build-system" / "profiles")
+    for profiles_directory in candidates:
+        candidate = profiles_directory / conan_profile
+        if candidate.is_file():
+            return str(candidate.resolve())
+    return conan_profile
+
+
+def install_dependencies(
+    context: TaskContext,
+    output_directory: Path,
+    conan_profile: str | None = None,
+) -> int:
     """Install editable Conan dependencies into one build directory."""
     return run_command(
         context,
@@ -262,7 +301,10 @@ def install_dependencies(context: TaskContext, output_directory: Path) -> int:
             "-of",
             str(output_directory),
             "-pr",
-            context.conan_profile,
+            resolve_conan_profile(
+                context,
+                conan_profile or context.conan_profile,
+            ),
             "-o",
             "nbn-cpp-api-ui/*:shared=True",
         ],
@@ -277,7 +319,11 @@ def open_integrated_terminal(context: TaskContext) -> int:
 def configure_coverage(context: TaskContext) -> int:
     """Configure the LLVM coverage build."""
     reset_build_directory(context.coverage_build, dry_run=context.dry_run)
-    result = install_dependencies(context, context.coverage_build)
+    result = install_dependencies(
+        context,
+        context.coverage_build,
+        COVERAGE_PROFILE,
+    )
     if result != 0:
         return result
     return configure_cmake(
@@ -286,7 +332,6 @@ def configure_coverage(context: TaskContext) -> int:
         [
             "-DCMAKE_BUILD_TYPE=Debug",
             "-DNBN_BUILD_TESTS=ON",
-            "-DNBN_LLVM_COVERAGE_ENABLE=ON",
             CMAKE_CLANG_TIDY_ON,
         ],
     )
@@ -358,13 +403,17 @@ def coverage_metrics(context: TaskContext) -> int:
 
 def configure_valgrind(context: TaskContext) -> int:
     """Configure the debug build used by Valgrind."""
-    reset_build_directory(context.debug_build, dry_run=context.dry_run)
-    result = install_dependencies(context, context.debug_build)
+    reset_build_directory(context.valgrind_build, dry_run=context.dry_run)
+    result = install_dependencies(
+        context,
+        context.valgrind_build,
+        VALGRIND_PROFILE,
+    )
     if result != 0:
         return result
     return configure_cmake(
         context,
-        context.debug_build,
+        context.valgrind_build,
         [
             "-DCMAKE_BUILD_TYPE=Debug",
             "-DNBN_BUILD_TESTS=ON",
@@ -377,20 +426,31 @@ def configure_valgrind(context: TaskContext) -> int:
 
 def build_valgrind(context: TaskContext) -> int:
     """Build the default target containing the UI tests used by Valgrind."""
-    if require_build_tree(context, context.debug_build, "Valgrind build", require_ninja=True):
+    if require_build_tree(
+        context,
+        context.valgrind_build,
+        "Valgrind build",
+        require_ninja=True,
+    ):
         return 1
-    return run_command(context, cmake_build_command(context.debug_build))
+    return run_command(context, cmake_build_command(context.valgrind_build))
 
 
 def valgrind_tool(context: TaskContext, tool: str) -> int:
     """Run one Valgrind tool through the repository CTest script."""
-    if require_build_tree(context, context.debug_build, "Valgrind tests", require_ninja=True):
+    if require_build_tree(
+        context,
+        context.valgrind_build,
+        "Valgrind tests",
+        require_ninja=True,
+    ):
         return 1
-    output_directory = context.debug_build / "valgrind-results" / tool
+    output_directory = context.valgrind_build / "valgrind-results" / tool
     if tool == "callgrind" and not context.dry_run:
-        (context.debug_build / "valgrind-results" / "failed-tests.txt").unlink(
-            missing_ok=True
+        failed_tests = (
+            context.valgrind_build / "valgrind-results" / "failed-tests.txt"
         )
+        failed_tests.unlink(missing_ok=True)
     return run_command(
         context,
         [
@@ -398,7 +458,7 @@ def valgrind_tool(context: TaskContext, tool: str) -> int:
             "-S",
             str(context.shared_scripts / "run_valgrind_ctest.cmake"),
             "-VV",
-            f"-DCTEST_BINARY_DIRECTORY={context.debug_build}",
+            f"-DCTEST_BINARY_DIRECTORY={context.valgrind_build}",
             f"-DVALGRIND_TOOL={tool}",
             f"-DVALGRIND_OUTPUT_DIR={output_directory}",
         ],
@@ -407,7 +467,7 @@ def valgrind_tool(context: TaskContext, tool: str) -> int:
 
 def valgrind_report(context: TaskContext) -> int:
     """Generate published Valgrind Markdown reports."""
-    reports_directory = context.debug_build / "valgrind-results"
+    reports_directory = context.valgrind_build / "valgrind-results"
     if not context.dry_run and not reports_directory.is_dir():
         print(
             f"[nbn-task] Valgrind report inputs are unavailable: {reports_directory}",
@@ -421,7 +481,7 @@ def valgrind_report(context: TaskContext) -> int:
         / ".github/skills/nbn-analyze-valgrind-reports/scripts/analyze_valgrind.py",
         [
             "--reports",
-            str(context.debug_build / "valgrind-results"),
+            str(context.valgrind_build / "valgrind-results"),
             "--output",
             str(context.quality_reports / "valgrind"),
         ],
@@ -469,38 +529,45 @@ def benchmark_all(context: TaskContext) -> int:
     )
 
 
+def sanitizer_configuration(
+    context: TaskContext,
+    sanitizer: str,
+) -> tuple[Path, str]:
+    """Return the build directory and Conan profile for a sanitizer."""
+    configurations = {
+        "asan": (context.asan_build, ASAN_PROFILE),
+        "tsan": (context.tsan_build, TSAN_PROFILE),
+        "ubsan": (context.ubsan_build, UBSAN_PROFILE),
+    }
+    try:
+        return configurations[sanitizer]
+    except KeyError as error:
+        raise ValueError(f"unsupported sanitizer: {sanitizer}") from error
+
+
 def configure_sanitizer(context: TaskContext, sanitizer: str) -> int:
-    """Configure an AddressSanitizer or ThreadSanitizer build."""
-    build_directory = context.asan_build if sanitizer == "asan" else context.tsan_build
-    sanitizer_flag = "address" if sanitizer == "asan" else "thread"
-    flags = f"-fsanitize={sanitizer_flag} -fno-omit-frame-pointer"
-    extra_options = " -DNBN_TSAN_BUILD=ON" if sanitizer == "tsan" else ""
+    """Configure a sanitizer build selected by its Conan profile."""
+    build_directory, conan_profile = sanitizer_configuration(
+        context,
+        sanitizer,
+    )
     reset_build_directory(build_directory, dry_run=context.dry_run)
-    result = install_dependencies(context, build_directory)
+    result = install_dependencies(context, build_directory, conan_profile)
     if result != 0:
         return result
     options = [
         "-DCMAKE_BUILD_TYPE=Debug",
-        "-DCMAKE_C_COMPILER=clang-19",
-        "-DCMAKE_CXX_COMPILER=clang++-19",
-        f"-DCMAKE_C_FLAGS=-fsanitize={sanitizer_flag}",
-        f"-DCMAKE_CXX_FLAGS={flags}",
-        f"-DCMAKE_EXE_LINKER_FLAGS=-fsanitize={sanitizer_flag}",
-        f"-DCMAKE_SHARED_LINKER_FLAGS=-fsanitize={sanitizer_flag}",
         "-DNBN_BUILD_TESTS=ON",
         "-DNBN_BUILD_BENCHMARKS=OFF",
-        "-DNBN_LLVM_COVERAGE_ENABLE=OFF",
         CMAKE_CLANG_TIDY_ON,
         "-DNBN_TEST_TIMEOUT_SECONDS=300",
     ]
-    if extra_options:
-        options.append(extra_options.strip())
     return configure_cmake(context, build_directory, options)
 
 
 def build_sanitizer(context: TaskContext, sanitizer: str) -> int:
     """Build the default target containing the UI tests for a sanitizer."""
-    build_directory = context.asan_build if sanitizer == "asan" else context.tsan_build
+    build_directory, _ = sanitizer_configuration(context, sanitizer)
     if require_build_tree(context, build_directory, f"{sanitizer} build", require_ninja=True):
         return 1
     return run_command(
@@ -511,14 +578,14 @@ def build_sanitizer(context: TaskContext, sanitizer: str) -> int:
 
 def run_sanitizer(context: TaskContext, sanitizer: str) -> int:
     """Run sanitizer tests while preserving the complete visible CTest log."""
-    build_directory = context.asan_build if sanitizer == "asan" else context.tsan_build
+    build_directory, _ = sanitizer_configuration(context, sanitizer)
     if require_build_tree(context, build_directory, f"{sanitizer} tests", require_ninja=True):
         return 1
-    options = (
-        "detect_leaks=1:halt_on_error=1:verbosity=1"
-        if sanitizer == "asan"
-        else "halt_on_error=1:verbosity=1"
-    )
+    options = {
+        "asan": "detect_leaks=1:halt_on_error=1:verbosity=1",
+        "tsan": "halt_on_error=1:verbosity=1",
+        "ubsan": "halt_on_error=1:print_stacktrace=1",
+    }[sanitizer]
     environment = context.command_environment()
     environment[f"{sanitizer.upper()}_OPTIONS"] = options
     return run_command(
@@ -536,7 +603,7 @@ def run_sanitizer(context: TaskContext, sanitizer: str) -> int:
 
 
 def sanitizer_report(context: TaskContext) -> int:
-    """Generate the combined ASan and TSan Markdown report."""
+    """Generate the combined sanitizer Markdown report."""
     report_directories = []
     for build_directory in (context.asan_build, context.tsan_build):
         report_directory = build_directory / "Testing" / "Temporary"
@@ -631,13 +698,12 @@ def coverage_all(context: TaskContext) -> int:
 
 def valgrind_all(context: TaskContext) -> int:
     """Run Valgrind tools until failure, then publish available diagnostics."""
-    results_directory = context.debug_build / "valgrind-results"
+    results_directory = context.valgrind_build / "valgrind-results"
     if not context.dry_run:
         results_directory.mkdir(parents=True, exist_ok=True)
         (results_directory / "failed-tests.txt").unlink(missing_ok=True)
-        for failure_log in (context.debug_build / "Testing" / "Temporary").glob(
-            "LastTestsFailed_*.log"
-        ):
+        temporary_directory = context.valgrind_build / "Testing" / "Temporary"
+        for failure_log in temporary_directory.glob("LastTestsFailed_*.log"):
             failure_log.unlink(missing_ok=True)
     results: list[int] = []
     for task in (
@@ -652,7 +718,7 @@ def valgrind_all(context: TaskContext) -> int:
         if result != 0:
             print(f"[nbn-task] task failed with exit code {result}", flush=True)
             break
-    if context.dry_run or (context.debug_build / "valgrind-results").is_dir():
+    if context.dry_run or results_directory.is_dir():
         results.append(valgrind_report(context))
     return first_failure(results)
 
@@ -736,11 +802,14 @@ class TaskRunner:
 
     def valgrind_all(self, context: TaskContext) -> int:
         """Run Valgrind tools and publish available diagnostics."""
-        results_directory = context.debug_build / "valgrind-results"
+        results_directory = context.valgrind_build / "valgrind-results"
         if not context.dry_run:
             results_directory.mkdir(parents=True, exist_ok=True)
             (results_directory / "failed-tests.txt").unlink(missing_ok=True)
-            for failure_log in (context.debug_build / "Testing" / "Temporary").glob(
+            temporary_directory = (
+                context.valgrind_build / "Testing" / "Temporary"
+            )
+            for failure_log in temporary_directory.glob(
                 "LastTestsFailed_*.log"
             ):
                 failure_log.unlink(missing_ok=True)
@@ -838,6 +907,13 @@ class TaskRunner:
                 context, "tsan"
             ),
             "tsan": lambda context: self.run_sanitizer(context, "tsan"),
+            "ubsan-configure": lambda context: self.configure_sanitizer(
+                context, "ubsan"
+            ),
+            "ubsan-build": lambda context: self.build_sanitizer(
+                context, "ubsan"
+            ),
+            "ubsan": lambda context: self.run_sanitizer(context, "ubsan"),
             "sanitizers-all": self.sanitizers_all,
             "sanitizer-report": self.sanitizer_report,
             "quality-reports-clean": self.clean_quality_reports,

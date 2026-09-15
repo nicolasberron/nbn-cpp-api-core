@@ -17,38 +17,6 @@
             }
         },
         {
-            "label": "nbn: CMake Build (Conan Debug)",
-            "type": "shell",
-            "command": "python ${workspaceFolder:nbn-cpp-api-core}/scripts/run_nbn_task.py cmake-build-debug --workspace ${workspaceFolder:nbn-cpp-api-core}/../${input:repository}",
-            "dependsOn": "nbn: CMake Configure (Conan Debug)",
-            "problemMatcher": [
-                "$gcc"
-            ],
-            "group": "build",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            }
-        },
-        {
-            "label": "nbn: Conan Install",
-            "type": "shell",
-            "command": "python ${workspaceFolder:nbn-cpp-api-core}/scripts/run_nbn_task.py conan-install --profile ${input:profile} --workspace ${workspaceFolder:nbn-cpp-api-core}/../${input:repository}",
-            "problemMatcher": [],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            }
-        },
-        {
             "label": "nbn: Open Integrated Terminal",
             "type": "shell",
             "command": "python ${workspaceFolder:nbn-cpp-api-core}/scripts/run_nbn_task.py open-integrated-terminal --profile ${input:profile} --workspace ${workspaceFolder:nbn-cpp-api-core}/../${input:repository}",
@@ -370,6 +338,53 @@
             "type": "shell",
             "command": "python ${workspaceFolder:nbn-cpp-api-core}/scripts/run_nbn_task.py tsan --workspace ${workspaceFolder:nbn-cpp-api-core}/../${input:repository}",
             "dependsOn": "nbn: ThreadSanitizer Build Tests",
+            "problemMatcher": [],
+            "continueOnError": true,
+            "group": "test",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "nbn: UndefinedBehaviorSanitizer Configure",
+            "type": "shell",
+            "command": "python ${workspaceFolder:nbn-cpp-api-core}/scripts/run_nbn_task.py ubsan-configure --workspace ${workspaceFolder:nbn-cpp-api-core}/../${input:repository}",
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "continueOnError": true,
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "nbn: UndefinedBehaviorSanitizer Build Tests",
+            "type": "shell",
+            "command": "python ${workspaceFolder:nbn-cpp-api-core}/scripts/run_nbn_task.py ubsan-build --workspace ${workspaceFolder:nbn-cpp-api-core}/../${input:repository}",
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "continueOnError": true,
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared"
+            }
+        },
+        {
+            "label": "nbn: UndefinedBehaviorSanitizer",
+            "type": "shell",
+            "command": "python ${workspaceFolder:nbn-cpp-api-core}/scripts/run_nbn_task.py ubsan --workspace ${workspaceFolder:nbn-cpp-api-core}/../${input:repository}",
+            "dependsOn": "nbn: UndefinedBehaviorSanitizer Build Tests",
             "problemMatcher": [],
             "continueOnError": true,
             "group": "test",
