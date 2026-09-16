@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import ast
 import os
 import shlex
 import shutil
@@ -136,11 +137,42 @@ class TaskContext:
     @property
     def production_library_prefixes(self) -> tuple[str, ...]:
         """Return production library prefixes included in coverage reports."""
-        return ("libnbn-core.so", "libnbn-core.a")
+        repository_prefix = "nbn-cpp-api-"
+        component = (
+            self.workspace.name.removeprefix(repository_prefix)
+            if self.workspace.name.startswith(repository_prefix)
+            else "core"
+        )
+        library = f"libnbn-{component}"
+        return (f"{library}.so", f"{library}.a")
 
     @property
     def coverage_header_only(self) -> bool:
         """Return whether coverage comes only from test executables."""
+        conanfile = self.workspace / "conanfile.py"
+        if not conanfile.is_file():
+            return False
+        try:
+            module = ast.parse(conanfile.read_text(encoding="utf-8"))
+        except SyntaxError as error:
+            raise ValueError(f"Cannot parse Conan recipe: {conanfile}") from error
+        for class_node in module.body:
+            if not isinstance(class_node, ast.ClassDef):
+                continue
+            for node in class_node.body:
+                targets = node.targets if isinstance(node, ast.Assign) else []
+                if isinstance(node, ast.AnnAssign):
+                    targets = [node.target]
+                if (
+                    any(
+                        isinstance(target, ast.Name)
+                        and target.id == "package_type"
+                        for target in targets
+                    )
+                    and isinstance(node.value, ast.Constant)
+                    and node.value.value == "header-library"
+                ):
+                    return True
         return False
 
     @property

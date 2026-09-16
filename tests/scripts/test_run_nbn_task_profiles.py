@@ -309,6 +309,66 @@ class InstrumentationProfileTests(unittest.TestCase):
         command = run_command.call_args.args[1]
         self.assertIn("--header-only", command)
 
+    def test_coverage_detects_annotated_header_only_package(self) -> None:
+        self.context.workspace.mkdir(parents=True)
+        (self.context.workspace / "conanfile.py").write_text(
+            "class Recipe:\n    package_type: str = \"header-library\"\n",
+            encoding="utf-8",
+        )
+
+        self.assertTrue(self.context.coverage_header_only)
+
+    def test_coverage_rejects_malformed_conan_recipe(self) -> None:
+        self.context.workspace.mkdir(parents=True)
+        (self.context.workspace / "conanfile.py").write_text(
+            "class Recipe\n",
+            encoding="utf-8",
+        )
+
+        with self.assertRaisesRegex(ValueError, "Cannot parse Conan recipe"):
+            _ = self.context.coverage_header_only
+
+    def test_coverage_uses_selected_workspace_library(self) -> None:
+        build_system_root = (
+            Path(self.temporary_directory.name) / "build-system"
+        )
+        scripts_directory = build_system_root / "scripts"
+        scripts_directory.mkdir(parents=True)
+        (scripts_directory / "run_llvm_coverage.py").touch()
+        geometry_workspace = (
+            Path(self.temporary_directory.name) / "nbn-cpp-api-geometry"
+        )
+        context = TASKS.TaskContext(
+            workspace=geometry_workspace,
+            build_root=self.context.build_root,
+            profile=self.context.profile,
+            conan_profile=self.context.conan_profile,
+            dry_run=True,
+        )
+
+        with (
+            patch.dict(
+                "os.environ",
+                {TASKS.BUILD_SYSTEM_ROOT_ENV: str(build_system_root)},
+            ),
+            patch.object(TASKS, "run_command", return_value=0) as run_command,
+        ):
+            self.assertEqual(TASKS.coverage(context), 0)
+
+        command = run_command.call_args.args[1]
+        prefixes = [
+            command[index + 1]
+            for index, argument in enumerate(command)
+            if argument == "--library-prefix"
+        ]
+        self.assertEqual(prefixes, ["libnbn-geometry.so", "libnbn-geometry.a"])
+
+    def test_coverage_library_prefixes_fall_back_to_core(self) -> None:
+        self.assertEqual(
+            self.context.production_library_prefixes,
+            ("libnbn-core.so", "libnbn-core.a"),
+        )
+
     def test_benchmark_task_uses_shared_runner(self) -> None:
         build_system_root = (
             Path(self.temporary_directory.name) / "build-system"
